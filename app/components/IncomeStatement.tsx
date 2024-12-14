@@ -1,8 +1,8 @@
 import { getIncomeStatement } from '@/lib/sql';
-import { IncomeStatementRow } from '@/types';
+import { SymbolRow, IncomeStatementRow } from '@/types';
 import { getGrowth } from '@/lib/math';
 
-export const Revenues = async ({ symbol }: { symbol: string }) => {
+export const Revenues = async ({ symbol }: { symbol: SymbolRow["id"] }) => {
     const incomeStatements = await getIncomeStatement(symbol);
 
     return (
@@ -20,7 +20,7 @@ export const Revenues = async ({ symbol }: { symbol: string }) => {
     );
 };
 
-export const RevenueGrowth = async ({ symbol }: { symbol: string }) => {
+export const RevenueGrowth = async ({ symbol }: { symbol: SymbolRow["id"] }) => {
     const incomeStatements = await getIncomeStatement(symbol);
     const revenueGrowthArray = [];
     for (let i = 0; i < incomeStatements.length - 1; i++) {
