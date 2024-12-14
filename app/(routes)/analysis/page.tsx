@@ -11,8 +11,10 @@ const AnalysisPage = async () => {
 
   return (
     <div>
-      <CheckboxList attributes={typeIds} />
-      <CheckboxList attributes={exchangeIds} />
+      <CheckboxList attributes={typeIds} title="Types" />
+      <br />
+      <CheckboxList attributes={exchangeIds} title="Exchanges" />
+      <br />
       <h1>Analysis for {symbol}</h1>
       <Revenues symbol={symbol} />
       <br />
