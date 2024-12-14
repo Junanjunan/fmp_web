@@ -8,7 +8,7 @@ const AnalysisPage = () => {
             <h1>Analysis for {symbol}</h1>
             <Revenues symbol={symbol} />
             <br />
-            <RevenueGrowth symbol={symbol} />
+            <RevenueGrowth symbol={symbol} attribute="revenue" />
         </div>
     );
 };

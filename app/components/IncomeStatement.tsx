@@ -1,6 +1,6 @@
 import { getIncomeStatement } from '@/lib/sql';
 import { SymbolRow, IncomeStatementRow } from '@/types';
-import { getGrowth } from '@/lib/math';
+import { getGrowthArray } from '@/lib/analysis';
 
 export const Revenues = async ({ symbol }: { symbol: SymbolRow["id"] }) => {
     const incomeStatements = await getIncomeStatement(symbol);
@@ -20,22 +20,11 @@ export const Revenues = async ({ symbol }: { symbol: SymbolRow["id"] }) => {
     );
 };
 
-export const RevenueGrowth = async ({ symbol }: { symbol: SymbolRow["id"] }) => {
-    const incomeStatements = await getIncomeStatement(symbol);
-    const revenueGrowthArray = [];
-    for (let i = 0; i < incomeStatements.length - 1; i++) {
-        const currentYear: IncomeStatementRow = incomeStatements[i];
-        const previousYear: IncomeStatementRow = incomeStatements[i + 1];
+export const RevenueGrowth = async (
+    { symbol, attribute }: { symbol: SymbolRow["id"], attribute: keyof IncomeStatementRow }
+) => {
+    const revenueGrowthArray = await getGrowthArray(symbol, attribute);
 
-        if (!currentYear.revenue || !previousYear.revenue) {
-            break;
-        }
-
-        const growth = getGrowth(currentYear.revenue, previousYear.revenue);
-        const year = currentYear.date.getFullYear();
-        revenueGrowthArray.push({ year, growth });
-    }
-    
     return (
         <div>
             {revenueGrowthArray.map((growth, index) => {
