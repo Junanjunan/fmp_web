@@ -1,9 +1,54 @@
 import { query } from '@/lib/db';
-import { IncomeStatementRow } from '@/types';
+import * as dbTypes from '@/types/db';
+
+
+export const getTypes = async (
+    types: dbTypes.TypeRow['id'][] | null = null
+): Promise<dbTypes.TypeRow[]> => {
+    let sql = `SELECT * FROM types`;
+    if (types) {
+        sql += ` WHERE id IN (${types.join(',')});`;
+    }
+    const result = await query(sql);
+    return result.rows;
+}
+
+export const getExchanges = async (
+    exchanges: dbTypes.ExchangeRow['id'][] | null = null
+): Promise<dbTypes.ExchangeRow[]> => {
+    let sql = `SELECT * FROM exchanges`;
+    if (exchanges) {
+        sql += ` WHERE id IN (${exchanges.join(',')});`;
+    }
+    const result = await query(sql);
+    return result.rows;
+}
+
+export const getSymbols = async (
+    symbols: dbTypes.SymbolRow['id'][] | null = null
+): Promise<dbTypes.SymbolRow[]> => {
+    let sql = `SELECT * FROM symbols`;
+    if (symbols) {
+        sql += ` WHERE id IN (${symbols.join(',')});`;
+    }
+    const result = await query(sql);
+    return result.rows;
+}
+
+export const getIncomeStatements = async (
+    incomeStatements: dbTypes.IncomeStatementRow['symbol'][] | null = null
+): Promise<dbTypes.IncomeStatementRow[]> => {
+    let sql = `SELECT * FROM income_statements`;
+    if (incomeStatements) {
+        sql += ` WHERE symbol IN (${incomeStatements.join(',')});`;
+    }
+    const result = await query(sql);
+    return result.rows;
+}
 
 export const getIncomeStatement = async (
     symbol: string
-): Promise<IncomeStatementRow[]> => {
+): Promise<dbTypes.IncomeStatementRow[]> => {
     const sql = `
         SELECT *
         FROM income_statements
@@ -11,5 +56,5 @@ export const getIncomeStatement = async (
         ORDER BY date DESC;
     `;
     const result = await query(sql, [symbol]);
-    return result.rows as IncomeStatementRow[];
+    return result.rows as dbTypes.IncomeStatementRow[];
 }
