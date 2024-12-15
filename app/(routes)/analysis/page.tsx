@@ -21,11 +21,11 @@ const AnalysisPage = () => {
   }, []);
 
   return (
-    <div>
+    <main>
       <CheckboxList attributes={typeIds} title="Types" />
       <br />
       <CheckboxList attributes={exchangeIds} title="Exchanges" />
-    </div>
+    </main>
   );
 };
 
