@@ -9,8 +9,8 @@ export const serverApi = axios.create({
   },
 });
 
-export const requestSearchFilters = async (): Promise<SearchFilters> => {
-  const response = await serverApi.get('/search-filters');
+export const requestGet = async (path: string): Promise<any> => {
+  const response = await serverApi.get(`/${path}`);
   return response.data;
 }
 

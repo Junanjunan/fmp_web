@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CheckboxList } from '@/app/components/UI';
-import { requestSearchFilters, requestAnalysis } from '@/app/axios';
+import { requestGet, requestAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow } from '@/types';
 
 
@@ -13,7 +13,7 @@ const AnalysisPage = () => {
   const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
 
   const setSearchFilters = async () => {
-    const searchFilters = await requestSearchFilters();
+    const searchFilters = await requestGet('search-filters');
     const types = searchFilters.types;
     const exchanges = searchFilters.exchanges;
     setTypeIds(types.map((type: TypeRow) => type.id));
