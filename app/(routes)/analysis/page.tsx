@@ -1,24 +1,30 @@
-import { CheckboxList } from '@/app/components/UI';
-import { Revenues, RevenueGrowth } from '@/app/components/IncomeStatement';
-import { getTypes, getExchanges } from '@/lib/sql';
+'use client';
 
-const AnalysisPage = async () => {
-  const symbol = 'AAPL'; // Replace with the desired symbol or pass it dynamically
-  const types = await getTypes();
-  const exchanges = await getExchanges();
-  const typeIds = types.map((type) => type.id);
-  const exchangeIds = exchanges.map((exchange) => exchange.id);
+import { useState, useEffect } from 'react';
+import { CheckboxList } from '@/app/components/UI';
+import { requestSearchFilters } from '@/app/axios';
+import { TypeRow, ExchangeRow } from '@/types';
+
+const AnalysisPage = () => {
+  const [typeIds, setTypeIds] = useState<TypeRow["id"][]>([]);
+  const [exchangeIds, setExchangeIds] = useState<ExchangeRow["id"][]>([]);
+  const setSearchFilters = async () => {
+    const searchFilters = await requestSearchFilters();
+    const types = searchFilters.types;
+    const exchanges = searchFilters.exchanges;
+    setTypeIds(types.map((type: TypeRow) => type.id));
+    setExchangeIds(exchanges.map((exchange: ExchangeRow) => exchange.id));
+  };
+
+  useEffect(() => {
+    setSearchFilters();
+  }, []);
 
   return (
     <div>
       <CheckboxList attributes={typeIds} title="Types" />
       <br />
       <CheckboxList attributes={exchangeIds} title="Exchanges" />
-      <br />
-      <h1>Analysis for {symbol}</h1>
-      <Revenues symbol={symbol} />
-      <br />
-      <RevenueGrowth symbol={symbol} attribute="revenue" />
     </div>
   );
 };

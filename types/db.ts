@@ -58,3 +58,8 @@ export interface IncomeStatementRow {
   link?: string;
   final_link?: string;
 }
+
+export interface SearchFilters {
+  types: TypeRow[];
+  exchanges: ExchangeRow[];
+}
