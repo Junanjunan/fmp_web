@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SelectProps } from '@/types';
 
 export const CheckboxList = (
   { attributes, title, onChange }: 
@@ -49,3 +50,28 @@ export const Button = (
     {isLoading ? 'Loading...' : title}
   </button>
 );
+
+export const Select = (
+  { options, value, onChange, title, id }: SelectProps
+) => {
+  const isValueNumber = typeof value === 'number';
+  return (
+    <div>
+      <label htmlFor={id}>{title}: </label>
+      <select
+        id={id}
+        value={value}
+        onChange={
+          (event) => onChange(
+            isValueNumber ? Number(event.target.value) : event.target.value
+          )
+      }
+      className="border border-gray-300 px-2 py-1 mt-5"
+    >
+      {options.map((option) => (
+        <option key={option} value={option}>{option}</option>
+      ))}
+      </select>
+    </div>
+  )
+};
