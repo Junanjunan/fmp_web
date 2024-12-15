@@ -11,6 +11,7 @@ const AnalysisPage = () => {
   const [exchangeIds, setExchangeIds] = useState<ExchangeRow["id"][]>([]);
   const [selectedTypeIds, setSelectedTypeIds] = useState<TypeRow["id"][]>([]);
   const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
+  const [years, setYears] = useState<number[]>([]);
 
   const setSearchFilters = async () => {
     const searchFilters = await requestGet('search-filters');
@@ -20,8 +21,14 @@ const AnalysisPage = () => {
     setExchangeIds(exchanges.map((exchange: ExchangeRow) => exchange.id));
   };
 
+  const setYearsRows = async () => {
+    const years = await requestGet('years');
+    setYears(years);
+  }
+
   useEffect(() => {
     setSearchFilters();
+    setYearsRows();
   }, []);
 
   const handleTypeChange = (selected: TypeRow["id"][]) => {
@@ -52,6 +59,16 @@ const AnalysisPage = () => {
       >
         Submit
       </button>
+      <table className="min-w-full border border-gray-300 mt-4">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="border border-gray-300 px-4 py-2">Growth (%)</th>
+            {years.map((year) => (
+              <th key={year} className="border border-gray-300 px-4 py-2">{year}</th>
+            ))}
+          </tr>
+        </thead>
+      </table>
     </main>
   );
 };

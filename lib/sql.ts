@@ -72,3 +72,13 @@ export const getIncomeStatement = async (
   const result = await query(sql, [symbol]);
   return result.rows as dbTypes.IncomeStatementRow[];
 }
+
+export const getYearsOfIncomeStatements = async (): Promise<number[]> => {
+  const sql = `
+    SELECT DISTINCT EXTRACT(YEAR FROM date)
+    FROM income_statements
+    ORDER BY extract DESC;
+  `;
+  const result = await query(sql);
+  return result.rows.map((row: { extract: number }) => row.extract);
+}
