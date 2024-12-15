@@ -5,9 +5,8 @@ export default function Home() {
     <main>
       <h1>Home</h1>
       <ul>
-        <li>
-          <Link href="/symbols">Symbols</Link>
-        </li>
+        <li><Link href="/symbols">Symbols</Link></li>
+        <li><Link href="/analysis">Analysis</Link></li>
       </ul>
     </main>
   );
