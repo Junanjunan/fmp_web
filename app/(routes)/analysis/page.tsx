@@ -52,7 +52,6 @@ const AnalysisPage = () => {
   return (
     <main>
       <CheckboxList attributes={typeIds} title="Types" onChange={handleTypeChange} />
-      <br />
       <CheckboxList attributes={exchangeIds} title="Exchanges" onChange={handleExchangeChange} />
       <Button onClick={handleSubmit} title="Search" />
       <table className="min-w-full border border-gray-300 mt-4">

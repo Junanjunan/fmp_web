@@ -15,7 +15,7 @@ export const CheckboxList = (
   };
 
   return (
-    <div>
+    <div className="mb-4">
       <div>{title}</div>
       <div className="flex space-x-4 flex-wrap">
         {attributes.map((attribute) => {
