@@ -38,12 +38,14 @@ export const CheckboxList = (
 };
 
 export const Button = (
-  { onClick, title }: { onClick: () => void, title: string }
+  { onClick, title, isLoading }:
+  { onClick: () => void, title: string, isLoading: boolean }
 ) => (
   <button
     onClick={onClick}
-    className="bg-blue-500 text-white px-1 py-1 rounded-md mt-2"
+    className={`bg-blue-500 text-white px-1 py-1 rounded-md mt-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+    disabled={isLoading}
   >
-    {title}
+    {isLoading ? 'Loading...' : title}
   </button>
 );

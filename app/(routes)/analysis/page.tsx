@@ -13,6 +13,7 @@ const AnalysisPage = () => {
   const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
   const [years, setYears] = useState<number[]>([]);
   const [symbolGrowths, setSymbolGrowths] = useState<GrowthOfSymbols>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setSearchFilters();
@@ -41,19 +42,21 @@ const AnalysisPage = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const data = {
       typeIds: selectedTypeIds,
       exchangeIds: selectedExchangeIds,
     };
     const response = await requestAnalysis(data);
     setSymbolGrowths(response);
+    setIsLoading(false);
   };
 
   return (
     <main>
       <CheckboxList attributes={typeIds} title="Types" onChange={handleTypeChange} />
       <CheckboxList attributes={exchangeIds} title="Exchanges" onChange={handleExchangeChange} />
-      <Button onClick={handleSubmit} title="Search" />
+      <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
       <table className="min-w-full border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-200">
