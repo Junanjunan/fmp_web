@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { CheckboxList } from '@/app/components/UI';
-import { requestSearchFilters } from '@/app/axios';
+import { requestSearchFilters, requestAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow } from '@/types';
+
 
 const AnalysisPage = () => {
   const [typeIds, setTypeIds] = useState<TypeRow["id"][]>([]);
@@ -31,9 +32,13 @@ const AnalysisPage = () => {
     setSelectedExchangeIds(selected);
   };
 
-  const handleSubmit = () => {
-    console.log('Selected Types:', selectedTypeIds);
-    console.log('Selected Exchanges:', selectedExchangeIds);
+  const handleSubmit = async () => {
+    const data = {
+      typeIds: selectedTypeIds,
+      exchangeIds: selectedExchangeIds,
+    };
+    const response = await requestAnalysis(data);
+    console.log(response);
   };
 
   return (

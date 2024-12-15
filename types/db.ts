@@ -63,3 +63,8 @@ export interface SearchFilters {
   types: TypeRow[];
   exchanges: ExchangeRow[];
 }
+
+export interface FilteredIds {
+  typeIds: TypeRow["id"][];
+  exchangeIds: ExchangeRow["id"][];
+}

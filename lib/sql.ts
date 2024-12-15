@@ -35,6 +35,20 @@ export const getSymbols = async (
   return result.rows;
 }
 
+export const getFilteredSymbols = async(
+  typeIds: dbTypes.TypeRow['id'][],
+  exchangeIds: dbTypes.ExchangeRow['id'][]
+): Promise<dbTypes.SymbolRow[]> => {
+  const sql = `
+    SELECT *
+    FROM symbols
+    WHERE type_id IN (${typeIds.map(id => `'${id}'`).join(',')})
+    AND exchange_id IN (${exchangeIds.map(id => `'${id}'`).join(',')});
+  `;
+  const result = await query(sql);
+  return result.rows;
+}
+
 export const getIncomeStatements = async (
   incomeStatements: dbTypes.IncomeStatementRow['symbol'][] | null = null
 ): Promise<dbTypes.IncomeStatementRow[]> => {
