@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { CheckboxList } from '@/app/components/UI';
 import { requestGet, requestAnalysis } from '@/app/axios';
-import { TypeRow, ExchangeRow } from '@/types';
+import { TypeRow, ExchangeRow, GrowthOfSymbols } from '@/types';
 
 
 const AnalysisPage = () => {
@@ -12,6 +12,7 @@ const AnalysisPage = () => {
   const [selectedTypeIds, setSelectedTypeIds] = useState<TypeRow["id"][]>([]);
   const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
   const [years, setYears] = useState<number[]>([]);
+  const [symbolGrowths, setSymbolGrowths] = useState<GrowthOfSymbols>({});
 
   useEffect(() => {
     setSearchFilters();
@@ -45,7 +46,7 @@ const AnalysisPage = () => {
       exchangeIds: selectedExchangeIds,
     };
     const response = await requestAnalysis(data);
-    console.log(response);
+    setSymbolGrowths(response);
   };
 
   return (
@@ -68,6 +69,18 @@ const AnalysisPage = () => {
             ))}
           </tr>
         </thead>
+        <tbody>
+          {Object.entries(symbolGrowths).map(([symbol, growthArray]) => (
+            <tr key={symbol}>
+              <td className="border border-gray-300 px-4 py-2">{symbol}</td>
+              {years.map((year) => (
+                <td key={year} className="border border-gray-300 px-4 py-2">
+                  {growthArray.find(growth => growth.year == year)?.growth}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
       </table>
     </main>
   );
