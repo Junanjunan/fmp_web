@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CheckboxList } from '@/app/components/UI';
+import { CheckboxList, Button } from '@/app/components/UI';
 import { requestGet, requestAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow, GrowthOfSymbols } from '@/types';
 
@@ -54,12 +54,7 @@ const AnalysisPage = () => {
       <CheckboxList attributes={typeIds} title="Types" onChange={handleTypeChange} />
       <br />
       <CheckboxList attributes={exchangeIds} title="Exchanges" onChange={handleExchangeChange} />
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white px-1 py-1 rounded-md mt-2"
-      >
-        Submit
-      </button>
+      <Button onClick={handleSubmit} title="Search" />
       <table className="min-w-full border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-200">
