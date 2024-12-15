@@ -13,6 +13,11 @@ const AnalysisPage = () => {
   const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
   const [years, setYears] = useState<number[]>([]);
 
+  useEffect(() => {
+    setSearchFilters();
+    setYearsRows();
+  }, []);
+
   const setSearchFilters = async () => {
     const searchFilters = await requestGet('search-filters');
     const types = searchFilters.types;
@@ -25,11 +30,6 @@ const AnalysisPage = () => {
     const years = await requestGet('years');
     setYears(years);
   }
-
-  useEffect(() => {
-    setSearchFilters();
-    setYearsRows();
-  }, []);
 
   const handleTypeChange = (selected: TypeRow["id"][]) => {
     setSelectedTypeIds(selected);
