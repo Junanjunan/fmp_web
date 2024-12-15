@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SearchFilters, FilteredIds } from '@/types/db';
+import { FilteredIds } from '@/types/db';
 
 
 export const serverApi = axios.create({
