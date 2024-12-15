@@ -13,11 +13,17 @@ export const getGrowthArray = async (
     const currentYear: IncomeStatementRow = incomeStatements[i];
     const previousYear: IncomeStatementRow = incomeStatements[i + 1];
 
-    const currentValue = currentYear[attribute];
-    const previousValue = previousYear[attribute];
+    let currentValue = currentYear[attribute];
+    let previousValue = previousYear[attribute];
 
     if (typeof currentValue !== 'number' || typeof previousValue !== 'number') {
-      break;
+      try {
+        currentValue = parseFloat(currentValue as string);
+        previousValue = parseFloat(previousValue as string);
+      } catch (error) {
+        console.error(`Error parsing ${attribute} for ${symbol}:`, error);
+        continue;
+      }
     }
 
     const growth = getGrowth(currentValue, previousValue);
