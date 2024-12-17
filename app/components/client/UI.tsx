@@ -61,16 +61,14 @@ export const Select = (
       <select
         id={id}
         value={value}
-        onChange={
-          (event) => onChange(
-            isValueNumber ? Number(event.target.value) : event.target.value
-          )
-      }
-      className="border border-gray-300 px-2 py-1 mt-5"
-    >
-      {options.map((option) => (
-        <option key={option} value={option}>{option}</option>
-      ))}
+        className="border border-gray-300 px-2 py-1 mt-5"
+        onChange={(event) => onChange(
+          isValueNumber ? Number(event.target.value) : event.target.value
+        )}
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>{option}</option>
+        ))}
       </select>
     </div>
   )
