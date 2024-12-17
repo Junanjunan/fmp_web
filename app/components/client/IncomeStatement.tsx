@@ -5,12 +5,12 @@ export const RevenueTable = (
   { filteredYears, symbolGrowths, years, minimumGrowth }: 
   { filteredYears: number[], symbolGrowths: GrowthOfSymbols, years: number[], minimumGrowth: number }
 ) => (
-  <table className="min-w-full border border-gray-300 mt-4">
-    <thead>
-      <tr className="bg-gray-200">
-        <th className="border border-gray-300 px-4 py-2">Growth (%)</th>
+  <table className="table">
+    <thead className="tableHeader">
+      <tr>
+        <th className="tableCell">Growth (%)</th>
         {filteredYears.map((year) => (
-          <th key={year} className="border border-gray-300 px-4 py-2">{year}</th>
+          <th key={year} className="tableCell">{year}</th>
         ))}
       </tr>
     </thead>
@@ -34,9 +34,9 @@ export const RevenueTable = (
 
         return (
           <tr key={symbol}>
-            <td className="border border-gray-300 px-4 py-2">{symbol}</td>
+            <td className="tableCell">{symbol}</td>
             {filteredYears.map((year) => (
-              <td key={year} className="border border-gray-300 px-4 py-2">
+              <td key={year} className="tableCell">
                 {growthArray.find(growth => growth.year == year)?.growth}
               </td>
             ))}
