@@ -15,6 +15,7 @@ const AnalysisPage = () => {
   const [selectedYearCount, setSelectedYearCount] = useState<string | number>(5);
   const [symbolGrowths, setSymbolGrowths] = useState<GrowthOfSymbols>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [minimumGrowth, setMinimumGrowth] = useState<number>(5);
   const filteredYears = years.slice(0, Number(selectedYearCount));
 
   useEffect(() => {
@@ -74,6 +75,16 @@ const AnalysisPage = () => {
         title="Year Count"
         id="yearCount"
       />
+      <div className="flex items-center">
+        <label htmlFor="growthLimit" className="mr-2">Minimum Growth(%): </label>
+        <input
+          type="number"
+          value={minimumGrowth}
+          onChange={(e) => setMinimumGrowth(Number(e.target.value))}
+          id="growthLimit"
+          className="border border-gray-300"
+        />
+      </div>
       <table className="min-w-full border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-200">
@@ -84,16 +95,34 @@ const AnalysisPage = () => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(symbolGrowths).map(([symbol, growthArray]) => (
-            <tr key={symbol}>
-              <td className="border border-gray-300 px-4 py-2">{symbol}</td>
-              {filteredYears.map((year) => (
-                <td key={year} className="border border-gray-300 px-4 py-2">
-                  {growthArray.find(growth => growth.year == year)?.growth}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {Object.entries(symbolGrowths).map(([symbol, growthArray]) => {
+            const thirdYear = Number(years[2]);
+            const yearsOfSymbol = growthArray.map(growth => growth.year);
+            if (!yearsOfSymbol.includes(thirdYear)) {
+              return null;
+            }
+
+            for (let i = 0; i < growthArray.length; i++) {
+              for (const year of years) {
+                if (growthArray[i].year == year) {
+                  if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
+                    return null;
+                  }
+                }
+              }
+            }
+
+            return (
+              <tr key={symbol}>
+                <td className="border border-gray-300 px-4 py-2">{symbol}</td>
+                {filteredYears.map((year) => (
+                  <td key={year} className="border border-gray-300 px-4 py-2">
+                    {growthArray.find(growth => growth.year == year)?.growth}
+                  </td>
+                ))}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </main>
