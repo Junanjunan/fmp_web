@@ -22,6 +22,10 @@ const AnalysisPage = () => {
     setYearsRows();
   }, []);
 
+  useEffect(() => {
+    setYears(years.slice(0, Number(selectedYearCount)));
+  }, [selectedYearCount]);
+
   const setSearchFilters = async () => {
     const searchFilters = await requestGet('search-filters');
     const types = searchFilters.types;
