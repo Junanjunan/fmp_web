@@ -75,3 +75,25 @@ export const Select = (
     </div>
   )
 };
+
+export const InputText = (
+  { inputType, value, onChange, title, id }: 
+  { 
+    inputType: string,
+    value: string | number,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    title: string,
+    id: string
+  }
+) => (
+  <div className="flex items-center ">
+    <label htmlFor={id} className="mr-4 mt-4">{title}: </label>
+    <input
+      type={inputType}
+      value={value}
+      onChange={onChange}
+      id={id}
+      className="border border-gray-300 px-2 py-1 mt-5"
+    />
+  </div>
+)

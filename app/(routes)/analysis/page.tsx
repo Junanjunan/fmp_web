@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CheckboxList, Button, Select } from '@/app/components/client/UI';
+import { CheckboxList, Button, Select, InputText } from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow, GrowthOfSymbols } from '@/types';
@@ -76,16 +76,13 @@ const AnalysisPage = () => {
         title="Year Count"
         id="yearCount"
       />
-      <div className="flex items-center">
-        <label htmlFor="growthLimit" className="mr-2">Minimum Growth(%): </label>
-        <input
-          type="number"
-          value={minimumGrowth}
-          onChange={(e) => setMinimumGrowth(Number(e.target.value))}
-          id="growthLimit"
-          className="border border-gray-300"
-        />
-      </div>
+      <InputText
+        inputType="number"
+        value={minimumGrowth}
+        onChange={(e) => setMinimumGrowth(Number(e.target.value))}
+        title="Minimum Growth(%)"
+        id="growthLimit"
+      />
       <RevenueTable
         filteredYears={filteredYears}
         symbolGrowths={symbolGrowths}
