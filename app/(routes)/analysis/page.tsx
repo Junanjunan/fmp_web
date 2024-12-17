@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CheckboxList, Button, Select } from '@/app/components/UI';
+import { CheckboxList, Button, Select } from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow, GrowthOfSymbols } from '@/types';
