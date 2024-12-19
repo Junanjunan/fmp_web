@@ -1,15 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CheckboxList, Button, Select, InputText } from '@/app/components/client/UI';
+import {
+  CheckboxList, CheckboxObjectList, Button, Select, InputText
+} from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
-import { TypeRow, ExchangeRow, GrowthOfSymbols } from '@/types';
+import {
+  TypeRow, ExchangeRow, ExchangesByCountry, GrowthOfSymbols
+} from '@/types';
 
 
 const AnalysisPage = () => {
   const [typeIds, setTypeIds] = useState<TypeRow["id"][]>([]);
-  const [exchangeIds, setExchangeIds] = useState<ExchangeRow["id"][]>([]);
+  const [exchanges, setExchanges] = useState<ExchangesByCountry>([]);
   const [selectedTypeIds, setSelectedTypeIds] = useState<TypeRow["id"][]>([]);
   const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
   const [years, setYears] = useState<number[]>([]);
@@ -32,8 +36,18 @@ const AnalysisPage = () => {
     const searchFilters = await requestGet('search-filters');
     const types = searchFilters.types;
     const exchanges = searchFilters.exchanges;
+    const exchangesByCountry: ExchangesByCountry = [];
     setTypeIds(types.map((type: TypeRow) => type.id));
-    setExchangeIds(exchanges.map((exchange: ExchangeRow) => exchange.id));
+    exchanges.forEach((exchange: ExchangeRow) => {
+      const countryId = exchange.country_id;
+      const existingCountry = exchangesByCountry.find(item => item.id === countryId);
+      if (existingCountry) {
+        existingCountry.infoArray.push({ id: exchange.id, name: exchange.name });
+      } else {
+        exchangesByCountry.push({ id: countryId, infoArray: [{ id: exchange.id, name: exchange.name }] });
+      }
+    });
+    setExchanges(exchangesByCountry);
   };
 
   const setYearsRows = async () => {
@@ -67,7 +81,7 @@ const AnalysisPage = () => {
   return (
     <main>
       <CheckboxList attributes={typeIds} title="Types" onChange={handleTypeChange} />
-      <CheckboxList attributes={exchangeIds} title="Exchanges" onChange={handleExchangeChange} />
+      <CheckboxObjectList attributes={exchanges} title="Exchanges" onChange={handleExchangeChange} />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
       <Select
         options={years.map((_, index) => index+1)}

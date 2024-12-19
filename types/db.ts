@@ -5,7 +5,13 @@ export interface TypeRow {
 export interface ExchangeRow {
   id: string;
   name: string;
+  country_id: string;
 }
+
+export type ExchangesByCountry = {
+  id: ExchangeRow["country_id"];
+  infoArray: { id: ExchangeRow["id"]; name: ExchangeRow["name"] }[];
+}[];
 
 export interface SymbolRow {
   id: string;
