@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { SelectProps } from '@/types';
 
 export const CheckboxList = (
-  { attributes, title, onChange }: 
-  { attributes: string[], title: string, onChange: (selected: string[]) => void }
+  { attributes, title, defaultChecked, onChange }: 
+  {
+    attributes: string[],
+    title: string,
+    defaultChecked: string[],
+    onChange: (selected: string[]) => void,
+  }
 ) => {
-  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+  const [checkedItems, setCheckedItems] = useState<string[]>(defaultChecked);
 
   const handleCheckboxChange = (attribute: string) => {
     const updatedCheckedItems = checkedItems.includes(attribute)
@@ -39,17 +44,18 @@ export const CheckboxList = (
 };
 
 export const CheckboxObjectList = (
-  { attributes, title, onChange }:
+  { attributes, title, defaultChecked, onChange }:
   {
     attributes: {
       id: string,
       infoArray: { id: string, name: string }[]
     }[],
     title: string,
+    defaultChecked: string[],
     onChange: (selected: string[]) => void,
   }
 ) => {
-  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+  const [checkedItems, setCheckedItems] = useState<string[]>(defaultChecked);
   const handleCheckboxChange = (id: string) => {
     const updatedCheckedItems = checkedItems.includes(id)
       ? checkedItems.filter(item => item !== id)

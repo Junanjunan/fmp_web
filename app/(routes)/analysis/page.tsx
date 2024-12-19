@@ -22,10 +22,14 @@ const AnalysisPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [minimumGrowth, setMinimumGrowth] = useState<number>(5);
   const filteredYears = years.slice(0, Number(selectedYearCount));
+  const defaultCheckedTypes = ["stock"];
+  const defaultCheckedExchanges = ["NASDAQ", "NYSE"];
 
   useEffect(() => {
     setSearchFilters();
     setYearsRows();
+    setSelectedTypeIds(defaultCheckedTypes);
+    setSelectedExchangeIds(defaultCheckedExchanges);
   }, []);
 
   useEffect(() => {
@@ -80,8 +84,18 @@ const AnalysisPage = () => {
 
   return (
     <main>
-      <CheckboxList attributes={typeIds} title="Types" onChange={handleTypeChange} />
-      <CheckboxObjectList attributes={exchanges} title="Exchanges" onChange={handleExchangeChange} />
+      <CheckboxList
+        attributes={typeIds}
+        title="Types"
+        defaultChecked={defaultCheckedTypes}
+        onChange={handleTypeChange}
+      />
+      <CheckboxObjectList
+        attributes={exchanges}
+        title="Exchanges"
+        defaultChecked={defaultCheckedExchanges}
+        onChange={handleExchangeChange}
+      />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
       <Select
         options={years.map((_, index) => index+1)}
