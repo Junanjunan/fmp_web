@@ -13,14 +13,14 @@ export async function POST(request: Request) {
   const growthOfSymbols: GrowthOfSymbols = {};
 
   for (const symbolRow of symbolRows) {
-    const symbol = symbolRow.id;
-    const incomeStatements = await getIncomeStatement(symbol);
+    const { id, type_id, exchange_id } = symbolRow;
+    const incomeStatements = await getIncomeStatement(id);
     if (incomeStatements.length === 0) {
-      console.log(`No income statements found for ${symbol}`);
+      console.log(`No income statements found for ${id}`);
       continue;
     }
-    const revenueGrowthArray = await getGrowthArray(symbol, 'revenue');
-    growthOfSymbols[symbol] = revenueGrowthArray;
+    const revenueGrowthArray = await getGrowthArray(id, 'revenue');
+    growthOfSymbols[id] = { type_id, exchange_id, growthArray: revenueGrowthArray };
   }
 
   return NextResponse.json(growthOfSymbols);

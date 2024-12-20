@@ -1,4 +1,4 @@
-import { SymbolRow } from './db';
+import { SymbolRow, TypeRow, ExchangeRow } from './db';
 
 
 export interface GrowthArray {
@@ -7,5 +7,9 @@ export interface GrowthArray {
 }
 
 export interface GrowthOfSymbols {
-  [key: SymbolRow["id"]]: GrowthArray[];
+  [key: SymbolRow["id"]]: {
+    type_id: TypeRow["id"];
+    exchange_id: ExchangeRow["id"];
+    growthArray: GrowthArray[];
+  };
 }

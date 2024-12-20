@@ -9,13 +9,17 @@ export const RevenueTable = (
     <thead className="tableHeader">
       <tr>
         <th className="tableCell">Growth (%)</th>
+        <th className="tableCell">Type</th>
+        <th className="tableCell">Exchange</th>
         {filteredYears.map((year) => (
           <th key={year} className="tableCell">{year}</th>
         ))}
       </tr>
     </thead>
     <tbody>
-      {Object.entries(symbolGrowths).map(([symbol, growthArray]) => {
+      {Object.entries(symbolGrowths).map(([
+        symbol, { type_id, exchange_id, growthArray }
+      ]) => {
         const thirdYear = Number(years[2]);
         const yearsOfSymbol = growthArray.map(growth => growth.year);
         if (!yearsOfSymbol.includes(thirdYear)) {
@@ -35,6 +39,8 @@ export const RevenueTable = (
         return (
           <tr key={symbol}>
             <td className="tableCell">{symbol}</td>
+            <td className="tableCell">{type_id}</td>
+            <td className="tableCell">{exchange_id}</td>
             {filteredYears.map((year) => (
               <td key={year} className="tableCell">
                 {growthArray.find(growth => growth.year == year)?.growth}
