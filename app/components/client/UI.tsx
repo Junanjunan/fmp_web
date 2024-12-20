@@ -75,6 +75,7 @@ export const CheckboxObjectList = (
           isLoading={false}
         />
       </div>
+      <SymbolCardList items={checkedItems} onClick={handleCheckboxChange} />
       <div className={`space-x-4 flex-wrap ${toggleMenu ? '' : 'hidden'}`}>
         {attributes.map(attribute => {
           return (
@@ -159,5 +160,34 @@ export const InputText = (
       id={id}
       className="border border-gray-300 px-2 py-1 mt-5"
     />
+  </div>
+)
+
+export const SymbolCard = (
+  { item, onClick }: { item: string, onClick: () => void }
+) => (
+  <div key={item} className="border border-gray-300 p-2 m-1 text-xs">
+    <span>{item}</span>
+    <button
+      onClick={onClick}
+      className="bg-blue-300 text-white ml-2 px-1"
+    >
+      ✕
+    </button>
+  </div>
+)
+
+export const SymbolCardList = (
+  { items, onClick }:
+  { items: string[], onClick: (item: string) => void }
+) => (
+  <div className="flex flex-wrap">
+    {items.map(item => (
+      <SymbolCard
+        key={item}
+        item={item}
+        onClick={() => onClick(item)}
+      />
+    ))}
   </div>
 )
