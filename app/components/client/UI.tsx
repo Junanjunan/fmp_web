@@ -56,6 +56,7 @@ export const CheckboxObjectList = (
   }
 ) => {
   const [checkedItems, setCheckedItems] = useState<string[]>(defaultChecked);
+  const [toggleMenu, setToggleMenu] = useState<boolean>(false);
   const handleCheckboxChange = (id: string) => {
     const updatedCheckedItems = checkedItems.includes(id)
       ? checkedItems.filter(item => item !== id)
@@ -66,8 +67,15 @@ export const CheckboxObjectList = (
 
   return (
     <div className="mb-4">
-      <div>{title}</div>
-      <div className="space-x-4 flex-wrap">
+      <div className="flex items-center">
+        <span>{title}</span>
+        <Button
+          onClick={() => setToggleMenu(!toggleMenu)}
+          title={toggleMenu ? 'Hide' : 'Show'}
+          isLoading={false}
+        />
+      </div>
+      <div className={`space-x-4 flex-wrap ${toggleMenu ? '' : 'hidden'}`}>
         {attributes.map(attribute => {
           return (
             <div key={attribute.id} className="border border-gray-300 p-2">
