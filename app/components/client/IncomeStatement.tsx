@@ -68,44 +68,44 @@ export const RevenueTable = (
 
   return (
     <div>
-    <span>{filteredSymbols.length} symbols found</span>
-    <table className="table">
-      <thead className="tableHeader">
-        <tr>
-          <th className="tableCell">Growth (%)</th>
-          <th className="tableCell">Type</th>
-          <th 
-            className="tableCell cursor-pointer"
-            onClick={() => handleSort('exchange')}
-          >
-            Exchange{toggleArrow('exchange')}
-          </th>
-          {filteredYears.map((year) => (
-            <th 
-              key={year} 
+      <span>{filteredSymbols.length} symbols found</span>
+      <table className="table">
+        <thead className="tableHeader">
+          <tr>
+            <th className="tableCell">Growth (%)</th>
+            <th className="tableCell">Type</th>
+            <th
               className="tableCell cursor-pointer"
-              onClick={() => handleSort(year.toString())}
+              onClick={() => handleSort('exchange')}
             >
-              {year}{toggleArrow(year.toString())}
+              Exchange{toggleArrow('exchange')}
             </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {filteredSymbols.map(([symbol, { type_id, exchange_id, growthArray }]) => (
-          <tr key={symbol}>
-            <td className="tableCell">{symbol}</td>
-            <td className="tableCell">{type_id}</td>
-            <td className="tableCell">{exchange_id}</td>
             {filteredYears.map((year) => (
-              <td key={year} className="tableCell">
-                {growthArray.find(growth => growth.year == year)?.growth}
-              </td>
+              <th
+                key={year}
+                className="tableCell cursor-pointer"
+                onClick={() => handleSort(year.toString())}
+              >
+                {year}{toggleArrow(year.toString())}
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {filteredSymbols.map(([symbol, { type_id, exchange_id, growthArray }]) => (
+            <tr key={symbol}>
+              <td className="tableCell">{symbol}</td>
+              <td className="tableCell">{type_id}</td>
+              <td className="tableCell">{exchange_id}</td>
+              {filteredYears.map((year) => (
+                <td key={year} className="tableCell">
+                  {growthArray.find(growth => growth.year == year)?.growth}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
