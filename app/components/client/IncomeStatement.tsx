@@ -29,6 +29,12 @@ export const RevenueTable = (
         : b[1].exchange_id.localeCompare(a[1].exchange_id);
     }
 
+    if (sortColumn === 'psRatio') {
+      return sortDirection === 'asc' 
+        ? a[1].psRatio - b[1].psRatio
+        : b[1].psRatio - a[1].psRatio;
+    }
+
     // For year columns
     const yearNum = parseInt(sortColumn);
     if (!isNaN(yearNum)) {
@@ -80,6 +86,12 @@ export const RevenueTable = (
             >
               Exchange{toggleArrow('exchange')}
             </th>
+            <th
+              className="tableCell cursor-pointer"
+              onClick={() => handleSort('psRatio')}
+            >
+              PS Ratio{toggleArrow('psRatio')}
+            </th>
             {filteredYears.map((year) => (
               <th
                 key={year}
@@ -92,11 +104,12 @@ export const RevenueTable = (
           </tr>
         </thead>
         <tbody>
-          {filteredSymbols.map(([symbol, { type_id, exchange_id, growthArray }]) => (
+          {filteredSymbols.map(([symbol, { type_id, exchange_id, growthArray, psRatio }]) => (
             <tr key={symbol}>
               <td className="tableCell">{symbol}</td>
               <td className="tableCell">{type_id}</td>
               <td className="tableCell">{exchange_id}</td>
+              <td className="tableCell">{psRatio}</td>
               {filteredYears.map((year) => (
                 <td key={year} className="tableCell">
                   {growthArray.find(growth => growth.year == year)?.growth}

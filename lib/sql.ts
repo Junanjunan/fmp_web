@@ -82,3 +82,18 @@ export const getYearsOfIncomeStatements = async (): Promise<number[]> => {
   const result = await query(sql);
   return result.rows.map((row: { extract: number }) => row.extract);
 }
+
+export const getFilteredSymbolsProfiles = async(
+  typeIds: dbTypes.TypeRow['id'][],
+  exchangeIds: dbTypes.ExchangeRow['id'][]
+): Promise<dbTypes.SymbolWithProfile[]> => {
+  const sql = `
+    SELECT s.*, sp.*
+    FROM symbols s
+    LEFT JOIN symbol_profiles sp ON s.id = sp.symbol
+    WHERE s.type_id IN (${typeIds.map(id => `'${id}'`).join(',')})
+    AND s.exchange_id IN (${exchangeIds.map(id => `'${id}'`).join(',')});
+  `;
+  const result = await query(sql);
+  return result.rows;
+}

@@ -113,3 +113,5 @@ export interface SymbolProfileRow {
   is_adr: boolean;
   is_fund: boolean;
 }
+
+export interface SymbolWithProfile extends SymbolRow, Omit<SymbolProfileRow, 'price'> {}
