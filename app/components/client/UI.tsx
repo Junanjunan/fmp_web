@@ -110,7 +110,7 @@ export const Button = (
 ) => (
   <button
     onClick={onClick}
-    className={`bg-blue-500 text-white px-1 py-1 rounded-md mt-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+    className={`bg-blue-500 text-white px-1 py-1 rounded-md m-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
     disabled={isLoading}
   >
     {isLoading ? 'Loading...' : title}
