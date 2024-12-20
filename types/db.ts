@@ -74,3 +74,42 @@ export interface FilteredIds {
   typeIds: TypeRow["id"][];
   exchangeIds: ExchangeRow["id"][];
 }
+
+export interface SymbolProfileRow {
+  symbol: string;
+  exchange_short_name: string;
+  price: number;
+  beta: number;
+  vol_avg: number;
+  mkt_cap: number;
+  last_div: number;
+  range: string;
+  changes: number;
+  company_name: string;
+  currency: string;
+  cik: string;
+  isin: string;
+  cusip: string;
+  exchange: string;
+  industry: string;
+  website: string;
+  description: string;
+  ceo: string;
+  sector: string;
+  country: string;
+  full_time_employees: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  dcf_diff: number;
+  dcf: number;
+  image: string;
+  ipo_date: string;
+  default_image: boolean;
+  is_etf: boolean;
+  is_actively_trading: boolean;
+  is_adr: boolean;
+  is_fund: boolean;
+}
