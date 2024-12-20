@@ -82,6 +82,15 @@ const AnalysisPage = () => {
     setSelectedYearCount(selected);
   };
 
+  const SearchedCount = () => {
+    if (isLoading) {
+      return null;
+    }
+
+    const count = Object.keys(symbolGrowths).length;
+    return <span>{count} searched</span>;
+  };
+
   return (
     <main>
       <CheckboxList
@@ -97,6 +106,7 @@ const AnalysisPage = () => {
         onChange={handleExchangeChange}
       />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
+      <SearchedCount />
       <Select
         options={years.map((_, index) => index+1)}
         value={selectedYearCount}
