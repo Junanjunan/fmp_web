@@ -67,6 +67,8 @@ export const RevenueTable = (
   });
 
   return (
+    <div>
+    <span>{filteredSymbols.length} symbols found</span>
     <table className="table">
       <thead className="tableHeader">
         <tr>
@@ -104,5 +106,6 @@ export const RevenueTable = (
         ))}
       </tbody>
     </table>
+    </div>
   );
 }
