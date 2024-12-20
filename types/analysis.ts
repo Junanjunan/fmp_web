@@ -13,3 +13,12 @@ export interface GrowthOfSymbols {
     growthArray: GrowthArray[];
   };
 }
+
+export type SortedSymbolGrowths = [
+  SymbolRow["id"],
+  {
+    type_id: TypeRow["id"],
+    exchange_id: ExchangeRow["id"],
+    growthArray: GrowthArray[],
+  }
+][];

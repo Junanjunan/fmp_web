@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { GrowthOfSymbols } from '@/types';
+import { GrowthOfSymbols, SortedSymbolGrowths } from '@/types';
 
 
 export const RevenueTable = (
@@ -18,7 +18,7 @@ export const RevenueTable = (
     }
   };
 
-  const sortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
+  const sortedSymbolGrowths: SortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
     if (!sortColumn) {
       return 0;
     }
