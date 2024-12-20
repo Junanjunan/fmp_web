@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { GrowthOfSymbols } from '@/types';
 
 
@@ -5,20 +6,72 @@ export const RevenueTable = (
   { filteredYears, symbolGrowths, years, minimumGrowth }: 
   { filteredYears: number[], symbolGrowths: GrowthOfSymbols, years: number[], minimumGrowth: number }
 ) => {
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('desc');
+    }
+  };
+
+  const sortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
+    if (!sortColumn) {
+      return 0;
+    }
+
+    if (sortColumn === 'exchange') {
+      return sortDirection === 'asc' 
+        ? a[1].exchange_id.localeCompare(b[1].exchange_id)
+        : b[1].exchange_id.localeCompare(a[1].exchange_id);
+    }
+
+    // For year columns
+    const yearNum = parseInt(sortColumn);
+    if (!isNaN(yearNum)) {
+      const aGrowth = a[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
+      const bGrowth = b[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
+      return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+    }
+
+    return 0;
+  });
+
+  const toggleArrow = (column: string) => {
+    if (sortColumn === column) {
+      return sortDirection === 'asc' ? '↑' : '↓';
+    }
+    return '';
+  }
+
   return (
     <table className="table">
       <thead className="tableHeader">
         <tr>
           <th className="tableCell">Growth (%)</th>
           <th className="tableCell">Type</th>
-          <th className="tableCell">Exchange</th>
+          <th 
+            className="tableCell cursor-pointer"
+            onClick={() => handleSort('exchange')}
+          >
+            Exchange{toggleArrow('exchange')}
+          </th>
           {filteredYears.map((year) => (
-            <th key={year} className="tableCell">{year}</th>
+            <th 
+              key={year} 
+              className="tableCell cursor-pointer"
+              onClick={() => handleSort(year.toString())}
+            >
+              {year}{toggleArrow(year.toString())}
+            </th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {Object.entries(symbolGrowths).map(([
+        {sortedSymbolGrowths.map(([
           symbol, { type_id, exchange_id, growthArray }
         ]) => {
           const thirdYear = Number(years[2]);
