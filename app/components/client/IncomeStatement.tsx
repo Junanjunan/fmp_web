@@ -47,6 +47,25 @@ export const RevenueTable = (
     return '';
   }
 
+  const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
+    const growthArray = symbolData[1].growthArray;
+    const thirdYear = Number(years[2]);
+    const yearsOfSymbol = growthArray.map(growth => growth.year);
+    if (!yearsOfSymbol.includes(thirdYear)) {
+      return false;
+    }
+    for (let i = 0; i < growthArray.length; i++) {
+      for (const year of years) {
+        if (growthArray[i].year == year) {
+          if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  });
+
   return (
     <table className="table">
       <thead className="tableHeader">
@@ -71,38 +90,18 @@ export const RevenueTable = (
         </tr>
       </thead>
       <tbody>
-        {sortedSymbolGrowths.map(([
-          symbol, { type_id, exchange_id, growthArray }
-        ]) => {
-          const thirdYear = Number(years[2]);
-          const yearsOfSymbol = growthArray.map(growth => growth.year);
-          if (!yearsOfSymbol.includes(thirdYear)) {
-            return null;
-          }
-  
-          for (let i = 0; i < growthArray.length; i++) {
-            for (const year of years) {
-              if (growthArray[i].year == year) {
-                if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
-                  return null;
-                }
-              }
-            }
-          }
-  
-          return (
-            <tr key={symbol}>
-              <td className="tableCell">{symbol}</td>
-              <td className="tableCell">{type_id}</td>
-              <td className="tableCell">{exchange_id}</td>
-              {filteredYears.map((year) => (
-                <td key={year} className="tableCell">
-                  {growthArray.find(growth => growth.year == year)?.growth}
-                </td>
-              ))}
-            </tr>
-          )
-        })}
+        {filteredSymbols.map(([symbol, { type_id, exchange_id, growthArray }]) => (
+          <tr key={symbol}>
+            <td className="tableCell">{symbol}</td>
+            <td className="tableCell">{type_id}</td>
+            <td className="tableCell">{exchange_id}</td>
+            {filteredYears.map((year) => (
+              <td key={year} className="tableCell">
+                {growthArray.find(growth => growth.year == year)?.growth}
+              </td>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </table>
   );
