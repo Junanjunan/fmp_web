@@ -11,6 +11,11 @@ export const RevenueTable = (
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const executeFMP = async () => {
+    const confirm = window.confirm('Are you sure you want to refresh the filtered symbols?');
+    if (!confirm) {
+      return;
+    }
+
     const symbolsToBeAnalyzed = filteredSymbols.map(symbol => symbol[0]);
     try {
       const response = await fetch('/api/v1/fmp-server/symbols', {
@@ -100,7 +105,12 @@ export const RevenueTable = (
   return (
     <div>
       <span>{filteredSymbols.length} symbols found</span>
-      <Button onClick={executeFMP} title="Refresh Filtered Symbols" isLoading={false} />
+      <Button
+        onClick={executeFMP}
+        title="Refresh Filtered Symbols"
+        isLoading={false}
+        disabled={filteredSymbols.length === 0}
+      />
       <table className="table">
         <thead className="tableHeader">
           <tr>

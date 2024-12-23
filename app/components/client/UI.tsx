@@ -106,13 +106,16 @@ export const CheckboxObjectList = (
 }
 
 export const Button = (
-  { onClick, title, isLoading }:
-  { onClick: () => void, title: string, isLoading: boolean }
+  { onClick, title, isLoading, disabled=false }:
+  { onClick: () => void, title: string, isLoading: boolean, disabled?: boolean }
 ) => (
   <button
     onClick={onClick}
-    className={`bg-blue-500 text-white px-1 py-1 rounded-md m-1 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-    disabled={isLoading}
+    className={
+      `bg-blue-500 text-white px-1 py-1 rounded-md m-1
+      ${isLoading || disabled ? 'opacity-50 cursor-not-allowed' : ''}`
+    }
+    disabled={isLoading || disabled}
   >
     {isLoading ? 'Loading...' : title}
   </button>
