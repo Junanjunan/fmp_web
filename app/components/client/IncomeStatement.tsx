@@ -9,6 +9,22 @@ export const RevenueTable = (
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
+  const executeFMP = async () => {
+    try {
+      const response = await fetch('/api/v1/fmp-server/symbols', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          params: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        }),
+      });
+      const data = await response.json();
+      console.log(JSON.parse(data.result));
+    } catch (error) {
+      console.error('FMP execution error:', error);
+    }
+  }
+
   const handleSort = (column: string) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -78,6 +94,7 @@ export const RevenueTable = (
   return (
     <div>
       <span>{filteredSymbols.length} symbols found</span>
+      <button onClick={executeFMP} className="bg-blue-500 text-white px-2 py-1 rounded-md">Execute FMP</button>
       <table className="table">
         <thead className="tableHeader">
           <tr>

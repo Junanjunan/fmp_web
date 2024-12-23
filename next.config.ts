@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     DB_PASSWORD: isProduction ? env.PRODUCTION_DB_PASSWORD : env.LOCAL_DB_PASSWORD,
     DB_PORT: isProduction ? env.PRODUCTION_DB_PORT : env.LOCAL_DB_PORT,
     SERVER_URL: isProduction ? env.PRODUCTION_SERVER_URL : env.LOCAL_SERVER_URL,
+    FMP_ROOT: env.FMP_ROOT,
   }
 };
 
