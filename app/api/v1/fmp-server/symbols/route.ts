@@ -17,8 +17,13 @@ export async function POST(request: Request) {
         ], 
         {
           cwd: process.env.FMP_ROOT,
+          detached: true, // Make the process independent
+          stdio: ['ignore', 'pipe', 'pipe'] // Prevent the parent process from blocking the child
         },
       );
+
+      // Unref the child process from the parent
+      childProcess.unref();
 
       let dataString = '';
       let errorString = '';
