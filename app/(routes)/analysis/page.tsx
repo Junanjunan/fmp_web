@@ -16,12 +16,13 @@ const AnalysisPage = () => {
   const [exchanges, setExchanges] = useState<ExchangesByCountry>([]);
   const [selectedTypeIds, setSelectedTypeIds] = useState<TypeRow["id"][]>([]);
   const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
-  const [years, setYears] = useState<number[]>([]);
+  const [yearsOfTable, setYearsOfTable] = useState<number[]>([]);
+  const [totalYears, setTotalYears] = useState<number[]>([]);
   const [selectedYearCount, setSelectedYearCount] = useState<string | number>(5);
   const [symbolGrowths, setSymbolGrowths] = useState<GrowthOfSymbols>({});
   const [isLoading, setIsLoading] = useState(false);
   const [minimumGrowth, setMinimumGrowth] = useState<number>(5);
-  const filteredYears = years.slice(0, Number(selectedYearCount));
+  const filteredYears = yearsOfTable.slice(0, Number(selectedYearCount));
   const defaultCheckedTypes = ["stock"];
   const defaultCheckedExchanges = ["NASDAQ", "NYSE"];
 
@@ -33,7 +34,7 @@ const AnalysisPage = () => {
   }, []);
 
   useEffect(() => {
-    setYears(years.slice(0, Number(selectedYearCount)));
+    setYearsOfTable(yearsOfTable.slice(0, Number(selectedYearCount)));
   }, [selectedYearCount]);
 
   const setSearchFilters = async () => {
@@ -56,7 +57,8 @@ const AnalysisPage = () => {
 
   const setYearsRows = async () => {
     const years = await requestGet('years');
-    setYears(years);
+    setTotalYears(years);
+    setYearsOfTable(years);
   }
 
   const handleTypeChange = (selected: TypeRow["id"][]) => {
@@ -108,7 +110,7 @@ const AnalysisPage = () => {
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
       <SearchedCount />
       <Select
-        options={years.map((_, index) => index+1)}
+        options={totalYears.map((_, index) => index+1)}
         value={selectedYearCount}
         onChange={handleYearCountChange}
         title="Year Count"
@@ -124,7 +126,7 @@ const AnalysisPage = () => {
       <RevenueTable
         filteredYears={filteredYears}
         symbolGrowths={symbolGrowths}
-        years={years}
+        years={yearsOfTable}
         minimumGrowth={minimumGrowth}
       />
     </main>
