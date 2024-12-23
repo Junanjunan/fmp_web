@@ -60,6 +60,9 @@ export const RevenueTable = (
     if (!yearsOfSymbol.includes(thirdYear)) {
       return false;
     }
+    if (Number(growthArray.at(-1)?.year) > Number(years.at(-1))) {
+      return false;
+    }
     for (let i = 0; i < growthArray.length; i++) {
       for (const year of years) {
         if (growthArray[i].year == year) {

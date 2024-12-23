@@ -34,8 +34,8 @@ const AnalysisPage = () => {
   }, []);
 
   useEffect(() => {
-    setYearsOfTable(yearsOfTable.slice(0, Number(selectedYearCount)));
-  }, [selectedYearCount]);
+    setYearsOfTable(totalYears.slice(0, Number(selectedYearCount)));
+  }, [selectedYearCount, totalYears]);
 
   const setSearchFilters = async () => {
     const searchFilters = await requestGet('search-filters');
