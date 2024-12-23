@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GrowthOfSymbols, SortedSymbolGrowths } from '@/types';
+import { Button } from '@/app/components/client/UI';
 
 
 export const RevenueTable = (
@@ -10,12 +11,17 @@ export const RevenueTable = (
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const executeFMP = async () => {
+    const symbolsToBeAnalyzed = filteredSymbols.map(symbol => symbol[0]);
     try {
       const response = await fetch('/api/v1/fmp-server/symbols', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          params: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          params: {
+            filePath: 'services.subprocess',
+            method: 'update_filtered_symbols',
+            symbols: symbolsToBeAnalyzed
+          },
         }),
       });
       const data = await response.json();
@@ -94,7 +100,7 @@ export const RevenueTable = (
   return (
     <div>
       <span>{filteredSymbols.length} symbols found</span>
-      <button onClick={executeFMP} className="bg-blue-500 text-white px-2 py-1 rounded-md">Execute FMP</button>
+      <Button onClick={executeFMP} title="Refresh Filtered Symbols" isLoading={false} />
       <table className="table">
         <thead className="tableHeader">
           <tr>
