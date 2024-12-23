@@ -92,7 +92,8 @@ export const getFilteredSymbolsProfiles = async(
     FROM symbols s
     LEFT JOIN symbol_profiles sp ON s.id = sp.symbol
     WHERE s.type_id IN (${typeIds.map(id => `'${id}'`).join(',')})
-    AND s.exchange_id IN (${exchangeIds.map(id => `'${id}'`).join(',')});
+    AND s.exchange_id IN (${exchangeIds.map(id => `'${id}'`).join(',')})
+    AND sp.is_actively_trading = true;
   `;
   const result = await query(sql);
   return result.rows;
