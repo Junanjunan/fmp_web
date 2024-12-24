@@ -1,5 +1,6 @@
 import { SymbolRow, SymbolProfileRow, IncomeStatementRow } from "@/types";
 import { formatDate } from "@/lib/date";
+import { getGrowthArray } from "@/lib/analysis";
 
 export const BasicInfoTable = ({ symbolRow }: { symbolRow: SymbolRow }) => {
   return (
@@ -101,9 +102,12 @@ export const SymbolProfilesTable = (
   );
 }
 
-export const IncomeStatementsTable = (
+export const IncomeStatementsTable = async (
   { incomeStatementsRows }: { incomeStatementsRows: IncomeStatementRow[] }
 ) => {
+  const revenueGrowthArray = await getGrowthArray(incomeStatementsRows, 'revenue');
+  const operatingIncomeGrowthArray = await getGrowthArray(incomeStatementsRows, 'operating_income');
+  const netIncomeGrowthArray = await getGrowthArray(incomeStatementsRows, 'net_income');
   return (
     <div className="mt-10 mb-10">
       <h2 className="text-xl">Income Statements</h2>
@@ -123,6 +127,12 @@ export const IncomeStatementsTable = (
             <td className="tableCell">Revenue</td>
             {incomeStatementsRows.map((row) => (
               <td className="tableCell">{row.revenue}</td>
+            ))}
+          </tr>
+          <tr>
+            <td className="tableCell">Revenue Growth(%)</td>
+            {revenueGrowthArray.map((row) => (
+              <td className="tableCell">{row.growth}</td>
             ))}
           </tr>
           <tr>
@@ -150,9 +160,21 @@ export const IncomeStatementsTable = (
             ))}
           </tr>
           <tr>
+            <td className="tableCell">Operating Income Growth(%)</td>
+            {operatingIncomeGrowthArray.map((row) => (
+              <td className="tableCell">{row.growth}</td>
+            ))}
+          </tr>
+          <tr>
             <td className="tableCell">Net Income Ratio</td>
             {incomeStatementsRows.map((row) => (
               <td className="tableCell">{row.net_income_ratio}</td>
+            ))}
+          </tr>
+          <tr>
+            <td className="tableCell">Net Income Growth(%)</td>
+            {netIncomeGrowthArray.map((row) => (
+              <td className="tableCell">{row.growth}</td>
             ))}
           </tr>
         </tbody>
