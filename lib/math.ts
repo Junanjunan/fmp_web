@@ -14,3 +14,10 @@ export const getGrowth = (
   growth = parseFloat(growth.toFixed(2));
   return growth
 }
+
+export const getPercentageNumber = (
+  value: number | string, decimalPlaces: number = 2
+): number => {
+  const percentage = parseFloat(value as string) * 100;
+  return parseFloat(percentage.toFixed(decimalPlaces));
+}

@@ -1,6 +1,7 @@
 import { SymbolRow, SymbolProfileRow, IncomeStatementRow } from "@/types";
 import { formatDate } from "@/lib/date";
 import { getGrowthArray } from "@/lib/analysis";
+import { getPercentageNumber } from "@/lib/math";
 
 export const BasicInfoTable = ({ symbolRow }: { symbolRow: SymbolRow }) => {
   return (
@@ -148,15 +149,19 @@ export const IncomeStatementsTable = async (
             ))}
           </tr>
           <tr>
-            <td className="tableCell">Gross Profit Ratio</td>
+            <td className="tableCell">Gross Profit Ratio(%)</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">{row.gross_profit_ratio}</td>
+              <td className="tableCell">
+                {getPercentageNumber(row.gross_profit_ratio as number)}
+              </td>
             ))}
           </tr>
           <tr>
-            <td className="tableCell">Operating Income Ratio</td>
+            <td className="tableCell">Operating Income Ratio(%)</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">{row.operating_income_ratio}</td>
+              <td className="tableCell">
+                {getPercentageNumber(row.operating_income_ratio as number)}
+              </td>
             ))}
           </tr>
           <tr>
@@ -166,9 +171,11 @@ export const IncomeStatementsTable = async (
             ))}
           </tr>
           <tr>
-            <td className="tableCell">Net Income Ratio</td>
+            <td className="tableCell">Net Income Ratio(%)</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">{row.net_income_ratio}</td>
+              <td className="tableCell">
+                {getPercentageNumber(row.net_income_ratio as number)}
+              </td>
             ))}
           </tr>
           <tr>
