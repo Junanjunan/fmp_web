@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       console.log(`No income statements found for ${id}`);
       continue;
     }
-    const revenueGrowthArray = await getGrowthArray(id, 'revenue');
+    const revenueGrowthArray = await getGrowthArray(incomeStatements, 'revenue');
 
     const latestIncomeStatement = incomeStatements.reduce((max, current) => {
       return new Date(current.date) > new Date(max.date) ? current : max;

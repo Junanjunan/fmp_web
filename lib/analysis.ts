@@ -1,13 +1,11 @@
-import { getIncomeStatement } from '@/lib/sql';
-import { SymbolRow, IncomeStatementRow, GrowthArray } from '@/types';
+import { IncomeStatementRow, GrowthArray } from '@/types';
 import { getGrowth } from '@/lib/math';
 
 
 export const getGrowthArray = async (
-  symbol: SymbolRow["id"],
+  incomeStatements: IncomeStatementRow[],
   attribute: keyof IncomeStatementRow
 ): Promise<GrowthArray[]> => {
-  const incomeStatements = await getIncomeStatement(symbol);
   const growthArray: GrowthArray[] = [];
   for (let i = 0; i < incomeStatements.length - 1; i++) {
     const currentYear: IncomeStatementRow = incomeStatements[i];
@@ -21,7 +19,7 @@ export const getGrowthArray = async (
         currentValue = parseFloat(currentValue as string);
         previousValue = parseFloat(previousValue as string);
       } catch (error) {
-        console.error(`Error parsing ${attribute} for ${symbol}:`, error);
+        console.error(`Error parsing ${attribute} for income_statements:`, error);
         continue;
       }
     }
