@@ -14,8 +14,11 @@ export const RevenueTable = (
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
-    setSortedSymbolGrowths(_sortedSymbolGrowths);
-  }, [symbolGrowths])
+    if (sortedSymbolGrowths.length > 0) {
+      return;
+    }
+    setSortedSymbolGrowths(getSortedSymbolGrowths());
+  }, [symbolGrowths]);
 
   const executeFMP = async () => {
     const confirm = window.confirm('Are you sure you want to refresh the filtered symbols?');
@@ -52,33 +55,36 @@ export const RevenueTable = (
     }
   };
 
-  const _sortedSymbolGrowths: SortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
-    if (!sortColumn) {
+  function getSortedSymbolGrowths() {
+    const _sortedSymbolGrowths: SortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
+      if (!sortColumn) {
+        return 0;
+      }
+  
+      if (sortColumn === 'exchange') {
+        return sortDirection === 'asc' 
+          ? a[1].exchange_id.localeCompare(b[1].exchange_id)
+          : b[1].exchange_id.localeCompare(a[1].exchange_id);
+      }
+  
+      if (sortColumn === 'psRatio') {
+        return sortDirection === 'asc' 
+          ? a[1].psRatio - b[1].psRatio
+          : b[1].psRatio - a[1].psRatio;
+      }
+  
+      // For year columns
+      const yearNum = parseInt(sortColumn);
+      if (!isNaN(yearNum)) {
+        const aGrowth = a[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
+        const bGrowth = b[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
+        return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+      }
+  
       return 0;
-    }
-
-    if (sortColumn === 'exchange') {
-      return sortDirection === 'asc' 
-        ? a[1].exchange_id.localeCompare(b[1].exchange_id)
-        : b[1].exchange_id.localeCompare(a[1].exchange_id);
-    }
-
-    if (sortColumn === 'psRatio') {
-      return sortDirection === 'asc' 
-        ? a[1].psRatio - b[1].psRatio
-        : b[1].psRatio - a[1].psRatio;
-    }
-
-    // For year columns
-    const yearNum = parseInt(sortColumn);
-    if (!isNaN(yearNum)) {
-      const aGrowth = a[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
-      const bGrowth = b[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
-      return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
-    }
-
-    return 0;
-  });
+    });
+    return _sortedSymbolGrowths;
+  }
 
   const toggleArrow = (column: string) => {
     if (sortColumn === column) {

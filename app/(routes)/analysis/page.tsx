@@ -21,6 +21,7 @@ const AnalysisPage = () => {
     symbolGrowths, setSymbolGrowths,
     minimumGrowth, setMinimumGrowth,
     selectedYearCount, setSelectedYearCount,
+    setSortedSymbolGrowths,
   } = useAnalysisStore();
   const [isLoading, setIsLoading] = useState(false);
   const filteredYears = yearsOfTable.slice(0, Number(selectedYearCount));
@@ -69,6 +70,9 @@ const AnalysisPage = () => {
   };
 
   const handleSubmit = async () => {
+    // Table can be fulfilled after search when sortedSymbolGrowths is empty
+    // app/components/client/IncomeStatement.tsx 17 line: if (sortedSymbolGrowths.length > 0)
+    setSortedSymbolGrowths([]);
     setIsLoading(true);
     const data = {
       typeIds: selectedTypeIds,
