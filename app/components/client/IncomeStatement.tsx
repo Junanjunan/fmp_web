@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { GrowthOfSymbols, SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
+import Link from 'next/link';
 
 
 export const RevenueTable = (
@@ -142,7 +143,9 @@ export const RevenueTable = (
         <tbody>
           {filteredSymbols.map(([symbol, { type_id, exchange_id, growthArray, psRatio }]) => (
             <tr key={symbol}>
-              <td className="tableCell">{symbol}</td>
+              <td className="tableCell">
+                <Link href={`/analysis/${symbol}`}>{symbol}</Link>
+              </td>
               <td className="tableCell">{type_id}</td>
               <td className="tableCell">{exchange_id}</td>
               <td className="tableCell">{psRatio}</td>
