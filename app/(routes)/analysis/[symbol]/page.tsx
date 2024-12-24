@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { query } from '@/lib/db';
+import {
+  getSymbol, getIncomeStatement, getSymbolProfile
+} from '@/lib/sql';
 import {
   BasicInfoTable, SymbolProfilesTable, IncomeStatementsTable
 } from '@/app/components/server/Symbol';
@@ -11,18 +13,12 @@ const SymbolPage = async (
 ) => {
   const { symbol } = await params;
   const [
-    resultSymbols, resultSymbolProfiles, resultIncomeStatements
+    symbolRow, symbolProfilesRow, incomeStatementsRows
   ] = await Promise.all([
-    query('SELECT * FROM symbols WHERE id = $1', [symbol]),
-    query('SELECT * FROM symbol_profiles WHERE symbol = $1', [symbol]),
-    query(
-      'SELECT * FROM income_statements WHERE symbol = $1 ORDER BY date DESC',
-      [symbol]
-    ),
+    getSymbol(symbol),
+    getSymbolProfile(symbol),
+    getIncomeStatement(symbol)
   ]);
-  const symbolRow = resultSymbols.rows[0];
-  const symbolProfilesRow = resultSymbolProfiles.rows[0];
-  const incomeStatementsRows = resultIncomeStatements.rows;
 
   return (
     <div>

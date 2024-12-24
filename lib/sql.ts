@@ -24,6 +24,14 @@ export const getExchanges = async (
   return result.rows;
 }
 
+export const getSymbol = async (
+  symbol: dbTypes.SymbolRow['id']
+): Promise<dbTypes.SymbolRow> => {
+  const sql = `SELECT * FROM symbols WHERE id = $1`;
+  const result = await query(sql, [symbol]);
+  return result.rows[0];
+}
+
 export const getSymbols = async (
   symbols: dbTypes.SymbolRow['id'][] | null = null
 ): Promise<dbTypes.SymbolRow[]> => {
@@ -81,6 +89,14 @@ export const getYearsOfIncomeStatements = async (): Promise<number[]> => {
   `;
   const result = await query(sql);
   return result.rows.map((row: { extract: number }) => row.extract);
+}
+
+export const getSymbolProfile = async (
+  symbol: dbTypes.SymbolRow['id']
+): Promise<dbTypes.SymbolProfileRow> => {
+  const sql = `SELECT * FROM symbol_profiles WHERE symbol = $1`;
+  const result = await query(sql, [symbol]);
+  return result.rows[0];
 }
 
 export const getFilteredSymbolsProfiles = async(
