@@ -6,31 +6,30 @@ import {
 } from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
-import {
-  TypeRow, ExchangeRow, ExchangesByCountry, GrowthOfSymbols
-} from '@/types';
+import { TypeRow, ExchangeRow, ExchangesByCountry } from '@/types';
+import { useAnalysisStore } from '@/app/stores/useStore';
 
 
 const AnalysisPage = () => {
-  const [typeIds, setTypeIds] = useState<TypeRow["id"][]>([]);
-  const [exchanges, setExchanges] = useState<ExchangesByCountry>([]);
-  const [selectedTypeIds, setSelectedTypeIds] = useState<TypeRow["id"][]>([]);
-  const [selectedExchangeIds, setSelectedExchangeIds] = useState<ExchangeRow["id"][]>([]);
-  const [yearsOfTable, setYearsOfTable] = useState<number[]>([]);
-  const [totalYears, setTotalYears] = useState<number[]>([]);
-  const [selectedYearCount, setSelectedYearCount] = useState<string | number>(5);
-  const [symbolGrowths, setSymbolGrowths] = useState<GrowthOfSymbols>({});
+  const {
+    typeIds, setTypeIds,
+    exchanges, setExchanges,
+    selectedTypeIds, setSelectedTypeIds,
+    selectedExchangeIds, setSelectedExchangeIds,
+    yearsOfTable, setYearsOfTable,
+    totalYears, setTotalYears,
+    symbolGrowths, setSymbolGrowths,
+    minimumGrowth, setMinimumGrowth,
+    selectedYearCount, setSelectedYearCount,
+  } = useAnalysisStore();
   const [isLoading, setIsLoading] = useState(false);
-  const [minimumGrowth, setMinimumGrowth] = useState<number>(5);
   const filteredYears = yearsOfTable.slice(0, Number(selectedYearCount));
-  const defaultCheckedTypes = ["stock"];
-  const defaultCheckedExchanges = ["NASDAQ", "NYSE"];
 
   useEffect(() => {
     setSearchFilters();
     setYearsRows();
-    setSelectedTypeIds(defaultCheckedTypes);
-    setSelectedExchangeIds(defaultCheckedExchanges);
+    setSelectedTypeIds(selectedTypeIds);
+    setSelectedExchangeIds(selectedExchangeIds);
   }, []);
 
   useEffect(() => {
@@ -98,13 +97,13 @@ const AnalysisPage = () => {
       <CheckboxList
         attributes={typeIds}
         title="Types"
-        defaultChecked={defaultCheckedTypes}
+        defaultChecked={selectedTypeIds}
         onChange={handleTypeChange}
       />
       <CheckboxObjectList
         attributes={exchanges}
         title="Exchanges"
-        defaultChecked={defaultCheckedExchanges}
+        defaultChecked={selectedExchangeIds}
         onChange={handleExchangeChange}
       />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />

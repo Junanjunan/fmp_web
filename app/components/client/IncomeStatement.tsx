@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GrowthOfSymbols, SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
+import { useAnalysisStore } from '@/app/stores/useStore';
 
 
 export const RevenueTable = (
   { filteredYears, symbolGrowths, years, minimumGrowth }: 
   { filteredYears: number[], symbolGrowths: GrowthOfSymbols, years: number[], minimumGrowth: number }
 ) => {
+  const { sortedSymbolGrowths, setSortedSymbolGrowths } = useAnalysisStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  useEffect(() => {
+    setSortedSymbolGrowths(_sortedSymbolGrowths);
+  }, [symbolGrowths])
 
   const executeFMP = async () => {
     const confirm = window.confirm('Are you sure you want to refresh the filtered symbols?');
@@ -46,7 +52,7 @@ export const RevenueTable = (
     }
   };
 
-  const sortedSymbolGrowths: SortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
+  const _sortedSymbolGrowths: SortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
     if (!sortColumn) {
       return 0;
     }
