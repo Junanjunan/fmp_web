@@ -20,14 +20,23 @@ export async function POST(request: Request) {
       continue;
     }
     const revenueGrowthArray = await getGrowthArray(incomeStatements, 'revenue');
-
+    const operatingIncomeRatios = incomeStatements.map(incomeStatement => ({
+      year: incomeStatement.date.getFullYear(),
+      ratio: incomeStatement.operating_income_ratio as number
+    }));
     const latestIncomeStatement = incomeStatements.reduce((max, current) => {
       return new Date(current.date) > new Date(max.date) ? current : max;
     }, incomeStatements[0]);
     const latestRevenue = latestIncomeStatement.revenue ? latestIncomeStatement.revenue : -1;
     const psRatio = Math.round(mkt_cap / latestRevenue * 100) / 100;
 
-    growthOfSymbols[id] = { type_id, exchange_id, psRatio, growthArray: revenueGrowthArray };
+    growthOfSymbols[id] = {
+      type_id,
+      exchange_id,
+      psRatio,
+      growthArray: revenueGrowthArray,
+      operatingIncomeRatios,
+    };
   }
 
   return NextResponse.json(growthOfSymbols);

@@ -3,6 +3,7 @@ import { GrowthOfSymbols, SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore } from '@/app/stores/useStore';
+import { getPercentageNumber } from "@/lib/math";
 
 
 export const RevenueTable = (
@@ -145,8 +146,18 @@ export const RevenueTable = (
               PS Ratio{toggleArrow('psRatio')}
             </th>
             <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth</th>
+            <th className="tableCell" colSpan={filteredYears.length}>Operating Income Ratio</th>
           </tr>
           <tr>
+            {filteredYears.map((year) => (
+              <th
+                key={year}
+                className="tableCell cursor-pointer"
+                onClick={() => handleSort(year.toString())}
+              >
+                {year}{toggleArrow(year.toString())}
+              </th>
+            ))}
             {filteredYears.map((year) => (
               <th
                 key={year}
@@ -159,7 +170,10 @@ export const RevenueTable = (
           </tr>
         </thead>
         <tbody>
-          {filteredSymbols.map(([symbol, { type_id, exchange_id, growthArray, psRatio }]) => (
+          {filteredSymbols.map(([
+            symbol,
+            { type_id, exchange_id, growthArray, operatingIncomeRatios, psRatio }
+          ]) => (
             <tr key={symbol}>
               <td className="tableCell">
                 <Link href={`/analysis/${symbol}`}>{symbol}</Link>
@@ -172,6 +186,14 @@ export const RevenueTable = (
                   {growthArray.find(growth => growth.year == year)?.growth}
                 </td>
               ))}
+              {filteredYears.map((year, index) => {
+                const OIRatio = operatingIncomeRatios.find(ratio => ratio.year == year)?.ratio;
+                return (
+                  <td key={index} className="tableCell">
+                    {OIRatio ? getPercentageNumber(OIRatio) : ''}
+                  </td>
+                )
+              })}
             </tr>
           ))}
         </tbody>
