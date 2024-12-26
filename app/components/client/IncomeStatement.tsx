@@ -159,8 +159,8 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             >
               PS Ratio{toggleArrow('psRatio')}
             </th>
-            <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth</th>
-            <th className="tableCell" colSpan={filteredYears.length}>Operating Income Ratio</th>
+            <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth(%)</th>
+            <th className="tableCell" colSpan={filteredYears.length}>Operating Income Ratio(%)</th>
           </tr>
           <tr>
             {filteredYears.map((year) => (
