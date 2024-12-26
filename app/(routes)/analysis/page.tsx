@@ -20,6 +20,7 @@ const AnalysisPage = () => {
     totalYears, setTotalYears,
     symbolGrowths, setSymbolGrowths,
     minimumGrowth, setMinimumGrowth,
+    minimumOperatingIncomeRatio, setMinimumOperatingIncomeRatio,
     selectedYearCount, setSelectedYearCount,
     setSortedSymbolGrowths,
   } = useAnalysisStore();
@@ -125,6 +126,13 @@ const AnalysisPage = () => {
         onChange={(e) => setMinimumGrowth(Number(e.target.value))}
         title="Minimum Growth(%)"
         id="growthLimit"
+      />
+      <InputText
+        inputType="number"
+        value={minimumOperatingIncomeRatio}
+        onChange={(e) => setMinimumOperatingIncomeRatio(Number(e.target.value))}
+        title="Minimum Operating Income Ratio(%)"
+        id="operatingIncomeRatioLimit"
       />
       <RevenueTable filteredYears={filteredYears} />
     </main>

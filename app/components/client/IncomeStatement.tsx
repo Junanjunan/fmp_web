@@ -8,7 +8,7 @@ import { getPercentageNumber } from "@/lib/math";
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
   const {
-    symbolGrowths, yearsOfTable, minimumGrowth,
+    symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
     sortedSymbolGrowths, setSortedSymbolGrowths,
   } = useAnalysisStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -97,6 +97,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
 
   const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
     const growthArray = symbolData[1].growthArray;
+    const OIRatios = symbolData[1].operatingIncomeRatios;
     const thirdYear = Number(yearsOfTable[2]);
     const yearsOfSymbol = growthArray.map(growth => growth.year);
     if (!yearsOfSymbol.includes(thirdYear)) {
@@ -109,6 +110,9 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       for (const year of yearsOfTable) {
         if (growthArray[i].year == year) {
           if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
+            return false;
+          }
+          if (!OIRatios[i].ratio || OIRatios[i].ratio < minimumOperatingIncomeRatio) {
             return false;
           }
         }

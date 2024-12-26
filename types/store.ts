@@ -15,6 +15,7 @@ export interface AnalysisStore {
   sortedSymbolGrowths: SortedSymbolGrowths;
   selectedYearCount: string | number;
   minimumGrowth: number;
+  minimumOperatingIncomeRatio: number;
 
   setTypeIds: (typeIds: TypeRow["id"][]) => void;
   setExchanges: (exchanges: ExchangesByCountry) => void;
@@ -26,5 +27,6 @@ export interface AnalysisStore {
   setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSelectedYearCount: (selectedYearCount: string | number) => void;
   setMinimumGrowth: (minimumGrowth: number) => void;
+  setMinimumOperatingIncomeRatio: (minimumOperatingIncomeRatio: number) => void;
   reset: () => void;
 }
