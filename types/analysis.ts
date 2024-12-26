@@ -23,11 +23,5 @@ export interface GrowthOfSymbols {
 
 export type SortedSymbolGrowths = [
   SymbolRow["id"],
-  {
-    type_id: TypeRow["id"],
-    exchange_id: ExchangeRow["id"],
-    psRatio: number;
-    growthArray: GrowthArray[],
-    operatingIncomeRatios: RatioArray[],
-  }
+  GrowthOfSymbols[SymbolRow["id"]]
 ][];
