@@ -3,7 +3,6 @@ import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore } from '@/app/stores/useStore';
-import { getPercentageNumber } from "@/lib/math";
 
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
@@ -194,7 +193,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
                 const OIRatio = operatingIncomeRatios.find(ratio => ratio.year == year)?.ratio;
                 return (
                   <td key={index} className="tableCell">
-                    {OIRatio ? getPercentageNumber(OIRatio) : ''}
+                    {OIRatio}
                   </td>
                 )
               })}

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { FilteredIds } from '@/types/db';
 import { getFilteredSymbolsProfiles, getIncomeStatement } from '@/lib/sql';
 import { getGrowthArray } from '@/lib/analysis';
+import { getPercentageNumber } from '@/lib/math';
 import { GrowthOfSymbols } from '@/types/analysis';
 
 
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
     const revenueGrowthArray = await getGrowthArray(incomeStatements, 'revenue');
     const operatingIncomeRatios = incomeStatements.map(incomeStatement => ({
       year: incomeStatement.date.getFullYear(),
-      ratio: incomeStatement.operating_income_ratio as number
+      ratio: getPercentageNumber(incomeStatement.operating_income_ratio as number)
     }));
     const latestIncomeStatement = incomeStatements.reduce((max, current) => {
       return new Date(current.date) > new Date(max.date) ? current : max;
