@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SelectProps } from '@/types';
 
+
 export const CheckboxList = (
   { attributes, title, defaultChecked, onChange }: 
   {

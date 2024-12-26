@@ -61,19 +61,19 @@ export const RevenueTable = (
       if (!sortColumn) {
         return 0;
       }
-  
+
       if (sortColumn === 'exchange') {
         return sortDirection === 'asc' 
           ? a[1].exchange_id.localeCompare(b[1].exchange_id)
           : b[1].exchange_id.localeCompare(a[1].exchange_id);
       }
-  
+
       if (sortColumn === 'psRatio') {
         return sortDirection === 'asc' 
           ? a[1].psRatio - b[1].psRatio
           : b[1].psRatio - a[1].psRatio;
       }
-  
+
       // For year columns
       const yearNum = parseInt(sortColumn);
       if (!isNaN(yearNum)) {
@@ -81,7 +81,7 @@ export const RevenueTable = (
         const bGrowth = b[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
         return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
       }
-  
+
       return 0;
     });
     return _sortedSymbolGrowths;

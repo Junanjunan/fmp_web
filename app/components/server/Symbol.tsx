@@ -3,6 +3,7 @@ import { formatDate } from "@/lib/date";
 import { getGrowthArray } from "@/lib/analysis";
 import { getPercentageNumber } from "@/lib/math";
 
+
 export const BasicInfoTable = ({ symbolRow }: { symbolRow: SymbolRow }) => {
   return (
     <div className="mt-10 mb-10">
