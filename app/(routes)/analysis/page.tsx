@@ -126,12 +126,7 @@ const AnalysisPage = () => {
         title="Minimum Growth(%)"
         id="growthLimit"
       />
-      <RevenueTable
-        filteredYears={filteredYears}
-        symbolGrowths={symbolGrowths}
-        years={yearsOfTable}
-        minimumGrowth={minimumGrowth}
-      />
+      <RevenueTable filteredYears={filteredYears} />
     </main>
   );
 };

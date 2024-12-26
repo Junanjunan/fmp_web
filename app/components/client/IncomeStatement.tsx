@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import { GrowthOfSymbols, SortedSymbolGrowths } from '@/types';
+import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore } from '@/app/stores/useStore';
 import { getPercentageNumber } from "@/lib/math";
 
 
-export const RevenueTable = (
-  { filteredYears, symbolGrowths, years, minimumGrowth }: 
-  { filteredYears: number[], symbolGrowths: GrowthOfSymbols, years: number[], minimumGrowth: number }
-) => {
-  const { sortedSymbolGrowths, setSortedSymbolGrowths } = useAnalysisStore();
+export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
+  const {
+    symbolGrowths, yearsOfTable, minimumGrowth,
+    sortedSymbolGrowths, setSortedSymbolGrowths,
+  } = useAnalysisStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
@@ -97,16 +97,16 @@ export const RevenueTable = (
 
   const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
     const growthArray = symbolData[1].growthArray;
-    const thirdYear = Number(years[2]);
+    const thirdYear = Number(yearsOfTable[2]);
     const yearsOfSymbol = growthArray.map(growth => growth.year);
     if (!yearsOfSymbol.includes(thirdYear)) {
       return false;
     }
-    if (Number(growthArray.at(-1)?.year) > Number(years.at(-1))) {
+    if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
       return false;
     }
     for (let i = 0; i < growthArray.length; i++) {
-      for (const year of years) {
+      for (const year of yearsOfTable) {
         if (growthArray[i].year == year) {
           if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
             return false;
