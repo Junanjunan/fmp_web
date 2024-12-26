@@ -127,20 +127,25 @@ export const RevenueTable = (
       <table className="table">
         <thead className="tableHeader">
           <tr>
-            <th className="tableCell">Growth (%)</th>
-            <th className="tableCell">Type</th>
+            <th className="tableCell" rowSpan={2}>Growth (%)</th>
+            <th className="tableCell" rowSpan={2}>Type</th>
             <th
               className="tableCell cursor-pointer"
+              rowSpan={2}
               onClick={() => handleSort('exchange')}
             >
               Exchange{toggleArrow('exchange')}
             </th>
             <th
               className="tableCell cursor-pointer"
+              rowSpan={2}
               onClick={() => handleSort('psRatio')}
             >
               PS Ratio{toggleArrow('psRatio')}
             </th>
+            <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth</th>
+          </tr>
+          <tr>
             {filteredYears.map((year) => (
               <th
                 key={year}
