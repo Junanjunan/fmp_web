@@ -15,6 +15,7 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   selectedYearCount: 5,
   minimumGrowth: 5,
   minimumOperatingIncomeRatio: -999,
+  lastClickedSymbol: null,
 
   // Actions
   setTypeIds: (typeIds) => set({ typeIds }),
@@ -28,6 +29,7 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   setSelectedYearCount: (count) => set({ selectedYearCount: count }),
   setMinimumGrowth: (growth) => set({ minimumGrowth: growth }),
   setMinimumOperatingIncomeRatio: (ratio) => set({ minimumOperatingIncomeRatio: ratio }),
+  setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
   reset: () => set({
     typeIds: [],
     exchanges: [],
@@ -39,5 +41,6 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
     sortedSymbolGrowths: [],
     selectedYearCount: 5,
     minimumGrowth: 5,
+    lastClickedSymbol: null,
   })
 }));

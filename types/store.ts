@@ -1,5 +1,5 @@
 import {
-  TypeRow, ExchangeRow, SortedSymbolGrowths,
+  TypeRow, ExchangeRow, SymbolRow, SortedSymbolGrowths,
   ExchangesByCountry, GrowthOfSymbols
 } from '@/types';
 
@@ -16,6 +16,7 @@ export interface AnalysisStore {
   selectedYearCount: string | number;
   minimumGrowth: number;
   minimumOperatingIncomeRatio: number;
+  lastClickedSymbol: SymbolRow["id"] | null;
 
   setTypeIds: (typeIds: TypeRow["id"][]) => void;
   setExchanges: (exchanges: ExchangesByCountry) => void;
@@ -28,5 +29,6 @@ export interface AnalysisStore {
   setSelectedYearCount: (selectedYearCount: string | number) => void;
   setMinimumGrowth: (minimumGrowth: number) => void;
   setMinimumOperatingIncomeRatio: (minimumOperatingIncomeRatio: number) => void;
+  setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   reset: () => void;
 }

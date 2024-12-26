@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
@@ -6,9 +6,11 @@ import { useAnalysisStore } from '@/app/stores/useStore';
 
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
+  const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
     symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
     sortedSymbolGrowths, setSortedSymbolGrowths,
+    lastClickedSymbol, setLastClickedSymbol,
   } = useAnalysisStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -20,6 +22,15 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     }
     setSortedSymbolGrowths(getSortedSymbolGrowths());
   }, [symbolGrowths]);
+
+  useEffect(() => {
+    if (lastClickedSymbol && lastClickedRowRef.current) {
+      lastClickedRowRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [lastClickedSymbol]);
 
   const executeFMP = async () => {
     const confirm = window.confirm('Are you sure you want to refresh the filtered symbols?');
@@ -188,9 +199,18 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             symbol,
             { type_id, exchange_id, growthArray, operatingIncomeRatios, psRatio }
           ]) => (
-            <tr key={symbol}>
+            <tr
+              key={symbol}
+              ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
+              className={lastClickedSymbol === symbol ? 'bg-blue-100' : ''}
+            >
               <td className="tableCell">
-                <Link href={`/analysis/${symbol}`}>{symbol}</Link>
+                <Link
+                  href={`/analysis/${symbol}`}
+                  onClick={() => setLastClickedSymbol(symbol)}
+                >
+                  {symbol}
+                </Link>
               </td>
               <td className="tableCell">{type_id}</td>
               <td className="tableCell">{exchange_id}</td>
