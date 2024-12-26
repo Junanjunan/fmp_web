@@ -53,6 +53,7 @@ export const RevenueTable = (
       setSortColumn(column);
       setSortDirection('desc');
     }
+    setSortedSymbolGrowths(getSortedSymbolGrowths());
   };
 
   function getSortedSymbolGrowths() {
