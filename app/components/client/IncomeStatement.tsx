@@ -12,6 +12,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   } = useAnalysisStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortYearType, setSortYearType] = useState<'revenue' | 'operatingIncome' | null>(null);
 
   useEffect(() => {
     if (sortedSymbolGrowths.length > 0) {
@@ -46,10 +47,13 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     }
   }
 
-  const handleSort = (column: string) => {
+  const handleSort = (column: string, yearType: string | null = null) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
+      if (yearType) {
+        setSortYearType(yearType as 'revenue' | 'operatingIncome'); 
+      }
       setSortColumn(column);
       setSortDirection('desc');
     }
@@ -77,9 +81,16 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       // For year columns
       const yearNum = parseInt(sortColumn);
       if (!isNaN(yearNum)) {
-        const aGrowth = a[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
-        const bGrowth = b[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
-        return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+        if (sortYearType === 'revenue') {
+          const aGrowth = a[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
+          const bGrowth = b[1].growthArray.find(g => g.year === yearNum)?.growth || 0;
+          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+        }
+        if (sortYearType === 'operatingIncome') {
+          const aOIRatio = a[1].operatingIncomeRatios.find(g => g.year === yearNum)?.ratio || 0;
+          const bOIRatio = b[1].operatingIncomeRatios.find(g => g.year === yearNum)?.ratio || 0;
+          return sortDirection === 'asc' ? aOIRatio - bOIRatio : bOIRatio - aOIRatio;
+        }
       }
 
       return 0;
@@ -156,7 +167,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
               <th
                 key={year}
                 className="tableCell cursor-pointer"
-                onClick={() => handleSort(year.toString())}
+                onClick={() => handleSort(year.toString(), 'revenue')}
               >
                 {year}{toggleArrow(year.toString())}
               </th>
@@ -165,7 +176,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
               <th
                 key={year}
                 className="tableCell cursor-pointer"
-                onClick={() => handleSort(year.toString())}
+                onClick={() => handleSort(year.toString(), 'operatingIncome')}
               >
                 {year}{toggleArrow(year.toString())}
               </th>
