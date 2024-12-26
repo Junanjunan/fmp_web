@@ -96,7 +96,11 @@ export const SymbolProfilesTable = (
           </tr>
           <tr>
             <td className="tableCell">Website</td>
-            <td className="tableCell">{symbolProfilesRow.website}</td>
+            <td className="tableCell">
+              <a href={symbolProfilesRow.website} target="_blank" rel="noopener noreferrer">
+                {symbolProfilesRow.website}
+              </a>
+            </td>
           </tr>
         </tbody>
       </table>
