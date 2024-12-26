@@ -127,31 +127,31 @@ export const IncomeStatementsTable = async (
           <tr>
             <td className="tableCell">Revenue</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">{row.revenue}</td>
+              <td key={row.date.toString()} className="tableCell">{row.revenue}</td>
             ))}
           </tr>
           <tr>
             <td className="tableCell">Revenue Growth(%)</td>
-            {revenueGrowthArray.map((row) => (
-              <td className="tableCell">{row.growth}</td>
+            {revenueGrowthArray.map((row, index) => (
+              <td key={index} className="tableCell">{row.growth}</td>
             ))}
           </tr>
           <tr>
             <td className="tableCell">Cost of Revenue</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">{row.cost_of_revenue}</td>
+              <td key={row.date.toString()} className="tableCell">{row.cost_of_revenue}</td>
             ))}
           </tr>
           <tr>
             <td className="tableCell">Gross Profit</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">{row.gross_profit}</td>
+              <td key={row.date.toString()} className="tableCell">{row.gross_profit}</td>
             ))}
           </tr>
           <tr>
             <td className="tableCell">Gross Profit Ratio(%)</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">
+              <td key={row.date.toString()} className="tableCell">
                 {getPercentageNumber(row.gross_profit_ratio as number)}
               </td>
             ))}
@@ -159,29 +159,29 @@ export const IncomeStatementsTable = async (
           <tr>
             <td className="tableCell">Operating Income Ratio(%)</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">
+              <td key={row.date.toString()} className="tableCell">
                 {getPercentageNumber(row.operating_income_ratio as number)}
               </td>
             ))}
           </tr>
           <tr>
             <td className="tableCell">Operating Income Growth(%)</td>
-            {operatingIncomeGrowthArray.map((row) => (
-              <td className="tableCell">{row.growth}</td>
+            {operatingIncomeGrowthArray.map((row, index) => (
+              <td key={index} className="tableCell">{row.growth}</td>
             ))}
           </tr>
           <tr>
             <td className="tableCell">Net Income Ratio(%)</td>
             {incomeStatementsRows.map((row) => (
-              <td className="tableCell">
+              <td key={row.date.toString()} className="tableCell">
                 {getPercentageNumber(row.net_income_ratio as number)}
               </td>
             ))}
           </tr>
           <tr>
             <td className="tableCell">Net Income Growth(%)</td>
-            {netIncomeGrowthArray.map((row) => (
-              <td className="tableCell">{row.growth}</td>
+            {netIncomeGrowthArray.map((row, index) => (
+              <td key={index} className="tableCell">{row.growth}</td>
             ))}
           </tr>
         </tbody>
