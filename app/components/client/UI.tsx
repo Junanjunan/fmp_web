@@ -159,7 +159,8 @@ export const InputText = (
     <label htmlFor={id} className="mr-4 mt-4">{title}: </label>
     <input
       type={inputType}
-      value={value}
+      value={value === 0 && inputType === 'number' ? '' : value}
+      placeholder={inputType === 'number' ? 'Empty means 0' : ''}
       onChange={onChange}
       id={id}
       className="border border-gray-300 px-2 py-1 mt-5"
