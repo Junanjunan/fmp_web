@@ -9,9 +9,9 @@ datasource db {
 
 model auth_user {
   id              Int           @id @default(autoincrement())
-  name            String
   email           String        @unique
   email_verified  DateTime?
+  name            String?
   image           String?
   hashed_password String?       // Optional because OAuth users won't have passwords
   created_at      DateTime      @default(now())

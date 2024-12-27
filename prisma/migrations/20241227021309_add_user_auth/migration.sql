@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE "auth_user" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "email_verified" TIMESTAMP(3),
+    "name" TEXT,
     "image" TEXT,
     "hashed_password" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
