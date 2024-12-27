@@ -7,6 +7,52 @@ datasource db {
   url      = env("LOCAL_DB_URL")
 }
 
+model auth_User {
+  id             Int           @id @default(autoincrement())
+  name           String
+  email          String        @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?       // Optional because OAuth users won't have passwords
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Relations
+  socialLogins  auth_SocialLogin[]
+  refreshTokens  auth_RefreshToken[]
+}
+
+// For OAuth providers (Google, GitHub, etc.)
+model auth_SocialLogin {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  provider         String   // "google", "github", etc.
+  providerUserId   String   // Changed from providerAccountId for clarity
+  providerType     String   // "oauth2", "oidc", etc.
+  accessToken      String?  @db.Text  // Changed from snake_case to camelCase
+  refreshToken     String?  @db.Text
+  expiresAt        Int?
+  tokenType        String?
+  scope            String?
+  idToken          String?  @db.Text
+  sessionState     String?
+
+  user auth_User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+}
+
+model auth_RefreshToken {
+  id        Int         @id @default(autoincrement())
+  token     String      @unique
+  userId    Int
+  user      auth_User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime    @default(now())
+  isRevoked Boolean     @default(false)
+  deviceInfo String?
+}
+
 model countries {
   id        String      @id @db.VarChar(20)
   name      String      @db.VarChar(50)
