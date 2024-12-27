@@ -18,3 +18,10 @@ export const requestAnalysis = async (data: FilteredIds) => {
   const response = await serverApi.post('/analysis', data);
   return response.data;
 }
+
+export const requestSignup = async (
+  data: { email: string, password: string, passwordConfirm: string }
+) => {
+  const response = await serverApi.post('/auth/signup', data);
+  return response.data;
+}
