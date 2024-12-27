@@ -1,46 +1,46 @@
 -- CreateTable
-CREATE TABLE "auth_User" (
+CREATE TABLE "auth_user" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "emailVerified" TIMESTAMP(3),
+    "email_verified" TIMESTAMP(3),
     "image" TEXT,
-    "hashedPassword" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "hashed_password" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "auth_User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "auth_SocialLogin" (
+CREATE TABLE "auth_social_login" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "user_id" INTEGER NOT NULL,
     "provider" TEXT NOT NULL,
-    "providerUserId" TEXT NOT NULL,
-    "providerType" TEXT NOT NULL,
-    "accessToken" TEXT,
-    "refreshToken" TEXT,
-    "expiresAt" INTEGER,
-    "tokenType" TEXT,
+    "provider_user_id" TEXT NOT NULL,
+    "provider_type" TEXT NOT NULL,
+    "access_token" TEXT,
+    "refresh_token" TEXT,
+    "expires_at" INTEGER,
+    "token_type" TEXT,
     "scope" TEXT,
-    "idToken" TEXT,
-    "sessionState" TEXT,
+    "id_token" TEXT,
+    "session_state" TEXT,
 
-    CONSTRAINT "auth_SocialLogin_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_social_login_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "auth_RefreshToken" (
+CREATE TABLE "auth_refresh_token" (
     "id" SERIAL NOT NULL,
     "token" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "isRevoked" BOOLEAN NOT NULL DEFAULT false,
-    "deviceInfo" TEXT,
+    "user_id" INTEGER NOT NULL,
+    "expires_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "is_revoked" BOOLEAN NOT NULL DEFAULT false,
+    "device_info" TEXT,
 
-    CONSTRAINT "auth_RefreshToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_refresh_token_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -178,19 +178,19 @@ CREATE TABLE "types" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "auth_User_email_key" ON "auth_User"("email");
+CREATE UNIQUE INDEX "auth_user_email_key" ON "auth_user"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "auth_SocialLogin_provider_providerUserId_key" ON "auth_SocialLogin"("provider", "providerUserId");
+CREATE UNIQUE INDEX "auth_social_login_provider_provider_user_id_key" ON "auth_social_login"("provider", "provider_user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "auth_RefreshToken_token_key" ON "auth_RefreshToken"("token");
+CREATE UNIQUE INDEX "auth_refresh_token_token_key" ON "auth_refresh_token"("token");
 
 -- AddForeignKey
-ALTER TABLE "auth_SocialLogin" ADD CONSTRAINT "auth_SocialLogin_userId_fkey" FOREIGN KEY ("userId") REFERENCES "auth_User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "auth_social_login" ADD CONSTRAINT "auth_social_login_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "auth_RefreshToken" ADD CONSTRAINT "auth_RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "auth_User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "auth_refresh_token" ADD CONSTRAINT "auth_refresh_token_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "error_symbols" ADD CONSTRAINT "error_symbols_symbol_fkey" FOREIGN KEY ("symbol") REFERENCES "symbols"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

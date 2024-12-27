@@ -7,50 +7,50 @@ datasource db {
   url      = env("LOCAL_DB_URL")
 }
 
-model auth_User {
-  id             Int           @id @default(autoincrement())
-  name           String
-  email          String        @unique
-  emailVerified  DateTime?
-  image          String?
-  hashedPassword String?       // Optional because OAuth users won't have passwords
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+model auth_user {
+  id              Int           @id @default(autoincrement())
+  name            String
+  email           String        @unique
+  email_verified  DateTime?
+  image           String?
+  hashed_password String?       // Optional because OAuth users won't have passwords
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
 
   // Relations
-  socialLogins  auth_SocialLogin[]
-  refreshTokens  auth_RefreshToken[]
+  social_logins  auth_social_login[]
+  refresh_tokens  auth_refresh_token[]
 }
 
 // For OAuth providers (Google, GitHub, etc.)
-model auth_SocialLogin {
+model auth_social_login {
   id               Int      @id @default(autoincrement())
-  userId           Int
+  user_id          Int
   provider         String   // "google", "github", etc.
-  providerUserId   String   // Changed from providerAccountId for clarity
-  providerType     String   // "oauth2", "oidc", etc.
-  accessToken      String?  @db.Text  // Changed from snake_case to camelCase
-  refreshToken     String?  @db.Text
-  expiresAt        Int?
-  tokenType        String?
+  provider_user_id String   // Changed from providerAccountId for clarity
+  provider_type    String   // "oauth2", "oidc", etc.
+  access_token     String?  @db.Text  // Changed from snake_case to camelCase
+  refresh_token    String?  @db.Text
+  expires_at       Int?
+  token_type       String?
   scope            String?
-  idToken          String?  @db.Text
-  sessionState     String?
+  id_token         String?  @db.Text
+  session_state    String?
 
-  user auth_User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user auth_user @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerUserId])
+  @@unique([provider, provider_user_id])
 }
 
-model auth_RefreshToken {
-  id        Int         @id @default(autoincrement())
-  token     String      @unique
-  userId    Int
-  user      auth_User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-  createdAt DateTime    @default(now())
-  isRevoked Boolean     @default(false)
-  deviceInfo String?
+model auth_refresh_token {
+  id          Int         @id @default(autoincrement())
+  token       String      @unique
+  user_id     Int
+  user        auth_user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  expires_at  DateTime
+  created_at  DateTime    @default(now())
+  is_revoked  Boolean     @default(false)
+  device_info String?
 }
 
 model countries {
