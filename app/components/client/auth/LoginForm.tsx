@@ -27,7 +27,7 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        setError('Invalid credentials');
+        setError(result.error);
         return;
       }
 
