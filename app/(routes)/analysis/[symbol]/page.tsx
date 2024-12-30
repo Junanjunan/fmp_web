@@ -5,6 +5,7 @@ import {
 import {
   BasicInfoTable, SymbolProfilesTable, IncomeStatementsTable
 } from '@/app/components/server/Symbol';
+import { WatchlistToggleBtn } from '@/app/components/client/Watchlist/WatchlistToggleBtn';
 
 
 const SymbolPage = async (
@@ -31,6 +32,7 @@ const SymbolPage = async (
       <div className="mt-10">
         <span className="text-xl">Symbol: </span>
         <span className="text-xl font-bold">{symbol}</span>
+        <WatchlistToggleBtn symbol={symbol} />
       </div>
       <BasicInfoTable symbolRow={symbolRow} />
       <SymbolProfilesTable symbolProfilesRow={symbolProfilesRow} />
