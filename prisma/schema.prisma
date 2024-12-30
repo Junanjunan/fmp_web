@@ -20,6 +20,7 @@ model auth_user {
   // Relations
   social_logins  auth_social_login[]
   refresh_tokens  auth_refresh_token[]
+  user_symbols    user_symbols[]
 }
 
 // For OAuth providers (Google, GitHub, etc.)
@@ -175,9 +176,18 @@ model symbols {
   symbol_profiles   symbol_profiles?
   exchanges         exchanges?          @relation(fields: [exchange_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   types             types               @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_symbols      user_symbols[]
 }
 
 model types {
   id      String    @id @db.VarChar(20)
   symbols symbols[]
+}
+
+model user_symbols {
+  id            Int       @id @default(autoincrement())
+  user_email    String
+  symbol_id     String
+  user          auth_user @relation(fields: [user_email], references: [email], onDelete: Cascade)
+  symbols       symbols   @relation(fields: [symbol_id], references: [id], onDelete: Cascade)
 }
