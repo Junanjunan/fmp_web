@@ -8,50 +8,46 @@ datasource db {
 }
 
 model auth_user {
-  id              Int           @id @default(autoincrement())
-  email           String        @unique
+  id              Int                  @id @default(autoincrement())
+  email           String               @unique
   email_verified  DateTime?
   name            String?
   image           String?
-  hashed_password String?       // Optional because OAuth users won't have passwords
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt
-
-  // Relations
-  social_logins  auth_social_login[]
+  hashed_password String?
+  created_at      DateTime             @default(now())
+  updated_at      DateTime             @updatedAt
   refresh_tokens  auth_refresh_token[]
+  social_logins   auth_social_login[]
   user_symbols    user_symbols[]
 }
 
-// For OAuth providers (Google, GitHub, etc.)
 model auth_social_login {
-  id               Int      @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   user_id          Int
-  provider         String   // "google", "github", etc.
-  provider_user_id String   // Changed from providerAccountId for clarity
-  provider_type    String   // "oauth2", "oidc", etc.
-  access_token     String?  @db.Text  // Changed from snake_case to camelCase
-  refresh_token    String?  @db.Text
+  provider         String
+  provider_user_id String
+  provider_type    String
+  access_token     String?
+  refresh_token    String?
   expires_at       Int?
   token_type       String?
   scope            String?
-  id_token         String?  @db.Text
+  id_token         String?
   session_state    String?
-
-  user auth_user @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user             auth_user @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([provider, provider_user_id])
 }
 
 model auth_refresh_token {
-  id          Int         @id @default(autoincrement())
-  token       String      @unique
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
   user_id     Int
-  user        auth_user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   expires_at  DateTime
-  created_at  DateTime    @default(now())
-  is_revoked  Boolean     @default(false)
+  created_at  DateTime  @default(now())
+  is_revoked  Boolean   @default(false)
   device_info String?
+  user        auth_user @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model countries {
@@ -185,9 +181,11 @@ model types {
 }
 
 model user_symbols {
-  id            Int       @id @default(autoincrement())
-  user_email    String
-  symbol_id     String
-  user          auth_user @relation(fields: [user_email], references: [email], onDelete: Cascade)
-  symbols       symbols   @relation(fields: [symbol_id], references: [id], onDelete: Cascade)
+  id         Int       @id @default(autoincrement())
+  user_email String
+  symbol_id  String
+  symbols    symbols   @relation(fields: [symbol_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user       auth_user @relation(fields: [user_email], references: [email], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_email, symbol_id])
 }

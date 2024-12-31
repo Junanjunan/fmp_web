@@ -1,6 +1,7 @@
 import { query } from '@/lib/db';
 import * as dbTypes from '@/types/db';
 import { prisma } from '@/lib/database/prisma';
+import { Prisma } from '@prisma/client';
 
 
 export const getTypes = async (
@@ -131,14 +132,6 @@ export const insertWatchList = async (
   symbol: dbTypes.SymbolRow['id']
 ) => {
   try {
-    const watchlist = await getWatchList(userEmail);
-    if (watchlist.includes(symbol)) {
-      return{
-        success: false,
-        message: 'Symbol is already in watchlist'
-      }
-    }
-
     await prisma.user_symbols.create({
       data: {
         user_email: userEmail,
@@ -148,10 +141,13 @@ export const insertWatchList = async (
 
     return { success: true };
   } catch (e) {
-    console.error(e);
+    let message = 'Inserting into watchlist failed';
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+      message = 'This symbol is already in your watchlist';
+    }
     return {
       success: false,
-      message: 'Inserting into watchlist failed'
+      message: message
     };
   }
 }
@@ -161,8 +157,13 @@ export const deleteWatchList = async (
   symbol: dbTypes.SymbolRow['id']
 ) => {
   try {
-    await prisma.user_symbols.deleteMany({
-      where: { user_email: userEmail, symbol_id: symbol }
+    await prisma.user_symbols.delete({
+      where: {
+        user_email_symbol_id:{
+          user_email: userEmail,
+          symbol_id: symbol
+        } 
+      }
     });
     return { success: true };
   } catch (e) {

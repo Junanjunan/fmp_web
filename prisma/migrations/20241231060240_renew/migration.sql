@@ -177,20 +177,20 @@ CREATE TABLE "types" (
     CONSTRAINT "types_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "user_symbols" (
+    "id" SERIAL NOT NULL,
+    "user_email" TEXT NOT NULL,
+    "symbol_id" TEXT NOT NULL,
+
+    CONSTRAINT "user_symbols_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "auth_user_email_key" ON "auth_user"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "auth_social_login_provider_provider_user_id_key" ON "auth_social_login"("provider", "provider_user_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "auth_refresh_token_token_key" ON "auth_refresh_token"("token");
-
--- AddForeignKey
-ALTER TABLE "auth_social_login" ADD CONSTRAINT "auth_social_login_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "auth_refresh_token" ADD CONSTRAINT "auth_refresh_token_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth_user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+CREATE UNIQUE INDEX "user_symbols_email_symbol_unique" ON "user_symbols"("user_email", "symbol_id");
 
 -- AddForeignKey
 ALTER TABLE "error_symbols" ADD CONSTRAINT "error_symbols_symbol_fkey" FOREIGN KEY ("symbol") REFERENCES "symbols"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -212,3 +212,9 @@ ALTER TABLE "symbols" ADD CONSTRAINT "symbols_exchange_id_fkey" FOREIGN KEY ("ex
 
 -- AddForeignKey
 ALTER TABLE "symbols" ADD CONSTRAINT "symbols_type_id_fkey" FOREIGN KEY ("type_id") REFERENCES "types"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "user_symbols" ADD CONSTRAINT "user_symbols_symbol_id_fkey" FOREIGN KEY ("symbol_id") REFERENCES "symbols"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_symbols" ADD CONSTRAINT "user_symbols_user_email_fkey" FOREIGN KEY ("user_email") REFERENCES "auth_user"("email") ON DELETE CASCADE ON UPDATE CASCADE;
