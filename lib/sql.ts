@@ -116,16 +116,23 @@ export const getFilteredSymbolsProfiles = async(
   return result.rows;
 }
 
+export const getWatchList = async (
+  userEmail: string
+): Promise<dbTypes.SymbolRow['id'][]> => {
+  const userSymbols = await prisma.user_symbols.findMany({
+    where: { user_email: userEmail }
+  });
+  const symbols = userSymbols.map(symbol => symbol.symbol_id);
+  return symbols;
+}
+
 export const insertWatchList = async (
   userEmail: string,
   symbol: dbTypes.SymbolRow['id']
 ) => {
   try {
-    const userSymbols = await prisma.user_symbols.findMany({
-      where: { user_email: userEmail }
-    });
-    const watchList = userSymbols.map(symbol => symbol.symbol_id);
-    if (watchList.includes(symbol)) {
+    const watchlist = await getWatchList(userEmail);
+    if (watchlist.includes(symbol)) {
       return{
         success: false,
         message: 'Symbol is already in watchlist'
