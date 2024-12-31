@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { SymbolRow } from '@/types';
+import { requestInsertWatchList } from '@/app/axios';
 
 
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
@@ -15,13 +16,18 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     setIsInWatchListState(watch_list.includes(symbol));
   }, [watch_list, symbol]);
 
-  const handleToggleWatchlist = () => {
+  const handleToggleWatchlist = async () => {
     if (isInWatchListState) {
       // Remove from watchlist
       setIsInWatchListState(false);
     } else {
       // Add to watchlist
-      setIsInWatchListState(true);
+      try {
+        await requestInsertWatchList({ symbol });
+        setIsInWatchListState(true);
+      } catch (e: any) {
+        alert(e.response?.data?.message || 'An error occurred');
+      }
     }
   }
 

@@ -19,6 +19,13 @@ export const requestAnalysis = async (data: FilteredIds) => {
   return response.data;
 }
 
+export const requestInsertWatchList = async (
+  data: { symbol: string }
+) => {
+  const response = await serverApi.post('/watchlist', data);
+  return response.data;
+}
+
 export const requestSignup = async (
   data: { email: string, password: string, passwordConfirm: string }
 ) => {
