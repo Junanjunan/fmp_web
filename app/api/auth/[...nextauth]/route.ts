@@ -34,11 +34,6 @@ export const authOptions: AuthOptions = {
         if (!isCorrectPassword) {
           throw new Error('Password is incorrect');
         }
-        const userSymbols = await prisma.user_symbols.findMany({
-          where: {
-            user_email: user.email
-          }
-        });
         return {
           id: user.id.toString(),
           email: user.email,
@@ -47,7 +42,6 @@ export const authOptions: AuthOptions = {
           email_verified: user.email_verified,
           created_at: user.created_at,
           updated_at: user.updated_at,
-          watch_list: userSymbols.map((symbol) => symbol.symbol_id)
         }
       }
     })
@@ -67,7 +61,6 @@ export const authOptions: AuthOptions = {
         token.email_verified = typedUser.email_verified;
         token.created_at = typedUser.created_at;
         token.updated_at = typedUser.updated_at;
-        token.watch_list = typedUser.watch_list;
       }
       return token;
     },
@@ -76,7 +69,6 @@ export const authOptions: AuthOptions = {
         session.user.email_verified = token.email_verified;
         session.user.created_at = token.created_at;
         session.user.updated_at = token.updated_at;
-        session.user.watch_list = token.watch_list;
       }
       return session;
     }

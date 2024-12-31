@@ -1,20 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { SymbolRow } from '@/types';
-import { requestInsertWatchList } from '@/app/axios';
+import { requestGetWatchList, requestInsertWatchList } from '@/app/axios';
 
 
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
-  const { data: session } = useSession();
-  const { watch_list } = session?.user;
-  const isInWatchList = watch_list.includes(symbol);
-  const [isInWatchListState, setIsInWatchListState] = useState(isInWatchList);
+  const [isInWatchListState, setIsInWatchListState] = useState(false);
 
   useEffect(() => {
-    setIsInWatchListState(watch_list.includes(symbol));
-  }, [watch_list, symbol]);
+    const fetchWatchList = async () => {
+      const { watchlist } = await requestGetWatchList();
+      setIsInWatchListState(watchlist.includes(symbol));
+    }
+    fetchWatchList();
+  }, [symbol]);
 
   const handleToggleWatchlist = async () => {
     if (isInWatchListState) {

@@ -7,7 +7,6 @@ declare module "next-auth" {
       email_verified?: Date
       created_at?: Date
       updated_at?: Date
-      watch_list?: string[]
     } & DefaultSession["user"]
   }
 }

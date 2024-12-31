@@ -19,6 +19,12 @@ export const requestAnalysis = async (data: FilteredIds) => {
   return response.data;
 }
 
+export const requestGetWatchList = async (
+) => {
+  const response = await serverApi.get('/watchlist');
+  return response.data;
+}
+
 export const requestInsertWatchList = async (
   data: { symbol: string }
 ) => {

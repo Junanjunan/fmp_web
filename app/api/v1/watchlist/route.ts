@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 import { getServerSession_ } from "@/lib/auth/session";
-import { insertWatchList } from "@/lib/sql";
+import { getWatchList, insertWatchList } from "@/lib/sql";
+
+
+export async function GET(request: Request) {
+  const session = await getServerSession_();
+  if (!session) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Unauthorized'
+      },
+      { status: 401 }
+    );
+  }
+
+  const { email } = session.user;
+  const watchlist = await getWatchList(email);
+  return NextResponse.json({ watchlist });
+}
 
 
 export async function POST(request: Request) {
