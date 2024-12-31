@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession_ } from "@/lib/auth/session";
-import { getWatchList, insertWatchList } from "@/lib/sql";
+import { deleteWatchList, getWatchList, insertWatchList } from "@/lib/sql";
 
 
 export async function GET(request: Request) {
@@ -56,4 +56,19 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+export async function DELETE(request: Request) {
+  const session = await getServerSession_();
+  if (!session) {
+    return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { symbol } = await request.json();
+  const sqlRes = await deleteWatchList(session.user.email, symbol);
+  if (!sqlRes.success) {
+    return NextResponse.json({ success: false, message: sqlRes.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
 }

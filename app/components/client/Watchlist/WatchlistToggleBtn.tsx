@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { SymbolRow } from '@/types';
-import { requestGetWatchList, requestInsertWatchList } from '@/app/axios';
+import {
+  requestGetWatchList, requestInsertWatchList,
+  requestDeleteWatchList
+} from '@/app/axios';
 
 
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
@@ -19,7 +22,12 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const handleToggleWatchlist = async () => {
     if (isInWatchListState) {
       // Remove from watchlist
-      setIsInWatchListState(false);
+      try {
+        await requestDeleteWatchList({ symbol });
+        setIsInWatchListState(false);
+      } catch (e: any) {
+        alert(e.response?.data?.message || 'An error occurred');
+      }
     } else {
       // Add to watchlist
       try {

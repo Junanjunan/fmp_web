@@ -155,3 +155,21 @@ export const insertWatchList = async (
     };
   }
 }
+
+export const deleteWatchList = async (
+  userEmail: string,
+  symbol: dbTypes.SymbolRow['id']
+) => {
+  try {
+    await prisma.user_symbols.deleteMany({
+      where: { user_email: userEmail, symbol_id: symbol }
+    });
+    return { success: true };
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      message: 'Deleting from watchlist failed'
+    };
+  }
+}
