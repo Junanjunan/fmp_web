@@ -167,6 +167,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
         isLoading={false}
         disabled={filteredSymbols.length === 0}
       />
+      <ColorInformation />
       <table className="table">
         <thead className="tableHeader">
           <tr>
@@ -218,7 +219,10 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             <tr
               key={symbol}
               ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
-              className={lastClickedSymbol === symbol ? 'bg-blue-100' : ''}
+              className={
+                lastClickedSymbol === symbol ? 'bg-blue-100' :
+                watchlist.includes(symbol) ? 'bg-green-100' : ''
+              }
             >
               <td className="tableCell">
                 <Link
@@ -251,3 +255,17 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     </div>
   );
 }
+
+const ColorCard = ({ color, title }: { color: string, title: string }) => (
+  <div className="flex items-center mr-5">
+    <div className={`w-5 h-5 ${color} inline-block mr-1`}></div>
+    <span>{title}</span>
+  </div>
+);
+
+const ColorInformation = () => (
+  <div className="flex items-center mt-10">
+    <ColorCard color="bg-blue-100" title="Last viewed symbol" />
+    <ColorCard color="bg-green-100" title="Symbols in Watchlist" />
+  </div>
+);
