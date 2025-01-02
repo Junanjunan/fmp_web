@@ -9,7 +9,7 @@ export const serverApi = axios.create({
   },
 });
 
-export const requestGet = async (path: string): Promise<any> => {
+export const requestGet = async <T>(path: string): Promise<T> => {
   const response = await serverApi.get(`/${path}`);
   return response.data;
 }
