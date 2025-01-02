@@ -4,3 +4,8 @@ user_symbols unique configuration
     they can not be unique
     -> In this case, it has to be unique by user_email & symbol_id & exchange_id
   * Have to change column uniqueness to (user_email, symbol_id, exchange_id)
+
+Exclude Watchlist
+  - After computer rebooted, login is retained,
+    but Watchlist is empty because it is set after login.
+    -> Have to fix this.
