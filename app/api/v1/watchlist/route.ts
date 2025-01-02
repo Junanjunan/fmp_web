@@ -3,7 +3,7 @@ import { getServerSession_ } from "@/lib/auth/session";
 import { deleteWatchList, getWatchList, insertWatchList } from "@/lib/sql";
 
 
-export async function GET(request: Request) {
+export async function GET() {
   const session = await getServerSession_();
   if (!session) {
     return NextResponse.json(
