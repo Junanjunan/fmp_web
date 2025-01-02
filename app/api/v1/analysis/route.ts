@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const data: FilteredIds = await request.json();
   const typeIds = data.typeIds;
   const exchangeIds = data.exchangeIds;
-  const symbol = data.symbol;
+  const symbol = data.symbol ?? '';
   const symbolRows = await getFilteredSymbolsProfiles(typeIds, exchangeIds, symbol);
   const growthOfSymbols: GrowthOfSymbols = {};
 
