@@ -3,7 +3,7 @@ import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
-import { requestGetWatchList } from '@/app/axios';
+import { useWatchlistData } from '@/hooks';
 
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
@@ -14,17 +14,12 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     sortedSymbolGrowths, setSortedSymbolGrowths,
     lastClickedSymbol, setLastClickedSymbol,
   } = useAnalysisStore();
-  const { watchlist, setWatchlist } = useWatchlistStore();
+  const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sortYearType, setSortYearType] = useState<'revenue' | 'operatingIncome' | null>(null);
 
-  useEffect(() => {
-    requestGetWatchList()
-      .then((res) => {
-        setWatchlist(res.watchlist);
-      });
-  }, []);
+  useWatchlistData();
 
   useEffect(() => {
     if (sortedSymbolGrowths.length > 0) {
