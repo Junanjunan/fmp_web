@@ -9,13 +9,17 @@ export interface AnalysisStore {
   exchanges: ExchangesByCountry;
   selectedTypeIds: TypeRow["id"][];
   selectedExchangeIds: ExchangeRow["id"][];
+  applyYearCount: boolean;
   yearsOfTable: number[];
   totalYears: number[];
   symbolGrowths: GrowthOfSymbols;
   sortedSymbolGrowths: SortedSymbolGrowths;
   selectedYearCount: string | number;
+  applyMinimumGrowth: boolean;
   minimumGrowth: number;
+  applyMinimumOperatingIncomeRatio: boolean;
   minimumOperatingIncomeRatio: number;
+  searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
   excludeWatchlist: boolean;
 
@@ -23,24 +27,20 @@ export interface AnalysisStore {
   setExchanges: (exchanges: ExchangesByCountry) => void;
   setSelectedTypeIds: (selectedTypeIds: TypeRow["id"][]) => void;
   setSelectedExchangeIds: (selectedExchangeIds: ExchangeRow["id"][]) => void;
+  setApplyYearCount: (applyYearCount: boolean) => void;
   setYearsOfTable: (yearsOfTable: number[]) => void;
   setTotalYears: (totalYears: number[]) => void;
   setSymbolGrowths: (symbolGrowths: GrowthOfSymbols) => void;
   setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSelectedYearCount: (selectedYearCount: string | number) => void;
   setMinimumGrowth: (minimumGrowth: number) => void;
+  setApplyMinimumGrowth: (applyMinimumGrowth: boolean) => void;
   setMinimumOperatingIncomeRatio: (minimumOperatingIncomeRatio: number) => void;
+  setApplyMinimumOperatingIncomeRatio: (applyMinimumOperatingIncomeRatio: boolean) => void;
+  setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setExcludeWatchlist: (excludeWatchlist: boolean) => void;
   reset: () => void;
-}
-
-export interface SearchStore {
-  searchSymbol: string;
-  limitYearCount: boolean;
-
-  setSearchSymbol: (searchSymbol: string) => void;
-  setLimitYearCount: (limitYearCount: boolean) => void;
 }
 
 export interface WatchlistStore {

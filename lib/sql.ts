@@ -104,7 +104,7 @@ export const getSymbolProfile = async (
 export const getFilteredSymbolsProfiles = async(
   typeIds: dbTypes.TypeRow['id'][],
   exchangeIds: dbTypes.ExchangeRow['id'][],
-  symbol: dbTypes.SymbolRow['id'] | null = null
+  symbol: dbTypes.SymbolRow['id']
 ): Promise<dbTypes.SymbolWithProfile[]> => {
   let sql = `
     SELECT s.*, sp.*

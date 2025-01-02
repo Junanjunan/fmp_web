@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
-import { useAnalysisStore, useSearchStore, useWatchlistStore } from '@/app/stores/useStore';
+import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
 import { useWatchlistData } from '@/hooks';
 
 
@@ -10,11 +10,11 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
     symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
-    excludeWatchlist,
+    excludeWatchlist, applyYearCount, applyMinimumGrowth,
+    applyMinimumOperatingIncomeRatio,
     sortedSymbolGrowths, setSortedSymbolGrowths,
     lastClickedSymbol, setLastClickedSymbol,
   } = useAnalysisStore();
-  const { limitYearCount } = useSearchStore();
   const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -27,7 +27,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       return;
     }
     setSortedSymbolGrowths(getSortedSymbolGrowths());
-  }, [symbolGrowths, limitYearCount]);
+  }, [symbolGrowths, applyYearCount]);
 
   useEffect(() => {
     if (lastClickedSymbol && lastClickedRowRef.current) {
@@ -131,7 +131,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     if (!yearsOfSymbol.includes(thirdYear)) {
       return false;
     }
-    if (limitYearCount) {
+    if (applyYearCount) {
       if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
         return false;
       }
@@ -141,14 +141,22 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       return false;
     }
 
+    if (!applyMinimumGrowth && !applyMinimumOperatingIncomeRatio) {
+      return true;
+    }
+
     for (let i = 0; i < growthArray.length; i++) {
       for (const year of yearsOfTable) {
         if (growthArray[i].year == year) {
-          if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
-            return false;
+          if (applyMinimumGrowth) {
+            if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
+              return false;
+            }
           }
-          if (!OIRatios[i].ratio || OIRatios[i].ratio < minimumOperatingIncomeRatio) {
-            return false;
+          if (applyMinimumOperatingIncomeRatio) {
+            if (!OIRatios[i].ratio || OIRatios[i].ratio < minimumOperatingIncomeRatio) {
+              return false;
+            }
           }
         }
       }

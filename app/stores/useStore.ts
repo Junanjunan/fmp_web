@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AnalysisStore, SearchStore, WatchlistStore } from '@/types/store';
+import { AnalysisStore, WatchlistStore } from '@/types/store';
 
 
 export const useAnalysisStore = create<AnalysisStore>((set) => ({
@@ -12,9 +12,13 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   totalYears: [],
   symbolGrowths: {},
   sortedSymbolGrowths: [],
+  applyYearCount: true,
   selectedYearCount: 5,
+  applyMinimumGrowth: true,
   minimumGrowth: 5,
+  applyMinimumOperatingIncomeRatio: true,
   minimumOperatingIncomeRatio: -999,
+  searchSymbol: "",
   lastClickedSymbol: null,
   excludeWatchlist: false,
 
@@ -27,9 +31,13 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   setTotalYears: (totalYears) => set({ totalYears }),
   setSymbolGrowths: (symbolGrowths) => set({ symbolGrowths }),
   setSortedSymbolGrowths: (sortedSymbolGrowths) => set({ sortedSymbolGrowths }),
+  setApplyYearCount: (applyYearCount) => set({ applyYearCount }),
   setSelectedYearCount: (count) => set({ selectedYearCount: count }),
+  setApplyMinimumGrowth: (applyMinimumGrowth) => set({ applyMinimumGrowth }),
   setMinimumGrowth: (growth) => set({ minimumGrowth: growth }),
+  setApplyMinimumOperatingIncomeRatio: (applyMinimumOperatingIncomeRatio) => set({ applyMinimumOperatingIncomeRatio }),
   setMinimumOperatingIncomeRatio: (ratio) => set({ minimumOperatingIncomeRatio: ratio }),
+  setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
   setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
   setExcludeWatchlist: (excludeWatchlist) => set({ excludeWatchlist }),
   reset: () => set({
@@ -45,14 +53,6 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
     minimumGrowth: 5,
     lastClickedSymbol: null,
   })
-}));
-
-export const useSearchStore = create<SearchStore>((set) => ({
-  searchSymbol: "",
-  limitYearCount: true,
-
-  setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
-  setLimitYearCount: (limitYearCount) => set({ limitYearCount }),
 }));
 
 export const useWatchlistStore = create<WatchlistStore>((set) => ({

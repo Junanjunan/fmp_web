@@ -7,7 +7,7 @@ import {
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow, ExchangesByCountry } from '@/types';
-import { useAnalysisStore, useSearchStore } from '@/app/stores/useStore';
+import { useAnalysisStore } from '@/app/stores/useStore';
 
 
 const AnalysisPage = () => {
@@ -19,18 +19,18 @@ const AnalysisPage = () => {
     yearsOfTable, setYearsOfTable,
     totalYears, setTotalYears,
     symbolGrowths, setSymbolGrowths,
+    applyMinimumGrowth, setApplyMinimumGrowth,
     minimumGrowth, setMinimumGrowth,
+    applyMinimumOperatingIncomeRatio, setApplyMinimumOperatingIncomeRatio,
     minimumOperatingIncomeRatio, setMinimumOperatingIncomeRatio,
+    applyYearCount, setApplyYearCount,
     selectedYearCount, setSelectedYearCount,
     excludeWatchlist, setExcludeWatchlist,
+    searchSymbol, setSearchSymbol,
     setSortedSymbolGrowths,
   } = useAnalysisStore();
-  const {
-    limitYearCount, setLimitYearCount,
-    searchSymbol, setSearchSymbol,
-  } = useSearchStore();
   const [isLoading, setIsLoading] = useState(false);
-  const filteredYears = limitYearCount
+  const filteredYears = applyYearCount
     ? yearsOfTable.slice(0, Number(selectedYearCount))
     : yearsOfTable;
 
@@ -82,34 +82,24 @@ const AnalysisPage = () => {
     // app/components/client/IncomeStatement.tsx 17 line: if (sortedSymbolGrowths.length > 0)
     setSortedSymbolGrowths([]);
     setIsLoading(true);
-    setSearchSymbol("");
-    const data = {
-      typeIds: selectedTypeIds,
-      exchangeIds: selectedExchangeIds,
-    };
-    const response = await requestAnalysis(data);
-    setSymbolGrowths(response);
-    setLimitYearCount(true);
-    setIsLoading(false);
-  };
-
-  const handleSearchSymbolSubmit = async () => {
-    setSortedSymbolGrowths([]);
-    setIsLoading(true);
     const data = {
       typeIds: selectedTypeIds,
       exchangeIds: selectedExchangeIds,
       symbol: searchSymbol,
-    }
+    };
     const response = await requestAnalysis(data);
     setSymbolGrowths(response);
-    setSelectedYearCount(totalYears.length);
-    setMinimumGrowth(-9999999999);
-    setMinimumOperatingIncomeRatio(-9999999999);
-    setLimitYearCount(false);
     setIsLoading(false);
-  }
+  };
 
+  const handleApplyYearCount = () => {
+      if (!applyYearCount) {
+        setSelectedYearCount(5);
+      } else {
+        setSelectedYearCount(totalYears.length);
+      }
+      setApplyYearCount(!applyYearCount);
+  }
   const handleYearCountChange = (selected: string | number) => {
     setSelectedYearCount(selected);
   };
@@ -137,51 +127,83 @@ const AnalysisPage = () => {
         defaultChecked={selectedExchangeIds}
         onChange={handleExchangeChange}
       />
+      <InputText
+        inputType="text"
+        value={searchSymbol}
+        onChange={(e) => setSearchSymbol(e.target.value)}
+        title="Symbol Keyword"
+        id="searchSymbol"
+        placeholder="ex: AA, AAP, AAPL, aapl"
+      />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
       <SearchedCount />
-      <div className="flex items-center">
-        <InputText
-          inputType="text"
-          value={searchSymbol}
-          onChange={(e) => setSearchSymbol(e.target.value)}
-          title="Search Symbol"
-          id="searchSymbol"
-          placeholder="ex: AA, AAP, AAPL, aapl"
+
+      <div className="flex items-center h-20">
+        <CheckboxList
+          attributes={['Year Count']}
+          title=""
+          defaultChecked={applyYearCount ? ['Year Count'] : []}
+          onChange={handleApplyYearCount}
         />
-        <Button
-          onClick={handleSearchSymbolSubmit}
-          isLoading={isLoading}
-          title="Search"
-          additionalClass="mt-5"
+        <div className={`mb-10 ml-5 ${applyYearCount ? 'block' : 'hidden'}`}>
+          <Select
+            options={totalYears.map((_, index) => index+1)}
+            value={selectedYearCount}
+            onChange={handleYearCountChange}
+            title=""
+            id="yearCount"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center h-20 -mt-10">
+        <CheckboxList
+          attributes={['Minimum Growth(%)']}
+          title=""
+          defaultChecked={applyMinimumGrowth ? ['Minimum Growth(%)'] : []}
+          onChange={() => setApplyMinimumGrowth(!applyMinimumGrowth)}
+        />
+        <div className={`mb-10 ml-5 ${applyMinimumGrowth ? 'block' : 'hidden'}`}>
+          <InputText
+            inputType="number"
+            value={minimumGrowth}
+            onChange={(e) => setMinimumGrowth(Number(e.target.value))}
+            title=""
+            id="growthLimit"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center h-20 -mt-10">
+        <CheckboxList
+          attributes={['Minimum Operating Income Ratio(%)']}
+          title=""
+          defaultChecked={
+            applyMinimumOperatingIncomeRatio ? ['Minimum Operating Income Ratio(%)'] : []
+          }
+          onChange={
+            () => setApplyMinimumOperatingIncomeRatio(!applyMinimumOperatingIncomeRatio)
+          }
+        />
+        <div className={`mb-10 ml-5 ${applyMinimumOperatingIncomeRatio ? 'block' : 'hidden'}`}>
+          <InputText
+            inputType="number"
+            value={minimumOperatingIncomeRatio}
+            onChange={(e) => setMinimumOperatingIncomeRatio(Number(e.target.value))}
+            title=""
+            id="operatingIncomeRatioLimit"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center h-20 -mt-10">
+        <CheckboxList
+          attributes={['Exclude Watchlist']}
+          title=""
+          defaultChecked={excludeWatchlist ? ['Exclude Watchlist'] : []}
+          onChange={() => {setExcludeWatchlist(!excludeWatchlist)}}
         />
       </div>
-      <Select
-        options={totalYears.map((_, index) => index+1)}
-        value={selectedYearCount}
-        onChange={handleYearCountChange}
-        title="Year Count"
-        id="yearCount"
-      />
-      <InputText
-        inputType="number"
-        value={minimumGrowth}
-        onChange={(e) => setMinimumGrowth(Number(e.target.value))}
-        title="Minimum Growth(%)"
-        id="growthLimit"
-      />
-      <InputText
-        inputType="number"
-        value={minimumOperatingIncomeRatio}
-        onChange={(e) => setMinimumOperatingIncomeRatio(Number(e.target.value))}
-        title="Minimum Operating Income Ratio(%)"
-        id="operatingIncomeRatioLimit"
-      />
-      <CheckboxList
-        attributes={['Exclude']}
-        title="Exclude Watchlist"
-        defaultChecked={excludeWatchlist ? ['Exclude'] : []}
-        onChange={() => {setExcludeWatchlist(!excludeWatchlist)}}
-      />
       <RevenueTable filteredYears={filteredYears} />
     </main>
   );
