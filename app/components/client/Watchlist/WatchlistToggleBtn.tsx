@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { SymbolRow } from '@/types';
+import { isApiError } from '@/lib/error';
 import {
   requestGetWatchList, requestInsertWatchList,
   requestDeleteWatchList
@@ -25,16 +26,28 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
       try {
         await requestDeleteWatchList({ symbol });
         setIsInWatchListState(false);
-      } catch (e: any) {
-        alert(e.response?.data?.message || 'An error occurred');
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          alert(e.message);
+        } else if (isApiError(e)) {
+          alert(e.response?.data?.message || 'An error occurred');
+        } else {
+          alert('An error occurred');
+        }
       }
     } else {
       // Add to watchlist
       try {
         await requestInsertWatchList({ symbol });
         setIsInWatchListState(true);
-      } catch (e: any) {
-        alert(e.response?.data?.message || 'An error occurred');
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          alert(e.message);
+        } else if (isApiError(e)) {
+          alert(e.response?.data?.message || 'An error occurred');
+        } else {
+          alert('An error occurred');
+        }
       }
     }
   }

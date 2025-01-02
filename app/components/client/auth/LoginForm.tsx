@@ -3,6 +3,7 @@
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { isApiError } from '@/lib/error';
 
 
 export function LoginForm() {
@@ -34,8 +35,14 @@ export function LoginForm() {
       // Redirect to dashboard on success
       router.push('/');
       router.refresh();
-    } catch (error) {
-      setError('An error occurred');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else if (isApiError(error)) {
+        setError(error.response?.data?.message || 'An error occurred');
+      } else {
+        setError('An error occurred');
+      }
     } finally {
       setIsLoading(false);
     }

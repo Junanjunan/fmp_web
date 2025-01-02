@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { requestSignup } from '@/app/axios'
+import { isApiError } from '@/lib/error';
 
 
 export function SignupForm() {
@@ -34,8 +35,14 @@ export function SignupForm() {
         return;
       }
       router.push('/auth/login'); // Redirect to login page after successful signup
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else if (isApiError(error)) {
+        setError(error.response?.data?.message || 'An error occurred');
+      } else {
+        setError('An error occurred');
+      }
     } finally {
       setLoading(false);
     }
