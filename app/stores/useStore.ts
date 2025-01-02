@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AnalysisStore, WatchlistStore } from '@/types/store';
+import { AnalysisStore, SearchStore, WatchlistStore } from '@/types/store';
 
 
 export const useAnalysisStore = create<AnalysisStore>((set) => ({
@@ -45,6 +45,14 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
     minimumGrowth: 5,
     lastClickedSymbol: null,
   })
+}));
+
+export const useSearchStore = create<SearchStore>((set) => ({
+  searchSymbol: "",
+  limitYearCount: true,
+
+  setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
+  setLimitYearCount: (limitYearCount) => set({ limitYearCount }),
 }));
 
 export const useWatchlistStore = create<WatchlistStore>((set) => ({

@@ -103,16 +103,20 @@ export const getSymbolProfile = async (
 
 export const getFilteredSymbolsProfiles = async(
   typeIds: dbTypes.TypeRow['id'][],
-  exchangeIds: dbTypes.ExchangeRow['id'][]
+  exchangeIds: dbTypes.ExchangeRow['id'][],
+  symbol: dbTypes.SymbolRow['id'] | null = null
 ): Promise<dbTypes.SymbolWithProfile[]> => {
-  const sql = `
+  let sql = `
     SELECT s.*, sp.*
     FROM symbols s
     LEFT JOIN symbol_profiles sp ON s.id = sp.symbol
     WHERE s.type_id IN (${typeIds.map(id => `'${id}'`).join(',')})
     AND s.exchange_id IN (${exchangeIds.map(id => `'${id}'`).join(',')})
-    AND sp.is_actively_trading = true;
+    AND sp.is_actively_trading = true
   `;
+  if (symbol) {
+    sql += ` AND LOWER(s.id) LIKE LOWER('%${symbol}%');`;
+  }
   const result = await query(sql);
   return result.rows;
 }

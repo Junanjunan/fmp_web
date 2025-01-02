@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
-import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
+import { useAnalysisStore, useSearchStore, useWatchlistStore } from '@/app/stores/useStore';
 import { useWatchlistData } from '@/hooks';
 
 
@@ -14,6 +14,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     sortedSymbolGrowths, setSortedSymbolGrowths,
     lastClickedSymbol, setLastClickedSymbol,
   } = useAnalysisStore();
+  const { limitYearCount } = useSearchStore();
   const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -26,7 +27,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       return;
     }
     setSortedSymbolGrowths(getSortedSymbolGrowths());
-  }, [symbolGrowths]);
+  }, [symbolGrowths, limitYearCount]);
 
   useEffect(() => {
     if (lastClickedSymbol && lastClickedRowRef.current) {
@@ -130,8 +131,10 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     if (!yearsOfSymbol.includes(thirdYear)) {
       return false;
     }
-    if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
-      return false;
+    if (limitYearCount) {
+      if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
+        return false;
+      }
     }
 
     if (excludeWatchlist && watchlist.includes(symbol)) {

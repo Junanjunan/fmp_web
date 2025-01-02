@@ -35,6 +35,14 @@ export interface AnalysisStore {
   reset: () => void;
 }
 
+export interface SearchStore {
+  searchSymbol: string;
+  limitYearCount: boolean;
+
+  setSearchSymbol: (searchSymbol: string) => void;
+  setLimitYearCount: (limitYearCount: boolean) => void;
+}
+
 export interface WatchlistStore {
   watchlist: SymbolRow["id"][];
 

@@ -73,6 +73,7 @@ export interface SearchFilters {
 export interface FilteredIds {
   typeIds: TypeRow["id"][];
   exchangeIds: ExchangeRow["id"][];
+  symbol?: SymbolRow["id"];
 }
 
 export interface SymbolProfileRow {

@@ -7,7 +7,7 @@ import {
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow, ExchangesByCountry } from '@/types';
-import { useAnalysisStore } from '@/app/stores/useStore';
+import { useAnalysisStore, useSearchStore } from '@/app/stores/useStore';
 
 
 const AnalysisPage = () => {
@@ -25,8 +25,14 @@ const AnalysisPage = () => {
     excludeWatchlist, setExcludeWatchlist,
     setSortedSymbolGrowths,
   } = useAnalysisStore();
+  const {
+    limitYearCount, setLimitYearCount,
+    searchSymbol, setSearchSymbol,
+  } = useSearchStore();
   const [isLoading, setIsLoading] = useState(false);
-  const filteredYears = yearsOfTable.slice(0, Number(selectedYearCount));
+  const filteredYears = limitYearCount
+    ? yearsOfTable.slice(0, Number(selectedYearCount))
+    : yearsOfTable;
 
   useEffect(() => {
     setSearchFilters();
@@ -76,14 +82,33 @@ const AnalysisPage = () => {
     // app/components/client/IncomeStatement.tsx 17 line: if (sortedSymbolGrowths.length > 0)
     setSortedSymbolGrowths([]);
     setIsLoading(true);
+    setSearchSymbol("");
     const data = {
       typeIds: selectedTypeIds,
       exchangeIds: selectedExchangeIds,
     };
     const response = await requestAnalysis(data);
     setSymbolGrowths(response);
+    setLimitYearCount(true);
     setIsLoading(false);
   };
+
+  const handleSearchSymbolSubmit = async () => {
+    setSortedSymbolGrowths([]);
+    setIsLoading(true);
+    const data = {
+      typeIds: selectedTypeIds,
+      exchangeIds: selectedExchangeIds,
+      symbol: searchSymbol,
+    }
+    const response = await requestAnalysis(data);
+    setSymbolGrowths(response);
+    setSelectedYearCount(totalYears.length);
+    setMinimumGrowth(-9999999999);
+    setMinimumOperatingIncomeRatio(-9999999999);
+    setLimitYearCount(false);
+    setIsLoading(false);
+  }
 
   const handleYearCountChange = (selected: string | number) => {
     setSelectedYearCount(selected);
@@ -114,6 +139,17 @@ const AnalysisPage = () => {
       />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
       <SearchedCount />
+      <div className="flex items-center">
+        <InputText
+          inputType="text"
+          value={searchSymbol}
+          onChange={(e) => setSearchSymbol(e.target.value)}
+          title="Search Symbol"
+          id="searchSymbol"
+          placeholder="ex: AA, AAP, AAPL, aapl"
+        />
+        <Button onClick={handleSearchSymbolSubmit} isLoading={isLoading} title="Search" />
+      </div>
       <Select
         options={totalYears.map((_, index) => index+1)}
         value={selectedYearCount}

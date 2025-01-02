@@ -146,13 +146,14 @@ export const Select = (
 };
 
 export const InputText = (
-  { inputType, value, onChange, title, id }: 
+  { inputType, value, onChange, title, id, placeholder }: 
   { 
     inputType: string,
     value: string | number,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     title: string,
-    id: string
+    id: string,
+    placeholder?: string
   }
 ) => (
   <div className="flex items-center ">
@@ -160,7 +161,10 @@ export const InputText = (
     <input
       type={inputType}
       value={value === 0 && inputType === 'number' ? '' : value}
-      placeholder={inputType === 'number' ? 'Empty means 0' : ''}
+      placeholder={
+        placeholder ? placeholder :
+        inputType === 'number' ? 'Empty means 0' : ''
+      }
       onChange={onChange}
       id={id}
       className="border border-gray-300 px-2 py-1 mt-5"
