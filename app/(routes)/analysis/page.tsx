@@ -6,7 +6,7 @@ import {
 } from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
-import { TypeRow, ExchangeRow, ExchangesByCountry } from '@/types';
+import { TypeRow, ExchangeRow, ExchangesByCountry, SearchFilters } from '@/types';
 import { useAnalysisStore } from '@/app/stores/useStore';
 
 
@@ -46,7 +46,7 @@ const AnalysisPage = () => {
   }, [selectedYearCount, totalYears]);
 
   const setSearchFilters = async () => {
-    const searchFilters = await requestGet('search-filters');
+    const searchFilters = await requestGet<SearchFilters>('search-filters');
     const types = searchFilters.types;
     const exchanges = searchFilters.exchanges;
     const exchangesByCountry: ExchangesByCountry = [];
@@ -64,7 +64,7 @@ const AnalysisPage = () => {
   };
 
   const setYearsRows = async () => {
-    const years = await requestGet('years');
+    const years = await requestGet<number[]>('years');
     setTotalYears(years);
     setYearsOfTable(years);
   }
