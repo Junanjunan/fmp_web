@@ -12,7 +12,7 @@ export default function LoginPage() {
         <LoginForm />
         <div className="text-center">
           <Link href="/auth/signup" className="text-blue-500 hover:underline">
-            If you don't have an account, go to sign up
+            If you don&apos;t have an account, go to sign up
           </Link>
         </div>
       </div>
