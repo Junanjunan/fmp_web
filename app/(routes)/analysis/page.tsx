@@ -22,6 +22,7 @@ const AnalysisPage = () => {
     minimumGrowth, setMinimumGrowth,
     minimumOperatingIncomeRatio, setMinimumOperatingIncomeRatio,
     selectedYearCount, setSelectedYearCount,
+    excludeWatchlist, setExcludeWatchlist,
     setSortedSymbolGrowths,
   } = useAnalysisStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -133,6 +134,12 @@ const AnalysisPage = () => {
         onChange={(e) => setMinimumOperatingIncomeRatio(Number(e.target.value))}
         title="Minimum Operating Income Ratio(%)"
         id="operatingIncomeRatioLimit"
+      />
+      <CheckboxList
+        attributes={['Exclude']}
+        title="Exclude Watchlist"
+        defaultChecked={excludeWatchlist ? ['Exclude'] : []}
+        onChange={() => {setExcludeWatchlist(!excludeWatchlist)}}
       />
       <RevenueTable filteredYears={filteredYears} />
     </main>

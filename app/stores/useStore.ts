@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AnalysisStore } from '@/types/store';
+import { AnalysisStore, WatchlistStore } from '@/types/store';
 
 
 export const useAnalysisStore = create<AnalysisStore>((set) => ({
@@ -16,6 +16,7 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   minimumGrowth: 5,
   minimumOperatingIncomeRatio: -999,
   lastClickedSymbol: null,
+  excludeWatchlist: false,
 
   // Actions
   setTypeIds: (typeIds) => set({ typeIds }),
@@ -30,6 +31,7 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   setMinimumGrowth: (growth) => set({ minimumGrowth: growth }),
   setMinimumOperatingIncomeRatio: (ratio) => set({ minimumOperatingIncomeRatio: ratio }),
   setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
+  setExcludeWatchlist: (excludeWatchlist) => set({ excludeWatchlist }),
   reset: () => set({
     typeIds: [],
     exchanges: [],
@@ -43,4 +45,10 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
     minimumGrowth: 5,
     lastClickedSymbol: null,
   })
+}));
+
+export const useWatchlistStore = create<WatchlistStore>((set) => ({
+  watchlist: [],
+
+  setWatchlist: (watchlist) => set({ watchlist }),
 }));

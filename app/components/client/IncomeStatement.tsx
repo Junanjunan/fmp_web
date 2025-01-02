@@ -2,19 +2,29 @@ import { useState, useEffect, useRef } from 'react';
 import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
-import { useAnalysisStore } from '@/app/stores/useStore';
+import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
+import { requestGetWatchList } from '@/app/axios';
 
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
     symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
+    excludeWatchlist,
     sortedSymbolGrowths, setSortedSymbolGrowths,
     lastClickedSymbol, setLastClickedSymbol,
   } = useAnalysisStore();
+  const { watchlist, setWatchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sortYearType, setSortYearType] = useState<'revenue' | 'operatingIncome' | null>(null);
+
+  useEffect(() => {
+    requestGetWatchList()
+      .then((res) => {
+        setWatchlist(res.watchlist);
+      });
+  }, []);
 
   useEffect(() => {
     if (sortedSymbolGrowths.length > 0) {
@@ -117,6 +127,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   }
 
   const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
+    const symbol = symbolData[0];
     const growthArray = symbolData[1].growthArray;
     const OIRatios = symbolData[1].operatingIncomeRatios;
     const thirdYear = Number(yearsOfTable[2]);
@@ -127,6 +138,11 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
       return false;
     }
+
+    if (excludeWatchlist && watchlist.includes(symbol)) {
+      return false;
+    }
+
     for (let i = 0; i < growthArray.length; i++) {
       for (const year of yearsOfTable) {
         if (growthArray[i].year == year) {

@@ -17,6 +17,7 @@ export interface AnalysisStore {
   minimumGrowth: number;
   minimumOperatingIncomeRatio: number;
   lastClickedSymbol: SymbolRow["id"] | null;
+  excludeWatchlist: boolean;
 
   setTypeIds: (typeIds: TypeRow["id"][]) => void;
   setExchanges: (exchanges: ExchangesByCountry) => void;
@@ -30,5 +31,12 @@ export interface AnalysisStore {
   setMinimumGrowth: (minimumGrowth: number) => void;
   setMinimumOperatingIncomeRatio: (minimumOperatingIncomeRatio: number) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
+  setExcludeWatchlist: (excludeWatchlist: boolean) => void;
   reset: () => void;
+}
+
+export interface WatchlistStore {
+  watchlist: SymbolRow["id"][];
+
+  setWatchlist: (watchlist: SymbolRow["id"][]) => void;
 }
