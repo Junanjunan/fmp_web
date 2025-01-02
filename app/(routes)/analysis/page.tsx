@@ -148,7 +148,12 @@ const AnalysisPage = () => {
           id="searchSymbol"
           placeholder="ex: AA, AAP, AAPL, aapl"
         />
-        <Button onClick={handleSearchSymbolSubmit} isLoading={isLoading} title="Search" />
+        <Button
+          onClick={handleSearchSymbolSubmit}
+          isLoading={isLoading}
+          title="Search"
+          additionalClass="mt-5"
+        />
       </div>
       <Select
         options={totalYears.map((_, index) => index+1)}

@@ -107,14 +107,21 @@ export const CheckboxObjectList = (
 }
 
 export const Button = (
-  { onClick, title, isLoading, disabled=false }:
-  { onClick: () => void, title: string, isLoading: boolean, disabled?: boolean }
+  { onClick, title, isLoading, additionalClass, disabled=false }:
+  {
+    onClick: () => void,
+    title: string,
+    isLoading: boolean,
+    additionalClass?: string,
+    disabled?: boolean,
+   }
 ) => (
   <button
     onClick={onClick}
     className={
       `bg-blue-500 text-white px-1 py-1 rounded-md m-1
-      ${isLoading || disabled ? 'opacity-50 cursor-not-allowed' : ''}`
+      ${isLoading || disabled ? 'opacity-50 cursor-not-allowed' : ''}
+      ${additionalClass ? additionalClass : ''}`
     }
     disabled={isLoading || disabled}
   >
@@ -156,8 +163,8 @@ export const InputText = (
     placeholder?: string
   }
 ) => (
-  <div className="flex items-center ">
-    <label htmlFor={id} className="mr-4 mt-4">{title}: </label>
+  <div className="flex items-center mt-5">
+    <label htmlFor={id} className="mr-4">{title}: </label>
     <input
       type={inputType}
       value={value === 0 && inputType === 'number' ? '' : value}
@@ -167,7 +174,7 @@ export const InputText = (
       }
       onChange={onChange}
       id={id}
-      className="border border-gray-300 px-2 py-1 mt-5"
+      className="border border-gray-300 px-2 py-1"
     />
   </div>
 )
