@@ -1,11 +1,14 @@
 import Link from 'next/link';
 import {
-  getSymbol, getIncomeStatement, getSymbolProfile
+  getSymbol, getIncomeStatement, getSymbolProfile,
+  getHistoricalPrices
 } from '@/lib/sql';
 import {
   BasicInfoTable, SymbolProfilesTable, IncomeStatementsTable
 } from '@/app/components/server/Symbol';
 import { WatchlistToggleBtn } from '@/app/components/client/Watchlist/WatchlistToggleBtn';
+import { PriceChart } from '@/app/components/client/chart/priceChart';
+import { formatDate } from '@/lib/date';
 
 
 const SymbolPage = async (
@@ -14,12 +17,28 @@ const SymbolPage = async (
 ) => {
   const { symbol } = await params;
   const [
-    symbolRow, symbolProfilesRow, incomeStatementsRows
+    symbolRow,
+    symbolProfilesRow,
+    incomeStatementsRows,
+    historicalPricesRows,
   ] = await Promise.all([
     getSymbol(symbol),
     getSymbolProfile(symbol),
-    getIncomeStatement(symbol)
+    getIncomeStatement(symbol),
+    getHistoricalPrices(symbol)
   ]);
+
+  let historicalPriceData = historicalPricesRows.map(row => ({
+    time: formatDate(row.date),
+    open: parseFloat(row.open.toString()),
+    high: parseFloat(row.high.toString()),
+    low: parseFloat(row.low.toString()),
+    close: parseFloat(row.close.toString()),
+    volume: parseInt(row.volume.toString()),
+  }));
+  historicalPriceData.sort(
+    (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+  );
 
   return (
     <div>
@@ -37,6 +56,7 @@ const SymbolPage = async (
       <BasicInfoTable symbolRow={symbolRow} />
       <SymbolProfilesTable symbolProfilesRow={symbolProfilesRow} />
       <IncomeStatementsTable incomeStatementsRows={incomeStatementsRows} />
+      <PriceChart data={historicalPriceData} />
     </div>
   );
 };

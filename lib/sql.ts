@@ -131,6 +131,14 @@ export const getWatchList = async (
   return symbols;
 }
 
+export const getHistoricalPrices = async (
+  symbol: dbTypes.SymbolRow['id']
+): Promise<dbTypes.HistoricalPriceRow[]> => {
+  const sql = `SELECT * FROM symbol_historical_price_full WHERE symbol = $1`;
+  const result = await query(sql, [symbol]);
+  return result.rows;
+}
+
 export const insertWatchList = async (
   userEmail: string,
   symbol: dbTypes.SymbolRow['id']

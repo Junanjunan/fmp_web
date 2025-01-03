@@ -116,3 +116,20 @@ export interface SymbolProfileRow {
 }
 
 export interface SymbolWithProfile extends SymbolRow, Omit<SymbolProfileRow, 'price'> {}
+
+export interface HistoricalPriceRow {
+  symbol: string;
+  date: Date;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  adj_close: number;
+  volume: number;
+  unadjusted_volume: number;
+  change: number;
+  change_percent: number;
+  vwap: number;
+  label: string;
+  change_over_time: number;
+}
