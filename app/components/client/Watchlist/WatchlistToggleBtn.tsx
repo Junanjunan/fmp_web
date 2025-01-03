@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { SymbolRow } from '@/types';
 import { isApiError } from '@/lib/error';
 import {
@@ -11,9 +12,12 @@ import {
 
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const [isInWatchListState, setIsInWatchListState] = useState(false);
-
+  const { data: session } = useSession();
   useEffect(() => {
     const fetchWatchList = async () => {
+      if (!session) {
+        return;
+      }
       const { watchlist } = await requestGetWatchList();
       setIsInWatchListState(watchlist.includes(symbol));
     }
@@ -50,6 +54,10 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
         }
       }
     }
+  }
+
+  if (!session) {
+    return null;
   }
 
   return (
