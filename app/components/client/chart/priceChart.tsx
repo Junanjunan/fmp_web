@@ -3,6 +3,7 @@
 import { createChart } from 'lightweight-charts';
 import { useEffect, useRef } from 'react';
 import { ChartProps } from '@/types/chart';
+import { calculateBollingerBands } from '@/lib/chart';
 
 
 export const PriceChart = ({ data }: ChartProps) => {
@@ -54,6 +55,20 @@ export const PriceChart = ({ data }: ChartProps) => {
       wickDownColor: '#ef5350',
     });
 
+    // Add Bollinger Bands series first so they appear behind candlesticks
+    const upperBandSeries = priceChart.addLineSeries({
+      color: '#26a69a',
+      lineWidth: 1,
+    });
+    const middleBandSeries = priceChart.addLineSeries({
+      color: '#323232',
+      lineWidth: 1,
+    });
+    const lowerBandSeries = priceChart.addLineSeries({
+      color: '#ef5350',
+      lineWidth: 1,
+    });
+
     const volumeSeries = volumeChart.addHistogramSeries({
       color: '#26a69a',
       priceFormat: {
@@ -69,6 +84,8 @@ export const PriceChart = ({ data }: ChartProps) => {
       close: item.close,
     }));
 
+    const { upper, middle, lower } = calculateBollingerBands(data, 20, 2);
+
     const volumeData = data.map((item) => ({
       time: item.time,
       value: item.volume,
@@ -76,6 +93,9 @@ export const PriceChart = ({ data }: ChartProps) => {
     }));
 
     candlestickSeries.setData(candleData);
+    upperBandSeries.setData(upper);
+    middleBandSeries.setData(middle);
+    lowerBandSeries.setData(lower);
     volumeSeries.setData(volumeData);
 
     // Sync the time scales of both charts
@@ -118,8 +138,24 @@ export const PriceChart = ({ data }: ChartProps) => {
 
   return (
     <div>
+      <ColorInformation />
       <div ref={priceChartRef} />
       <div ref={volumeChartRef} />
     </div>
   );
 };
+
+const ColorCard = ({ color, title }: { color: string, title: string }) => (
+  <div className="flex items-center mr-5">
+    <div className={`w-5 h-5 inline-block mr-1`} style={{ backgroundColor: color }}></div>
+    <span>{title}</span>
+  </div>
+);
+
+const ColorInformation = () => (
+  <div className="flex items-center mt-10">
+    <ColorCard color="#26a69a" title="BB uper" />
+    <ColorCard color="#323232" title="BB middle" />
+    <ColorCard color="#ef5350" title="BB lower" />
+  </div>
+);

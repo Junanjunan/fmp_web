@@ -1,4 +1,4 @@
-interface PriceData {
+export interface PriceData {
   time: string;
   open: number;
   high: number;
