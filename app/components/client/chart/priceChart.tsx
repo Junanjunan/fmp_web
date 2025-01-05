@@ -86,7 +86,15 @@ export const PriceChart = ({ data }: ChartProps) => {
       }
     };
 
+    const syncHandlerBasedOnVolume = () => {
+      const timeRange = volumeChart.timeScale().getVisibleRange();
+      if (timeRange !== null) {
+        priceChart.timeScale().setVisibleRange(timeRange);
+      }
+    }
+
     priceChart.timeScale().subscribeVisibleTimeRangeChange(syncHandler);
+    volumeChart.timeScale().subscribeVisibleTimeRangeChange(syncHandlerBasedOnVolume);
 
     const handleResize = () => {
       if (priceChartRef.current && volumeChartRef.current) {
