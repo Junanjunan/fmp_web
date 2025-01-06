@@ -30,11 +30,11 @@ const SymbolPage = async (
 
   let historicalPriceData = historicalPricesRows.map(row => ({
     time: formatDate(row.date),
-    open: parseFloat(row.open.toString()),
-    high: parseFloat(row.high.toString()),
-    low: parseFloat(row.low.toString()),
-    close: parseFloat(row.close.toString()),
-    volume: parseInt(row.volume.toString()),
+    open: row.open ? parseFloat(row.open.toString()) : 0,
+    high: row.high ? parseFloat(row.high.toString()) : 0,
+    low: row.low ? parseFloat(row.low.toString()) : 0,
+    close: row.close ? parseFloat(row.close.toString()) : 0,
+    volume: row.volume ? parseInt(row.volume.toString()) : 0,
   }));
   historicalPriceData.sort(
     (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()

@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client';
+
 export interface TypeRow {
   id: string;
 }
@@ -120,16 +122,16 @@ export interface SymbolWithProfile extends SymbolRow, Omit<SymbolProfileRow, 'pr
 export interface HistoricalPriceRow {
   symbol: string;
   date: Date;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  adj_close: number;
-  volume: number;
-  unadjusted_volume: number;
-  change: number;
-  change_percent: number;
-  vwap: number;
-  label: string;
-  change_over_time: number;
+  open: Prisma.Decimal | null;
+  high: Prisma.Decimal | null;
+  low: Prisma.Decimal | null;
+  close: Prisma.Decimal | null;
+  adj_close: Prisma.Decimal | null;
+  volume: bigint | null;
+  unadjusted_volume: bigint | null;
+  change: Prisma.Decimal | null;
+  change_percent: Prisma.Decimal | null;
+  vwap: Prisma.Decimal | null;
+  label: string | null;
+  change_over_time: Prisma.Decimal | null;
 }
