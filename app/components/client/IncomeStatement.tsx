@@ -186,6 +186,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             >
               Exchange{toggleArrow('exchange')}
             </th>
+            <th className="tableCell" rowSpan={2}>Price</th>
             <th
               className="tableCell cursor-pointer"
               rowSpan={2}
@@ -220,7 +221,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
         <tbody>
           {filteredSymbols.map(([
             symbol,
-            { type_id, exchange_id, growthArray, operatingIncomeRatios, psRatio }
+            { type_id, exchange_id, growthArray, operatingIncomeRatios, price, psRatio }
           ]) => (
             <tr
               key={symbol}
@@ -240,6 +241,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
               </td>
               <td className="tableCell">{type_id}</td>
               <td className="tableCell">{exchange_id}</td>
+              <td className="tableCell">{price}</td>
               <td className="tableCell">{psRatio}</td>
               {filteredYears.map((year) => (
                 <td key={year} className="tableCell">

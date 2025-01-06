@@ -15,6 +15,7 @@ export interface GrowthOfSymbols {
   [key: SymbolRow["id"]]: {
     type_id: TypeRow["id"];
     exchange_id: ExchangeRow["id"];
+    price: number;
     psRatio: number;
     growthArray: GrowthArray[];
     operatingIncomeRatios: RatioArray[];

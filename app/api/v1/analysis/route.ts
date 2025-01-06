@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const growthOfSymbols: GrowthOfSymbols = {};
 
   for (const symbolRow of symbolRows) {
-    const { id, type_id, exchange_id, mkt_cap } = symbolRow;
+    const { id, type_id, exchange_id, mkt_cap, price } = symbolRow;
     const incomeStatements = await getIncomeStatement(id);
     if (incomeStatements.length === 0) {
       console.log(`No income statements found for ${id}`);
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
     growthOfSymbols[id] = {
       type_id,
       exchange_id,
+      price,
       psRatio,
       growthArray: revenueGrowthArray,
       operatingIncomeRatios,
