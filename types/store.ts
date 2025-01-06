@@ -22,6 +22,17 @@ export interface AnalysisStore {
   searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
   excludeWatchlist: boolean;
+  showBBValues: boolean;
+  filterUnderBBLower: boolean;
+  filterUnderBBMiddle: boolean;
+  BollingerObject: {
+    [key: SymbolRow["id"]]: {
+      lastUpper: number;
+      lastMiddle: number;
+      lastLower: number;
+    };
+  };
+  filterLoading: boolean;
 
   setTypeIds: (typeIds: TypeRow["id"][]) => void;
   setExchanges: (exchanges: ExchangesByCountry) => void;
@@ -40,6 +51,17 @@ export interface AnalysisStore {
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setExcludeWatchlist: (excludeWatchlist: boolean) => void;
+  setShowBBValues: (showBBValues: boolean) => void;
+  setFilterUnderBBLower: (filterUnderBBLower: boolean) => void;
+  setFilterUnderBBMiddle: (filterUnderBBMiddle: boolean) => void;
+  setBollingerObject: (bollingerObject: {
+    [key: SymbolRow["id"]]: {
+      lastUpper: number;
+      lastMiddle: number;
+      lastLower: number;
+    };
+  }) => void;
+  setFilterLoading: (filterLoading: boolean) => void;
   reset: () => void;
 }
 

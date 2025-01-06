@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { SortedSymbolGrowths } from '@/types';
-import { Button } from '@/app/components/client/UI';
+import { SortedSymbolGrowths, SymbolRow } from '@/types';
+import { Button, CheckboxList } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
 import { useWatchlistData } from '@/hooks';
+import { requestSymbHistoricalPrices } from '@/app/axios';
+import { calculateLastBollingerBands } from '@/lib/chart';
+import { PriceData } from '@/types/chart';
 
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
@@ -14,6 +17,11 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     applyMinimumOperatingIncomeRatio,
     sortedSymbolGrowths, setSortedSymbolGrowths,
     lastClickedSymbol, setLastClickedSymbol,
+    showBBValues, setShowBBValues,
+    filterUnderBBLower, setFilterUnderBBLower,
+    filterUnderBBMiddle, setFilterUnderBBMiddle,
+    BollingerObject, setBollingerObject,
+    filterLoading, setFilterLoading,
   } = useAnalysisStore();
   const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -37,6 +45,31 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       });
     }
   }, [lastClickedSymbol]);
+
+  useEffect(() => {
+    if (showBBValues) {
+      setFilterLoading(true);
+      const symbolInfoObject: { [key: SymbolRow['id']]: PriceData[] } = {};
+      const symbolBollingerObject: { [key: SymbolRow['id']]: { lastUpper: number, lastMiddle: number, lastLower: number } } = {};
+      const symbolIds = filteredSymbols.map(symbol => symbol[0]);
+      requestSymbHistoricalPrices({ symbolIds: symbolIds })
+        .then(response => {
+          for (const row of response.data) {
+            if (row.symbol in symbolInfoObject) {
+              symbolInfoObject[row.symbol].push(row);
+            } else {
+              symbolInfoObject[row.symbol] = [row];
+            }
+          }
+          Object.entries(symbolInfoObject).forEach(([symbol, data]) => {
+            const { lastUpper, lastMiddle, lastLower } = calculateLastBollingerBands(data);
+            symbolBollingerObject[symbol] = { lastUpper, lastMiddle, lastLower };
+          });
+          setBollingerObject(symbolBollingerObject);
+          setFilterLoading(false);
+        });
+    }
+  }, [showBBValues])
 
   const executeFMP = async () => {
     const confirm = window.confirm('Are you sure you want to refresh the filtered symbols?');
@@ -124,6 +157,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
 
   const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
     const symbol = symbolData[0];
+    const price = symbolData[1].price;
     const growthArray = symbolData[1].growthArray;
     const OIRatios = symbolData[1].operatingIncomeRatios;
     const thirdYear = Number(yearsOfTable[2]);
@@ -143,6 +177,15 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
 
     if (!applyMinimumGrowth && !applyMinimumOperatingIncomeRatio) {
       return true;
+    }
+
+    if (showBBValues) {
+      if (filterUnderBBLower && BollingerObject?.[symbol]?.lastLower < price) {
+        return false;
+      }
+      if (filterUnderBBMiddle && BollingerObject?.[symbol]?.lastMiddle < price) {
+        return false;
+      }
     }
 
     for (let i = 0; i < growthArray.length; i++) {
@@ -173,6 +216,31 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
         isLoading={false}
         disabled={filteredSymbols.length === 0}
       />
+      <div className="flex items-center h-20">
+        <CheckboxList
+          attributes={['Show BB values']}
+          title=""
+          defaultChecked={showBBValues ? ['Show BB values'] : []}
+          onChange={() => {setShowBBValues(!showBBValues)}}
+        />
+      </div>
+      <div className="flex items-center h-20 -mt-10">
+        <CheckboxList
+          attributes={['Filter Under BB Lower']}
+          title=""
+          defaultChecked={showBBValues ? ['Filter Under BB Lower'] : []}
+          onChange={() => {setFilterUnderBBLower(!filterUnderBBLower)}}
+        />
+      </div>
+      <div className="flex items-center h-20 -mt-10">
+        <CheckboxList
+          attributes={['Filter under BB Middle']}
+          title=""
+          defaultChecked={showBBValues ? ['Filter under BB Middle'] : []}
+          onChange={() => {setFilterUnderBBMiddle(!filterUnderBBMiddle)}}
+        />
+      </div>
+      <span className="text-red-500">{filterLoading ? 'Loading...' : ''}</span>
       <ColorInformation />
       <table className="table">
         <thead className="tableHeader">
@@ -187,6 +255,9 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
               Exchange{toggleArrow('exchange')}
             </th>
             <th className="tableCell" rowSpan={2}>Price</th>
+            <th className="tableCell" rowSpan={2}>BB Lower</th>
+            <th className="tableCell" rowSpan={2}>BB Middle</th>
+            <th className="tableCell" rowSpan={2}>BB Upper</th>
             <th
               className="tableCell cursor-pointer"
               rowSpan={2}
@@ -242,6 +313,9 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
               <td className="tableCell">{type_id}</td>
               <td className="tableCell">{exchange_id}</td>
               <td className="tableCell">{price}</td>
+              <td className="tableCell">{BollingerObject?.[symbol]?.lastLower}</td>
+              <td className="tableCell">{BollingerObject?.[symbol]?.lastMiddle}</td>
+              <td className="tableCell">{BollingerObject?.[symbol]?.lastUpper}</td>
               <td className="tableCell">{psRatio}</td>
               {filteredYears.map((year) => (
                 <td key={year} className="tableCell">

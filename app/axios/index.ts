@@ -19,6 +19,11 @@ export const requestAnalysis = async (data: FilteredIds) => {
   return response.data;
 }
 
+export const requestSymbHistoricalPrices = async (data: { symbolIds: string[] }) => {
+  const response = await serverApi.post('/symbols/historical-prices', data);
+  return response.data;
+}
+
 export const requestGetWatchList = async (
 ) => {
   const response = await serverApi.get('/watchlist');

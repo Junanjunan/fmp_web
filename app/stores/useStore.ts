@@ -21,6 +21,11 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   searchSymbol: "",
   lastClickedSymbol: null,
   excludeWatchlist: false,
+  showBBValues: false,
+  filterUnderBBLower: false,
+  filterUnderBBMiddle: false,
+  BollingerObject: {},
+  filterLoading: false,
 
   // Actions
   setTypeIds: (typeIds) => set({ typeIds }),
@@ -40,6 +45,11 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
   setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
   setExcludeWatchlist: (excludeWatchlist) => set({ excludeWatchlist }),
+  setShowBBValues: (showBBValues) => set({ showBBValues }),
+  setFilterUnderBBLower: (filterUnderBBLower) => set({ filterUnderBBLower }),
+  setFilterUnderBBMiddle: (filterUnderBBMiddle) => set({ filterUnderBBMiddle }),
+  setBollingerObject: (bollingerObject) => set({ BollingerObject: bollingerObject }),
+  setFilterLoading: (filterLoading) => set({ filterLoading }),
   reset: () => set({
     typeIds: [],
     exchanges: [],
