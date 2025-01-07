@@ -4,7 +4,7 @@ import { Button, CheckboxList } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
 import { useWatchlistData } from '@/hooks';
-import { requestSymbHistoricalPrices } from '@/app/axios';
+import { requestSymbolHistoricalPrices } from '@/app/axios';
 import { calculateLastBollingerBands } from '@/lib/chart';
 import { PriceData } from '@/types/chart';
 
@@ -52,7 +52,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       const symbolInfoObject: { [key: SymbolRow['id']]: PriceData[] } = {};
       const symbolBollingerObject: { [key: SymbolRow['id']]: { lastUpper: number, lastMiddle: number, lastLower: number } } = {};
       const symbolIds = filteredSymbols.map(symbol => symbol[0]);
-      requestSymbHistoricalPrices({ symbolIds: symbolIds })
+      requestSymbolHistoricalPrices({ symbolIds: symbolIds })
         .then(response => {
           for (const row of response.data) {
             if (row.symbol in symbolInfoObject) {
