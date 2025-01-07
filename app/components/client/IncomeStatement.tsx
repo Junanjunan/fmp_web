@@ -6,7 +6,8 @@ import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
 import { useWatchlistData } from '@/hooks';
 import { requestSymbolHistoricalPrices } from '@/app/axios';
 import { calculateLastBollingerBands } from '@/lib/chart';
-import { PriceData } from '@/types/chart';
+import { SymbolInfoObject } from '@/types/chart';
+import { formatDate } from '@/lib/date';
 
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
@@ -49,7 +50,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   useEffect(() => {
     if (showBBValues) {
       setFilterLoading(true);
-      const symbolInfoObject: { [key: SymbolRow['id']]: PriceData[] } = {};
+      const symbolInfoObject: { [key: SymbolRow['id']]: SymbolInfoObject[] } = {};
       const symbolBollingerObject: { [key: SymbolRow['id']]: { lastUpper: number, lastMiddle: number, lastLower: number } } = {};
       const exchangeSymbolsObject: { [key: ExchangeRow['id']]: SymbolRow['id'][] } = {};
       for (const symbolInfo of filteredSymbols) {
@@ -76,6 +77,9 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             }
           }
           Object.entries(symbolInfoObject).forEach(([symbol, data]) => {
+            data.sort(
+              (a, b) => new Date(formatDate(b.date)).getTime() - new Date(formatDate(a.date)).getTime()
+            );
             const { lastUpper, lastMiddle, lastLower } = calculateLastBollingerBands(data);
             symbolBollingerObject[symbol] = { lastUpper, lastMiddle, lastLower };
           });

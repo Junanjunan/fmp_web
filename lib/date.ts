@@ -1,5 +1,5 @@
 export const formatDate = (
-  date: Date,
+  date: Date | string,
   _year: boolean = true,
   _month: boolean = true,
   _day: boolean = true,
@@ -8,9 +8,10 @@ export const formatDate = (
   _seconds: boolean = false,
   _milliseconds: boolean = false,
 ) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-  const day = String(date.getDate()).padStart(2, '0');
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(dateObj.getDate()).padStart(2, '0');
   let result = '';
   if (_year) {
     result += `${year}`;
@@ -22,19 +23,19 @@ export const formatDate = (
     result += `-${day}`;
   }
   if (_hours) {
-    const hours = String(date.getHours()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
     result += ` ${hours}`;
   }
   if (_minutes) {
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
     result += `:${minutes}`;
   }
   if (_seconds) {
-    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
     result += `:${seconds}`;
   }
   if (_milliseconds) {
-    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+    const milliseconds = String(dateObj.getMilliseconds()).padStart(3, '0');
     result += `.${milliseconds}`;
   }
   return result;

@@ -7,6 +7,11 @@ export interface PriceData {
   volume: number;
 }
 
+export interface SymbolInfoObject extends PriceData {
+  symbol: string;
+  date: Date;
+}
+
 export interface ChartProps {
   data: PriceData[];
 }
