@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { SortedSymbolGrowths, SymbolRow } from '@/types';
+import { ExchangeRow, SortedSymbolGrowths, SymbolRow } from '@/types';
 import { Button, CheckboxList } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
@@ -51,10 +51,24 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       setFilterLoading(true);
       const symbolInfoObject: { [key: SymbolRow['id']]: PriceData[] } = {};
       const symbolBollingerObject: { [key: SymbolRow['id']]: { lastUpper: number, lastMiddle: number, lastLower: number } } = {};
-      const symbolIds = filteredSymbols.map(symbol => symbol[0]);
-      requestSymbolHistoricalPrices({ symbolIds: symbolIds })
-        .then(response => {
-          for (const row of response.data) {
+      const exchangeSymbolsObject: { [key: ExchangeRow['id']]: SymbolRow['id'][] } = {};
+      for (const symbolInfo of filteredSymbols) {
+        const symbolId = symbolInfo[0];
+        const exchangeId = symbolInfo[1].exchange_id;
+        if (exchangeSymbolsObject[exchangeId]) {
+          exchangeSymbolsObject[exchangeId].push(symbolId);
+        } else {
+          exchangeSymbolsObject[exchangeId] = [symbolId];
+        }
+      }
+      for (const exchangeId in exchangeSymbolsObject) {
+        const data = {
+          db_name: `symbol_historical_price_full_${exchangeId.toLowerCase()}`,
+          symbolIds: exchangeSymbolsObject[exchangeId] 
+        }
+        requestSymbolHistoricalPrices(data)
+          .then(response => {
+            for (const row of response.data) {
             if (row.symbol in symbolInfoObject) {
               symbolInfoObject[row.symbol].push(row);
             } else {
@@ -68,6 +82,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
           setBollingerObject(symbolBollingerObject);
           setFilterLoading(false);
         });
+      }
     }
   }, [showBBValues])
 
