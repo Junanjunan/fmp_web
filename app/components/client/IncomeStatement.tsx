@@ -64,7 +64,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       }
       for (const exchangeId in exchangeSymbolsObject) {
         const data = {
-          db_name: `symbol_historical_price_full_${exchangeId.toLowerCase()}`,
+          exchange_id: exchangeId,
           symbolIds: exchangeSymbolsObject[exchangeId] 
         }
         requestSymbolHistoricalPrices(data)
@@ -323,7 +323,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             >
               <td className="tableCell">
                 <Link
-                  href={`/analysis/${symbol}`}
+                  href={`/analysis/${exchange_id}/${symbol}`}
                   onClick={() => setLastClickedSymbol(symbol)}
                 >
                   {symbol}

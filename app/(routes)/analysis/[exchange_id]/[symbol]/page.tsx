@@ -13,9 +13,9 @@ import { formatDate } from '@/lib/date';
 
 const SymbolPage = async (
   { params }
-  : { params: Promise<{ symbol: string }> }
+  : { params: Promise<{ exchange_id: string, symbol: string }> }
 ) => {
-  const { symbol } = await params;
+  const { exchange_id, symbol } = await params;
   const [
     symbolRow,
     symbolProfilesRow,
@@ -25,7 +25,7 @@ const SymbolPage = async (
     getSymbol(symbol),
     getSymbolProfile(symbol),
     getIncomeStatement(symbol),
-    getHistoricalPrices(symbol)
+    getHistoricalPrices(exchange_id, symbol)
   ]);
 
   let historicalPriceData = historicalPricesRows.map(row => ({

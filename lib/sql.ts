@@ -132,20 +132,26 @@ export const getWatchList = async (
 }
 
 export const getHistoricalPrices = async (
-  symbol: dbTypes.SymbolRow['id']
+  exchange_id: dbTypes.ExchangeRow['id'],
+  symbol: dbTypes.SymbolRow['id'],
 ): Promise<dbTypes.HistoricalPriceRow[]> => {
-  const sql = `SELECT * FROM symbol_historical_price_full WHERE symbol = $1`;
+  const exchangeLower = exchange_id.toLowerCase();
+  const dbName = `symbol_historical_price_full_${exchangeLower}`;
+  const sql = `SELECT * FROM ${dbName} WHERE symbol = $1`;
   const result = await query(sql, [symbol]);
   return result.rows;
 }
 
 export const getSymbolsHistoricalPrices = async (
-  symbols: dbTypes.SymbolRow['id'][]
+  exchange_id: dbTypes.ExchangeRow['id'],
+  symbols: dbTypes.SymbolRow['id'][],
 ): Promise<dbTypes.HistoricalPriceRow[]> => {
+  const exchangeLower = exchange_id.toLowerCase();
+  const dbName = `symbol_historical_price_full_${exchangeLower}`;
   const symbolStrings = symbols.map(symbol => `'${symbol}'`).join(',');
   const sql = `
     SELECT *
-    FROM symbol_historical_price_full
+    FROM ${dbName}
     WHERE symbol IN (${symbolStrings})
   `;
   const result = await query(sql);
