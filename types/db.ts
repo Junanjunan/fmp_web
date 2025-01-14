@@ -135,3 +135,7 @@ export interface HistoricalPriceRow {
   label: string | null;
   change_over_time: Prisma.Decimal | null;
 }
+
+export interface ExchangeHistoricalPriceObject {
+  [key: ExchangeRow['id']]: HistoricalPriceRow[];
+}

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FilteredIds } from '@/types/db';
+import { FilteredIds, ExchangeRow } from '@/types/db';
 
 
 export const serverApi = axios.create({
@@ -16,6 +16,13 @@ export const requestGet = async <T>(path: string): Promise<T> => {
 
 export const requestAnalysis = async (data: FilteredIds) => {
   const response = await serverApi.post('/analysis', data);
+  return response.data;
+}
+
+export const requestAnalysisVolume = async (
+  data: {exchangeIds: ExchangeRow['id'][], days: number}
+) => {
+  const response = await serverApi.post('/analysis-volume', data);
   return response.data;
 }
 

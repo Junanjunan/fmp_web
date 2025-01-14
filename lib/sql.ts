@@ -158,6 +158,36 @@ export const getSymbolsHistoricalPrices = async (
   return result.rows;
 }
 
+export const getDatesOfSymbolsHistoricalPrices = async (
+  exchange_id: dbTypes.ExchangeRow['id'],
+): Promise<dbTypes.HistoricalPriceRow[]> => {
+  const exchangeLower = exchange_id.toLowerCase();
+  const dbName = `symbol_historical_price_full_${exchangeLower}`;
+  const sql = `
+    SELECT DISTINCT date AT TIME ZONE 'UTC' AS date
+    FROM ${dbName}
+    ORDER BY date DESC;
+  `;
+  const result = await query(sql);
+  return result.rows;
+}
+
+export const getSymbolsHistoricalPricesByDate = async (
+  exchange_id: dbTypes.ExchangeRow['id'],
+  startDate: string,
+  endDate: string
+): Promise<dbTypes.HistoricalPriceRow[]> => {
+  const exchangeLower = exchange_id.toLowerCase();
+  const dbName = `symbol_historical_price_full_${exchangeLower}`;
+  const sql = `
+    SELECT *
+    FROM ${dbName}
+    WHERE date BETWEEN $1 AND $2
+  `;
+  const result = await query(sql, [startDate, endDate]);
+  return result.rows;
+}
+
 export const insertWatchList = async (
   userEmail: string,
   symbol: dbTypes.SymbolRow['id']

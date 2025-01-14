@@ -5,7 +5,7 @@ import {
   CheckboxList, CheckboxObjectList, Button, InputText
 } from '@/app/components/client/UI';
 import { AnalysisVolumeTable } from '@/app/components/client/table/AnalysisVolume';
-import { requestGet } from '@/app/axios';
+import { requestGet, requestAnalysisVolume } from '@/app/axios';
 import { TypeRow, ExchangeRow, ExchangesByCountry, SearchFilters } from '@/types';
 import { useAnalysisVolumeStore } from '@/app/stores/useStore';
 
@@ -56,7 +56,15 @@ const AnalysisVolumePage = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("clicked");
+    setIsLoading(true);
+    const days = numberOfBindingDays * numberOfBinds;
+    const data = {
+      exchangeIds: selectedExchangeIds,
+      days: days
+    };
+    const response = await requestAnalysisVolume(data);
+    console.log("response", response);
+    setIsLoading(false);
   };
 
   const SearchedCount = () => {
