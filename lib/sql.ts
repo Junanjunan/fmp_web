@@ -183,6 +183,7 @@ export const getSymbolsHistoricalPricesByDate = async (
     SELECT *
     FROM ${dbName}
     WHERE date BETWEEN $1 AND $2
+    ORDER BY symbol, date DESC;
   `;
   const result = await query(sql, [startDate, endDate]);
   return result.rows;
