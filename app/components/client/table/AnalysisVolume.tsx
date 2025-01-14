@@ -82,7 +82,8 @@ export const AnalysisVolumeTable = () => {
               Exchange
             </th>
             <th className="tableCell">Price</th>
-            <th className="tableCell">Last adjsted volume</th>
+            <th className="tableCell">Market Cap</th>
+            <th className="tableCell">Last adjusted amount <br /> (price * bind_of_days_0 / market_cap * 100)</th>
             {Array.from({ length: numberOfBinds }).map((_, index) => (
               <th key={index}>Binds of days {index}</th>
             ))}
@@ -91,7 +92,7 @@ export const AnalysisVolumeTable = () => {
         <tbody>
           {symbolDatas.map(([
             symbol,
-            { type_id, exchange_id, price, lastTransactionAmount, volumeArray }
+            { type_id, exchange_id, price, lastAdjustedAmount, mkt_cap, volumeArray }
           ]) => (
             <tr
               key={symbol}
@@ -112,7 +113,8 @@ export const AnalysisVolumeTable = () => {
               <td className="tableCell">{type_id}</td>
               <td className="tableCell">{exchange_id}</td>
               <td className="tableCell">{price}</td>
-              <td className="tableCell">{lastTransactionAmount}</td>
+              <td className="tableCell">{mkt_cap}</td>
+              <td className="tableCell">{lastAdjustedAmount}</td>
               {Array.from({ length: numberOfBinds }).map((_, index) => (
                 <td key={index} className="tableCell">
                   {volumeArray[index]}

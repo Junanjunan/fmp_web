@@ -69,16 +69,17 @@ const AnalysisVolumePage = () => {
     const responseData = response.data;
     const symbolsVolumeInfoObject: { [key: SymbolRow["id"]]: SymbolVolumeInfo } = {};
     Object.keys(responseData).forEach((exchangeId) => {
-      const exchangeData: { symbol: SymbolRow["id"], close: number, volume: number }[] = responseData[exchangeId];
+      const exchangeData: { symbol: SymbolRow["id"], close: number, volume: number, mkt_cap: number }[] = responseData[exchangeId];
       for (const symbolData of exchangeData) {
-        const { symbol, close, volume } = symbolData;
+        const { symbol, close, volume, mkt_cap } = symbolData;
         const transactionAmount = close * volume;
         if (!symbolsVolumeInfoObject[symbol]) {
           symbolsVolumeInfoObject[symbol] = {
             type_id: 'stock' as TypeRow["id"],
             exchange_id: exchangeId as ExchangeRow["id"],
             price: close,
-            lastTransactionAmount: transactionAmount,
+            lastAdjustedAmount: mkt_cap > 0 ? transactionAmount / mkt_cap * 100 : 0,
+            mkt_cap: mkt_cap,
             volumeArray: [volume]
           }
         } else {

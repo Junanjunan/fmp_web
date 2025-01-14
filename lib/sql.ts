@@ -181,9 +181,10 @@ export const getSymbolsHistoricalPricesByDate = async (
   const dbName = `symbol_historical_price_full_${exchangeLower}`;
   const sql = `
     SELECT *
-    FROM ${dbName}
-    WHERE date BETWEEN $1 AND $2
-    ORDER BY symbol, date DESC;
+    FROM ${dbName} AS shp
+    LEFT JOIN symbol_profiles AS sp ON shp.symbol = sp.symbol
+    WHERE shp.date BETWEEN $1 AND $2
+    ORDER BY shp.symbol, shp.date DESC;
   `;
   const result = await query(sql, [startDate, endDate]);
   return result.rows;

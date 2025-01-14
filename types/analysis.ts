@@ -31,6 +31,7 @@ export interface SymbolVolumeInfo {
   type_id: string,
   exchange_id: string;
   price: number;
-  lastTransactionAmount: number | null;
+  lastAdjustedAmount: number | null;
+  mkt_cap: number | null;
   volumeArray: number[];
 }
