@@ -6,7 +6,10 @@ import {
 } from '@/app/components/client/UI';
 import { AnalysisVolumeTable } from '@/app/components/client/table/AnalysisVolume';
 import { requestGet, requestAnalysisVolume } from '@/app/axios';
-import { TypeRow, ExchangeRow, ExchangesByCountry, SearchFilters } from '@/types';
+import {
+  SymbolRow, TypeRow, ExchangeRow, ExchangesByCountry,
+  SearchFilters, SymbolVolumeInfo
+} from '@/types';
 import { useAnalysisVolumeStore } from '@/app/stores/useStore';
 
 
@@ -16,7 +19,7 @@ const AnalysisVolumePage = () => {
     exchanges, setExchanges,
     selectedTypeIds, setSelectedTypeIds,
     selectedExchangeIds, setSelectedExchangeIds,
-    symbolGrowths,
+    symbolsVolumeInfoObject, setSymbolsVolumeInfoObject,
     excludeWatchlist, setExcludeWatchlist,
     numberOfBindingDays, setNumberOfBindingDays,
     numberOfBinds, setNumberOfBinds,
@@ -63,7 +66,27 @@ const AnalysisVolumePage = () => {
       days: days
     };
     const response = await requestAnalysisVolume(data);
-    console.log("response", response);
+    const responseData = response.data;
+    const symbolsVolumeInfoObject: { [key: SymbolRow["id"]]: SymbolVolumeInfo } = {};
+    Object.keys(responseData).forEach((exchangeId) => {
+      const exchangeData: { symbol: SymbolRow["id"], close: number, volume: number }[] = responseData[exchangeId];
+      for (const symbolData of exchangeData) {
+        const { symbol, close, volume } = symbolData;
+        const transactionAmount = close * volume;
+        if (!symbolsVolumeInfoObject[symbol]) {
+          symbolsVolumeInfoObject[symbol] = {
+            type_id: 'stock' as TypeRow["id"],
+            exchange_id: exchangeId as ExchangeRow["id"],
+            price: close,
+            lastTransactionAmount: transactionAmount,
+            volumeArray: [volume]
+          }
+        } else {
+          symbolsVolumeInfoObject[symbol].volumeArray.push(volume);
+        }
+      }
+    })
+    setSymbolsVolumeInfoObject(symbolsVolumeInfoObject);
     setIsLoading(false);
   };
 
@@ -72,7 +95,7 @@ const AnalysisVolumePage = () => {
       return null;
     }
 
-    const count = Object.keys(symbolGrowths).length;
+    const count = Object.keys(symbolsVolumeInfoObject).length;
     return <span>{count} searched</span>;
   };
 

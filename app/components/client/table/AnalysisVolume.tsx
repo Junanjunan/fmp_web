@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { SortedSymbolGrowths } from '@/types';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisVolumeStore, useWatchlistStore } from '@/app/stores/useStore';
@@ -10,7 +9,8 @@ export const AnalysisVolumeTable = () => {
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
     excludeWatchlist,
-    sortedSymbolGrowths,
+    symbolsVolumeInfoObject,
+    numberOfBinds,
     lastClickedSymbol, setLastClickedSymbol,
   } = useAnalysisVolumeStore();
   const { watchlist } = useWatchlistStore();
@@ -32,7 +32,7 @@ export const AnalysisVolumeTable = () => {
       return;
     }
 
-    const symbolsToBeAnalyzed = filteredSymbols.map(symbol => symbol[0]);
+    const symbolsToBeAnalyzed = symbolDatas.map(symbol => symbol[0]);
     try {
       const response = await fetch('/api/v1/fmp-server/symbols', {
         method: 'POST',
@@ -52,9 +52,7 @@ export const AnalysisVolumeTable = () => {
     }
   }
 
-  const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
-    const symbol = symbolData[0];
-
+  const symbolDatas = Object.entries(symbolsVolumeInfoObject).filter(([symbol, _]) => {
     if (excludeWatchlist && watchlist.includes(symbol)) {
       return false;
     }
@@ -64,12 +62,12 @@ export const AnalysisVolumeTable = () => {
 
   return (
     <div>
-      <span>{filteredSymbols.length} symbols found</span>
+      <span>{symbolDatas.length} symbols found</span>
       <Button
         onClick={executeFMP}
         title="Refresh Filtered Symbols"
         isLoading={false}
-        disabled={filteredSymbols.length === 0}
+        disabled={symbolDatas.length === 0}
       />
       <ColorInformation />
       <table className="table">
@@ -84,12 +82,16 @@ export const AnalysisVolumeTable = () => {
               Exchange
             </th>
             <th className="tableCell">Price</th>
+            <th className="tableCell">Last adjsted volume</th>
+            {Array.from({ length: numberOfBinds }).map((_, index) => (
+              <th key={index}>Binds of days {index}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {filteredSymbols.map(([
+          {symbolDatas.map(([
             symbol,
-            { type_id, exchange_id, price }
+            { type_id, exchange_id, price, lastTransactionAmount, volumeArray }
           ]) => (
             <tr
               key={symbol}
@@ -110,6 +112,12 @@ export const AnalysisVolumeTable = () => {
               <td className="tableCell">{type_id}</td>
               <td className="tableCell">{exchange_id}</td>
               <td className="tableCell">{price}</td>
+              <td className="tableCell">{lastTransactionAmount}</td>
+              {Array.from({ length: numberOfBinds }).map((_, index) => (
+                <td key={index} className="tableCell">
+                  {volumeArray[index]}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>

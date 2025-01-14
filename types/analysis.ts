@@ -26,3 +26,11 @@ export type SortedSymbolGrowths = [
   SymbolRow["id"],
   GrowthOfSymbols[SymbolRow["id"]]
 ][];
+
+export interface SymbolVolumeInfo {
+  type_id: string,
+  exchange_id: string;
+  price: number;
+  lastTransactionAmount: number | null;
+  volumeArray: number[];
+}

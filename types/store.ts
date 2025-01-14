@@ -1,6 +1,6 @@
 import {
   TypeRow, ExchangeRow, SymbolRow, SortedSymbolGrowths,
-  ExchangesByCountry, GrowthOfSymbols
+  ExchangesByCountry, GrowthOfSymbols, SymbolVolumeInfo,
 } from '@/types';
 
 
@@ -70,8 +70,7 @@ export interface AnalysisVolumeStore {
   exchanges: ExchangesByCountry;
   selectedTypeIds: TypeRow["id"][];
   selectedExchangeIds: ExchangeRow["id"][];
-  symbolGrowths: GrowthOfSymbols;
-  sortedSymbolGrowths: SortedSymbolGrowths;
+  symbolsVolumeInfoObject: { [key: string]: SymbolVolumeInfo };
   searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
   excludeWatchlist: boolean;
@@ -82,8 +81,7 @@ export interface AnalysisVolumeStore {
   setExchanges: (exchanges: ExchangesByCountry) => void;
   setSelectedTypeIds: (selectedTypeIds: TypeRow["id"][]) => void;
   setSelectedExchangeIds: (selectedExchangeIds: ExchangeRow["id"][]) => void;
-  setSymbolGrowths: (symbolGrowths: GrowthOfSymbols) => void;
-  setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
+  setSymbolsVolumeInfoObject: (symbolsVolumeInfoObject: { [key: string]: SymbolVolumeInfo }) => void;
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setExcludeWatchlist: (excludeWatchlist: boolean) => void;

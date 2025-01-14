@@ -71,8 +71,7 @@ export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
   exchanges: [],
   selectedTypeIds: ["stock"],
   selectedExchangeIds: ["NASDAQ", "NYSE"],
-  symbolGrowths: {},
-  sortedSymbolGrowths: [],
+  symbolsVolumeInfoObject: {},
   searchSymbol: "",
   lastClickedSymbol: null,
   excludeWatchlist: false,
@@ -84,8 +83,7 @@ export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
   setExchanges: (exchanges) => set({ exchanges }),
   setSelectedTypeIds: (selectedTypeIds) => set({ selectedTypeIds }),
   setSelectedExchangeIds: (selectedExchangeIds) => set({ selectedExchangeIds }),
-  setSymbolGrowths: (symbolGrowths) => set({ symbolGrowths }),
-  setSortedSymbolGrowths: (sortedSymbolGrowths) => set({ sortedSymbolGrowths }),
+  setSymbolsVolumeInfoObject: (symbolsVolumeInfoObject) => set({ symbolsVolumeInfoObject }),
   setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
   setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
   setExcludeWatchlist: (excludeWatchlist) => set({ excludeWatchlist }),
@@ -97,8 +95,6 @@ export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
     exchanges: [],
     selectedTypeIds: ["stock"],
     selectedExchangeIds: ["NASDAQ", "NYSE"],
-    symbolGrowths: {},
-    sortedSymbolGrowths: [],
     lastClickedSymbol: null,
   })
 }));
