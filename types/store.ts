@@ -65,6 +65,33 @@ export interface AnalysisStore {
   reset: () => void;
 }
 
+export interface AnalysisVolumeStore {
+  typeIds: TypeRow["id"][];
+  exchanges: ExchangesByCountry;
+  selectedTypeIds: TypeRow["id"][];
+  selectedExchangeIds: ExchangeRow["id"][];
+  symbolGrowths: GrowthOfSymbols;
+  sortedSymbolGrowths: SortedSymbolGrowths;
+  searchSymbol: string;
+  lastClickedSymbol: SymbolRow["id"] | null;
+  excludeWatchlist: boolean;
+  numberOfBindingDays: number;
+  numberOfBinds: number;
+
+  setTypeIds: (typeIds: TypeRow["id"][]) => void;
+  setExchanges: (exchanges: ExchangesByCountry) => void;
+  setSelectedTypeIds: (selectedTypeIds: TypeRow["id"][]) => void;
+  setSelectedExchangeIds: (selectedExchangeIds: ExchangeRow["id"][]) => void;
+  setSymbolGrowths: (symbolGrowths: GrowthOfSymbols) => void;
+  setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
+  setSearchSymbol: (searchSymbol: string) => void;
+  setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
+  setExcludeWatchlist: (excludeWatchlist: boolean) => void;
+  setNumberOfBindingDays: (numberOfBindingDays: number) => void;
+  setNumberOfBinds: (numberOfBinds: number) => void;
+  reset: () => void;
+}
+
 export interface WatchlistStore {
   watchlist: SymbolRow["id"][];
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AnalysisStore, WatchlistStore } from '@/types/store';
+import { AnalysisStore, AnalysisVolumeStore, WatchlistStore } from '@/types/store';
 
 
 export const useAnalysisStore = create<AnalysisStore>((set) => ({
@@ -61,6 +61,44 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
     sortedSymbolGrowths: [],
     selectedYearCount: 5,
     minimumGrowth: 5,
+    lastClickedSymbol: null,
+  })
+}));
+
+export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
+  // Initial state
+  typeIds: [],
+  exchanges: [],
+  selectedTypeIds: ["stock"],
+  selectedExchangeIds: ["NASDAQ", "NYSE"],
+  symbolGrowths: {},
+  sortedSymbolGrowths: [],
+  searchSymbol: "",
+  lastClickedSymbol: null,
+  excludeWatchlist: false,
+  numberOfBindingDays: 1,
+  numberOfBinds: 3,
+
+  // Actions
+  setTypeIds: (typeIds) => set({ typeIds }),
+  setExchanges: (exchanges) => set({ exchanges }),
+  setSelectedTypeIds: (selectedTypeIds) => set({ selectedTypeIds }),
+  setSelectedExchangeIds: (selectedExchangeIds) => set({ selectedExchangeIds }),
+  setSymbolGrowths: (symbolGrowths) => set({ symbolGrowths }),
+  setSortedSymbolGrowths: (sortedSymbolGrowths) => set({ sortedSymbolGrowths }),
+  setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
+  setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
+  setExcludeWatchlist: (excludeWatchlist) => set({ excludeWatchlist }),
+  setNumberOfBindingDays: (numberOfBindingDays) => set({ numberOfBindingDays }),
+  setNumberOfBinds: (numberOfBinds) => set({ numberOfBinds }),
+
+  reset: () => set({
+    typeIds: [],
+    exchanges: [],
+    selectedTypeIds: ["stock"],
+    selectedExchangeIds: ["NASDAQ", "NYSE"],
+    symbolGrowths: {},
+    sortedSymbolGrowths: [],
     lastClickedSymbol: null,
   })
 }));

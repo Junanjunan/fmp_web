@@ -1,0 +1,133 @@
+import { useEffect, useRef } from 'react';
+import { SortedSymbolGrowths } from '@/types';
+import { Button } from '@/app/components/client/UI';
+import Link from 'next/link';
+import { useAnalysisVolumeStore, useWatchlistStore } from '@/app/stores/useStore';
+import { useWatchlistData } from '@/hooks';
+
+
+export const AnalysisVolumeTable = () => {
+  const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
+  const {
+    excludeWatchlist,
+    sortedSymbolGrowths,
+    lastClickedSymbol, setLastClickedSymbol,
+  } = useAnalysisVolumeStore();
+  const { watchlist } = useWatchlistStore();
+
+  useWatchlistData();
+
+  useEffect(() => {
+    if (lastClickedSymbol && lastClickedRowRef.current) {
+      lastClickedRowRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [lastClickedSymbol]);
+
+  const executeFMP = async () => {
+    const confirm = window.confirm('Are you sure you want to refresh the filtered symbols?');
+    if (!confirm) {
+      return;
+    }
+
+    const symbolsToBeAnalyzed = filteredSymbols.map(symbol => symbol[0]);
+    try {
+      const response = await fetch('/api/v1/fmp-server/symbols', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          params: {
+            filePath: 'services.subprocess',
+            method: 'update_filtered_symbols',
+            symbols: symbolsToBeAnalyzed
+          },
+        }),
+      });
+      const data = await response.json();
+      console.log(JSON.parse(data.result));
+    } catch (error) {
+      console.error('FMP execution error:', error);
+    }
+  }
+
+  const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
+    const symbol = symbolData[0];
+
+    if (excludeWatchlist && watchlist.includes(symbol)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  return (
+    <div>
+      <span>{filteredSymbols.length} symbols found</span>
+      <Button
+        onClick={executeFMP}
+        title="Refresh Filtered Symbols"
+        isLoading={false}
+        disabled={filteredSymbols.length === 0}
+      />
+      <ColorInformation />
+      <table className="table">
+        <thead className="tableHeader">
+          <tr>
+            <th className="tableCell">Symbol</th>
+            <th className="tableCell">Type</th>
+            <th
+              className="tableCell cursor-pointer"
+              rowSpan={2}
+            >
+              Exchange
+            </th>
+            <th className="tableCell">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredSymbols.map(([
+            symbol,
+            { type_id, exchange_id, price }
+          ]) => (
+            <tr
+              key={symbol}
+              ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
+              className={
+                lastClickedSymbol === symbol ? 'bg-blue-100' :
+                watchlist.includes(symbol) ? 'bg-green-100' : ''
+              }
+            >
+              <td className="tableCell">
+                <Link
+                  href={`/analysis/${symbol}`}
+                  onClick={() => setLastClickedSymbol(symbol)}
+                >
+                  {symbol}
+                </Link>
+              </td>
+              <td className="tableCell">{type_id}</td>
+              <td className="tableCell">{exchange_id}</td>
+              <td className="tableCell">{price}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+const ColorCard = ({ color, title }: { color: string, title: string }) => (
+  <div className="flex items-center mr-5">
+    <div className={`w-5 h-5 ${color} inline-block mr-1`}></div>
+    <span>{title}</span>
+  </div>
+);
+
+const ColorInformation = () => (
+  <div className="flex items-center mt-10">
+    <ColorCard color="bg-blue-100" title="Last viewed symbol" />
+    <ColorCard color="bg-green-100" title="Symbols in Watchlist" />
+  </div>
+);
