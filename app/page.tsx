@@ -7,6 +7,7 @@ export default function Home() {
       <ul>
         <li><Link href="/symbols">Symbols</Link></li>
         <li><Link href="/analysis">Analysis</Link></li>
+        <li><Link href="/analysis-volume">Analysis Volume</Link></li>
       </ul>
     </main>
   );
