@@ -86,7 +86,7 @@ const AnalysisVolumePage = () => {
           symbolsVolumeInfoObject[symbol].volumeArray.push(volume);
         }
       }
-    })
+    });
     setSymbolsVolumeInfoObject(symbolsVolumeInfoObject);
     setIsLoading(false);
   };
