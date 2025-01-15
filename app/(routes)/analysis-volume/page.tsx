@@ -8,7 +8,7 @@ import { AnalysisVolumeTable } from '@/app/components/client/table/AnalysisVolum
 import { requestGet, requestAnalysisVolume } from '@/app/axios';
 import {
   SymbolRow, TypeRow, ExchangeRow, ExchangesByCountry,
-  SearchFilters, SymbolVolumeInfo
+  SearchFilters, SymbolVolumeInfo, SymbolVolumeInfoArrayItem
 } from '@/types';
 import { useAnalysisVolumeStore } from '@/app/stores/useStore';
 
@@ -23,6 +23,7 @@ const AnalysisVolumePage = () => {
     excludeWatchlist, setExcludeWatchlist,
     numberOfBindingDays, setNumberOfBindingDays,
     numberOfBinds, setNumberOfBinds,
+    setSortedSymbols,
   } = useAnalysisVolumeStore();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -87,7 +88,23 @@ const AnalysisVolumePage = () => {
         }
       }
     });
+
+    const sortedSymbolsArray: SymbolVolumeInfoArrayItem[] = [];
+    Object.entries(symbolsVolumeInfoObject).forEach(([symbol, symbolData]) => {
+      const sortedSymbolsItem = {
+        symbol: symbol,
+        type_id: symbolData.type_id,
+        exchange_id: symbolData.exchange_id,
+        price: symbolData.price,
+        mkt_cap: symbolData.mkt_cap,
+        lastAdjustedAmount: symbolData.lastAdjustedAmount,
+        volumeArray: symbolData.volumeArray
+      }
+      sortedSymbolsArray.push(sortedSymbolsItem);
+    });
+
     setSymbolsVolumeInfoObject(symbolsVolumeInfoObject);
+    setSortedSymbols(sortedSymbolsArray);
     setIsLoading(false);
   };
 

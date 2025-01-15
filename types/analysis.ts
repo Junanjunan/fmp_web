@@ -31,7 +31,11 @@ export interface SymbolVolumeInfo {
   type_id: string,
   exchange_id: string;
   price: number;
-  lastAdjustedAmount: number | null;
+  lastAdjustedAmount: number;
   mkt_cap: number | null;
   volumeArray: number[];
+}
+
+export interface SymbolVolumeInfoArrayItem extends SymbolVolumeInfo {
+  symbol: SymbolRow["id"];
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisVolumeStore, useWatchlistStore } from '@/app/stores/useStore';
@@ -12,8 +12,11 @@ export const AnalysisVolumeTable = () => {
     symbolsVolumeInfoObject,
     numberOfBinds,
     lastClickedSymbol, setLastClickedSymbol,
+    sortedSymbols, setSortedSymbols
   } = useAnalysisVolumeStore();
   const { watchlist } = useWatchlistStore();
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   useWatchlistData();
 
@@ -60,6 +63,36 @@ export const AnalysisVolumeTable = () => {
     return true;
   });
 
+  function getSortedSymbols() {
+    const _sortedSymbols = [...sortedSymbols];
+
+    _sortedSymbols.sort((a, b) => {
+      if (!sortColumn) {
+        return 0;
+      }
+
+      if (sortColumn === 'lastAdjustedAmount') {
+        return sortDirection === 'asc'
+          ? a.lastAdjustedAmount - b.lastAdjustedAmount
+          : b.lastAdjustedAmount - a.lastAdjustedAmount;
+      }
+
+      return 0;
+    })
+    console.log(_sortedSymbols)
+    return _sortedSymbols;
+  }
+
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('desc');
+    }
+    setSortedSymbols(getSortedSymbols());
+  };
+
   return (
     <div>
       <span>{symbolDatas.length} symbols found</span>
@@ -83,17 +116,22 @@ export const AnalysisVolumeTable = () => {
             </th>
             <th className="tableCell">Price</th>
             <th className="tableCell">Market Cap</th>
-            <th className="tableCell">Last adjusted amount <br /> (price * bind_of_days_0 / market_cap * 100)</th>
+            <th
+              className="tableCell"
+              onClick={() => handleSort('lastAdjustedAmount')}
+            >
+              Last adjusted amount <br />
+              (price * bind_of_days_0 / market_cap * 100)
+            </th>
             {Array.from({ length: numberOfBinds }).map((_, index) => (
               <th key={index}>Binds of days {index}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {symbolDatas.map(([
-            symbol,
-            { type_id, exchange_id, price, lastAdjustedAmount, mkt_cap, volumeArray }
-          ]) => (
+          {sortedSymbols.map(({
+            symbol, type_id, exchange_id, price, lastAdjustedAmount, mkt_cap, volumeArray
+          }) => (
             <tr
               key={symbol}
               ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
