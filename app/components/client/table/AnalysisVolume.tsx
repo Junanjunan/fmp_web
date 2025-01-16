@@ -104,7 +104,7 @@ export const AnalysisVolumeTable = () => {
       />
       <ColorInformation />
       <table className="table">
-        <thead className="tableHeader">
+        <thead className="tableHeader sticky top-0 z-10">
           <tr>
             <th className="tableCell">Symbol</th>
             <th className="tableCell">Type</th>

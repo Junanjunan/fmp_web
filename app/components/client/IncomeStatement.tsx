@@ -262,7 +262,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       <span className="text-red-500">{filterLoading ? 'Loading...' : ''}</span>
       <ColorInformation />
       <table className="table">
-        <thead className="tableHeader">
+        <thead className="tableHeader sticky top-0 z-10">
           <tr>
             <th className="tableCell" rowSpan={2}>Growth (%)</th>
             <th className="tableCell" rowSpan={2}>Type</th>
