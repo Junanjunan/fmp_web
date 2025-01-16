@@ -142,7 +142,7 @@ export const AnalysisVolumeTable = () => {
             >
               <td className="tableCell">
                 <Link
-                  href={`/analysis/${symbol}`}
+                  href={`/analysis/${exchange_id}/${symbol}`}
                   onClick={() => setLastClickedSymbol(symbol)}
                 >
                   {symbol}
