@@ -100,6 +100,13 @@ export const AnalysisVolumeTable = () => {
     setSortedSymbols(getSortedSymbols());
   };
 
+  const toggleArrow = (column: string) => {
+    if (sortColumn === column) {
+      return sortDirection === 'asc' ? '↑' : '↓';
+    }
+    return '';
+  }
+
   return (
     <div>
       <span>{symbolDatas.length} symbols found</span>
@@ -124,11 +131,11 @@ export const AnalysisVolumeTable = () => {
             <th className="tableCell">Price</th>
             <th className="tableCell">Market Cap</th>
             <th
-              className="tableCell"
+              className="tableCell cursor-pointer"
               onClick={() => handleSort('lastAdjustedAmount')}
             >
               Last adjusted amount <br />
-              (price * bind_of_days_0 / market_cap * 100)
+              (price * bind_of_days_0 / market_cap * 100){toggleArrow('lastAdjustedAmount')}
             </th>
             {Array.from({ length: numberOfBinds }).map((_, index) => (
               <th key={index}>Binds of days {index}</th>
