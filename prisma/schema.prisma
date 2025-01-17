@@ -8,17 +8,18 @@ datasource db {
 }
 
 model auth_user {
-  id              Int                  @id @default(autoincrement())
-  email           String               @unique
-  email_verified  DateTime?
-  name            String?
-  image           String?
-  hashed_password String?
-  created_at      DateTime             @default(now())
-  updated_at      DateTime             @updatedAt
-  refresh_tokens  auth_refresh_token[]
-  social_logins   auth_social_login[]
-  user_symbols    user_symbols[]
+  id                  Int                  @id @default(autoincrement())
+  email               String               @unique
+  email_verified      DateTime?
+  name                String?
+  image               String?
+  hashed_password     String?
+  created_at          DateTime             @default(now())
+  updated_at          DateTime             @updatedAt
+  refresh_tokens      auth_refresh_token[]
+  social_logins       auth_social_login[]
+  user_symbols        user_symbols[]
+  user_symbols_list    user_symbols_list[]
 }
 
 model auth_social_login {
@@ -187,14 +188,26 @@ model types {
   symbols symbols[]
 }
 
-model user_symbols {
-  id         Int       @id @default(autoincrement())
-  user_email String
-  symbol_id  String
-  symbols    symbols   @relation(fields: [symbol_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user       auth_user @relation(fields: [user_email], references: [email], onDelete: Cascade, onUpdate: NoAction)
+model user_symbols_list {
+  id            Int             @id @default(autoincrement())
+  user_email    String
+  name          String
+  user          auth_user       @relation(fields: [user_email], references: [email], onDelete: Cascade, onUpdate: NoAction)
+  user_symbols  user_symbols[]
 
-  @@unique([user_email, symbol_id])
+  @@unique([user_email, name])
+}
+
+model user_symbols {
+  id                    Int                 @id @default(autoincrement())
+  user_email            String
+  symbol_id             String
+  user_symbols_list_id  Int
+  symbols               symbols             @relation(fields: [symbol_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user                  auth_user           @relation(fields: [user_email], references: [email], onDelete: Cascade, onUpdate: NoAction)
+  user_symbols_list     user_symbols_list   @relation(fields: [user_symbols_list_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_email, symbol_id, user_symbols_list_id])
 }
 
 model symbol_historical_price_full {
