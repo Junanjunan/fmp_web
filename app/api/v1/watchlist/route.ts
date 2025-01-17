@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession_ } from "@/lib/auth/session";
-import { deleteWatchList, getWatchList, insertWatchList } from "@/lib/sql";
+import { deleteWatchList, getWatchList, insertSymbolToWatchList } from "@/lib/sql";
 
 
 export async function GET() {
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     }
     const { email } = session.user;
     const { symbol } = await request.json();
-    const sqlRes = await insertWatchList(email, symbol);
+    const sqlRes = await insertSymbolToWatchList(email, symbol);
     if (!sqlRes.success) {
       return NextResponse.json(
         {

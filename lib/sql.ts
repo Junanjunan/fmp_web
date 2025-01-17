@@ -190,7 +190,7 @@ export const getSymbolsHistoricalPricesByDate = async (
   return result.rows;
 }
 
-export const insertWatchList = async (
+export const insertSymbolToWatchList = async (
   userEmail: string,
   symbol: dbTypes.SymbolRow['id']
 ) => {
