@@ -139,3 +139,9 @@ export interface HistoricalPriceRow {
 export interface ExchangeHistoricalPriceObject {
   [key: ExchangeRow['id']]: HistoricalPriceRow[];
 }
+
+export interface UserSymbolRow {
+  id: number;
+  user_email: string;
+  symbol_id: SymbolRow["id"];
+}

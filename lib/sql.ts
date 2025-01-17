@@ -124,7 +124,7 @@ export const getFilteredSymbolsProfiles = async(
 export const getWatchList = async (
   userEmail: string
 ): Promise<dbTypes.SymbolRow['id'][]> => {
-  const userSymbols = await prisma.user_symbols.findMany({
+  const userSymbols: dbTypes.UserSymbolRow[] = await prisma.user_symbols.findMany({
     where: { user_email: userEmail }
   });
   const symbols = userSymbols.map(symbol => symbol.symbol_id);
