@@ -58,7 +58,6 @@ export const AnalysisVolumeTable = () => {
         }),
       });
       const data = await response.json();
-      console.log(JSON.parse(data.result));
     } catch (error) {
       console.error('FMP execution error:', error);
     }
@@ -88,7 +87,6 @@ export const AnalysisVolumeTable = () => {
 
       return 0;
     })
-    console.log(_sortedSymbols)
     return _sortedSymbols;
   }
 

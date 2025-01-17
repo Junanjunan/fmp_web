@@ -171,7 +171,6 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
         }),
       });
       const data = await response.json();
-      console.log(JSON.parse(data.result));
     } catch (error) {
       console.error('FMP execution error:', error);
     }
