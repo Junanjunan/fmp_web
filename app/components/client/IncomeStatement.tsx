@@ -3,7 +3,7 @@ import { ExchangeRow, SortedSymbolGrowths, SymbolRow } from '@/types';
 import { Button, CheckboxList } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
-import { useWatchlistData } from '@/hooks';
+import { useWatchlistData, usePagination } from '@/hooks';
 import { requestSymbolHistoricalPrices } from '@/app/axios';
 import { calculateLastBollingerBands } from '@/lib/chart';
 import { SymbolInfoObject } from '@/types/chart';
@@ -28,6 +28,67 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sortYearType, setSortYearType] = useState<'revenue' | 'operatingIncome' | null>(null);
+
+  const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
+    const symbol = symbolData[0];
+    const price = symbolData[1].price;
+    const growthArray = symbolData[1].growthArray;
+    const OIRatios = symbolData[1].operatingIncomeRatios;
+    const thirdYear = Number(yearsOfTable[2]);
+    const yearsOfSymbol = growthArray.map(growth => growth.year);
+    if (!yearsOfSymbol.includes(thirdYear)) {
+      return false;
+    }
+    if (applyYearCount) {
+      if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
+        return false;
+      }
+    }
+
+    if (excludeWatchlist && watchlist.includes(symbol)) {
+      return false;
+    }
+
+    if (!applyMinimumGrowth && !applyMinimumOperatingIncomeRatio) {
+      return true;
+    }
+
+    if (showBBValues) {
+      if (filterUnderBBLower && BollingerObject?.[symbol]?.lastLower < price) {
+        return false;
+      }
+      if (filterUnderBBMiddle && BollingerObject?.[symbol]?.lastMiddle < price) {
+        return false;
+      }
+    }
+
+    for (let i = 0; i < growthArray.length; i++) {
+      for (const year of yearsOfTable) {
+        if (growthArray[i].year == year) {
+          if (applyMinimumGrowth) {
+            if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
+              return false;
+            }
+          }
+          if (applyMinimumOperatingIncomeRatio) {
+            if (!OIRatios[i].ratio || OIRatios[i].ratio < minimumOperatingIncomeRatio) {
+              return false;
+            }
+          }
+        }
+      }
+    }
+    return true;
+  });
+
+  const {
+    currentItems: currentSymbols,
+    currentPage,
+    totalPages,
+    goToNextPage,
+    goToPreviousPage,
+    goToSpecificPage,
+  } = usePagination(filteredSymbols, 20);
 
   useWatchlistData();
 
@@ -174,58 +235,6 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     return '';
   }
 
-  const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
-    const symbol = symbolData[0];
-    const price = symbolData[1].price;
-    const growthArray = symbolData[1].growthArray;
-    const OIRatios = symbolData[1].operatingIncomeRatios;
-    const thirdYear = Number(yearsOfTable[2]);
-    const yearsOfSymbol = growthArray.map(growth => growth.year);
-    if (!yearsOfSymbol.includes(thirdYear)) {
-      return false;
-    }
-    if (applyYearCount) {
-      if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
-        return false;
-      }
-    }
-
-    if (excludeWatchlist && watchlist.includes(symbol)) {
-      return false;
-    }
-
-    if (!applyMinimumGrowth && !applyMinimumOperatingIncomeRatio) {
-      return true;
-    }
-
-    if (showBBValues) {
-      if (filterUnderBBLower && BollingerObject?.[symbol]?.lastLower < price) {
-        return false;
-      }
-      if (filterUnderBBMiddle && BollingerObject?.[symbol]?.lastMiddle < price) {
-        return false;
-      }
-    }
-
-    for (let i = 0; i < growthArray.length; i++) {
-      for (const year of yearsOfTable) {
-        if (growthArray[i].year == year) {
-          if (applyMinimumGrowth) {
-            if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
-              return false;
-            }
-          }
-          if (applyMinimumOperatingIncomeRatio) {
-            if (!OIRatios[i].ratio || OIRatios[i].ratio < minimumOperatingIncomeRatio) {
-              return false;
-            }
-          }
-        }
-      }
-    }
-    return true;
-  });
-
   return (
     <div>
       <span>{filteredSymbols.length} symbols found</span>
@@ -309,7 +318,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
           </tr>
         </thead>
         <tbody>
-          {filteredSymbols.map(([
+          {currentSymbols.map(([
             symbol,
             { type_id, exchange_id, growthArray, operatingIncomeRatios, price, psRatio }
           ]) => (
@@ -353,6 +362,33 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <Button
+          onClick={() => goToSpecificPage(1)}
+          title="To First"
+          isLoading={null}
+          disabled={currentPage === 1}
+        />
+        <Button
+          onClick={goToPreviousPage}
+          title="Previous"
+          isLoading={null}
+          disabled={currentPage === 1}
+        />
+        <span>Page {currentPage} of {totalPages}</span>
+        <Button
+          onClick={goToNextPage}
+          title="Next"
+          isLoading={null}
+          disabled={currentPage === totalPages}
+        />
+        <Button
+          onClick={() => goToSpecificPage(totalPages)}
+          title="To Last"
+          isLoading={null}
+          disabled={currentPage === totalPages}
+        />
+      </div>
     </div>
   );
 }

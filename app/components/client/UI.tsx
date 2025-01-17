@@ -111,7 +111,7 @@ export const Button = (
   {
     onClick: () => void,
     title: string,
-    isLoading: boolean,
+    isLoading: boolean | null,
     additionalClass?: string,
     disabled?: boolean,
    }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/app/components/client/UI';
 import Link from 'next/link';
 import { useAnalysisVolumeStore, useWatchlistStore } from '@/app/stores/useStore';
-import { useWatchlistData } from '@/hooks';
+import { useWatchlistData, usePagination } from '@/hooks';
 
 
 export const AnalysisVolumeTable = () => {
@@ -17,6 +17,15 @@ export const AnalysisVolumeTable = () => {
   const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  const {
+    currentItems: currentSymbols,
+    currentPage,
+    totalPages,
+    goToNextPage,
+    goToPreviousPage,
+    goToSpecificPage,
+  } = usePagination(sortedSymbols, 20);
 
   useWatchlistData();
 
@@ -129,7 +138,7 @@ export const AnalysisVolumeTable = () => {
           </tr>
         </thead>
         <tbody>
-          {sortedSymbols.map(({
+          {currentSymbols.map(({
             symbol, type_id, exchange_id, price, lastAdjustedAmount, mkt_cap, volumeArray
           }) => (
             <tr
@@ -162,6 +171,33 @@ export const AnalysisVolumeTable = () => {
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <Button
+          onClick={() => goToSpecificPage(1)}
+          title="To First"
+          isLoading={null}
+          disabled={currentPage === 1}
+        />
+        <Button
+          onClick={goToPreviousPage}
+          title="Previous"
+          isLoading={null}
+          disabled={currentPage === 1}
+        />
+        <span>Page {currentPage} of {totalPages}</span>
+        <Button
+          onClick={goToNextPage}
+          title="Next"
+          isLoading={null}
+          disabled={currentPage === totalPages}
+        />
+        <Button
+          onClick={() => goToSpecificPage(totalPages)}
+          title="To Last"
+          isLoading={null}
+          disabled={currentPage === totalPages}
+        />
+      </div>
     </div>
   );
 }
