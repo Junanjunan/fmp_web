@@ -159,21 +159,27 @@ model symbol_profiles {
 }
 
 model symbols {
-  id                           String                         @id @db.VarChar(20)
-  name                         String                         @db.VarChar(200)
-  price                        Decimal?                       @db.Decimal(30, 10)
-  type_id                      String                         @db.VarChar(20)
-  exchange_id                  String?                        @db.VarChar(20)
-  is_updated                   Boolean?                       @default(false)
-  is_existing                  Boolean?                       @default(true)
-  updated_at                   DateTime?                      @default(now()) @db.Timestamp(6)
-  error_symbols                error_symbols[]
-  income_statements            income_statements[]
-  symbol_historical_price_full symbol_historical_price_full[]
-  symbol_profiles              symbol_profiles?
-  exchanges                    exchanges?                     @relation(fields: [exchange_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  types                        types                          @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_symbols                 user_symbols[]
+  id                                  String                                @id @db.VarChar(20)
+  name                                String                                @db.VarChar(200)
+  price                               Decimal?                              @db.Decimal(30, 10)
+  type_id                             String                                @db.VarChar(20)
+  exchange_id                         String?                               @db.VarChar(20)
+  is_updated                          Boolean?                              @default(false)
+  is_existing                         Boolean?                              @default(true)
+  updated_at                          DateTime?                             @default(now()) @db.Timestamp(6)
+  error_symbols                       error_symbols[]
+  income_statements                   income_statements[]
+  symbol_historical_price_full        symbol_historical_price_full[]
+  symbol_historical_price_full_amex   symbol_historical_price_full_amex[]
+  symbol_historical_price_full_koe    symbol_historical_price_full_koe[]
+  symbol_historical_price_full_ksc    symbol_historical_price_full_ksc[]
+  symbol_historical_price_full_nasdaq symbol_historical_price_full_nasdaq[]
+  symbol_historical_price_full_nyse   symbol_historical_price_full_nyse[]
+  symbol_profiles                     symbol_profiles?
+  exchanges                           exchanges?                            @relation(fields: [exchange_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  types                               types                                 @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  symbols_check_updated               symbols_check_updated[]
+  user_symbols                        user_symbols[]
 }
 
 model types {
@@ -209,4 +215,114 @@ model symbol_historical_price_full {
   symbols           symbols  @relation(fields: [symbol], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([symbol, date])
+}
+
+model symbol_historical_price_full_amex {
+  symbol            String   @db.VarChar(20)
+  date              DateTime @db.Timestamp(6)
+  open              Decimal? @db.Decimal(30, 10)
+  high              Decimal? @db.Decimal(30, 10)
+  low               Decimal? @db.Decimal(30, 10)
+  close             Decimal? @db.Decimal(30, 10)
+  adj_close         Decimal? @db.Decimal(30, 10)
+  volume            BigInt?
+  unadjusted_volume BigInt?
+  change            Decimal? @db.Decimal(30, 10)
+  change_percent    Decimal? @db.Decimal(30, 10)
+  vwap              Decimal? @db.Decimal(30, 10)
+  label             String?  @db.VarChar(50)
+  change_over_time  Decimal? @db.Decimal(30, 20)
+  symbols           symbols  @relation(fields: [symbol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([symbol, date])
+}
+
+model symbol_historical_price_full_koe {
+  symbol            String   @db.VarChar(20)
+  date              DateTime @db.Timestamp(6)
+  open              Decimal? @db.Decimal(30, 10)
+  high              Decimal? @db.Decimal(30, 10)
+  low               Decimal? @db.Decimal(30, 10)
+  close             Decimal? @db.Decimal(30, 10)
+  adj_close         Decimal? @db.Decimal(30, 10)
+  volume            BigInt?
+  unadjusted_volume BigInt?
+  change            Decimal? @db.Decimal(30, 10)
+  change_percent    Decimal? @db.Decimal(30, 10)
+  vwap              Decimal? @db.Decimal(30, 10)
+  label             String?  @db.VarChar(50)
+  change_over_time  Decimal? @db.Decimal(30, 20)
+  symbols           symbols  @relation(fields: [symbol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([symbol, date])
+}
+
+model symbol_historical_price_full_ksc {
+  symbol            String   @db.VarChar(20)
+  date              DateTime @db.Timestamp(6)
+  open              Decimal? @db.Decimal(30, 10)
+  high              Decimal? @db.Decimal(30, 10)
+  low               Decimal? @db.Decimal(30, 10)
+  close             Decimal? @db.Decimal(30, 10)
+  adj_close         Decimal? @db.Decimal(30, 10)
+  volume            BigInt?
+  unadjusted_volume BigInt?
+  change            Decimal? @db.Decimal(30, 10)
+  change_percent    Decimal? @db.Decimal(30, 10)
+  vwap              Decimal? @db.Decimal(30, 10)
+  label             String?  @db.VarChar(50)
+  change_over_time  Decimal? @db.Decimal(30, 20)
+  symbols           symbols  @relation(fields: [symbol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([symbol, date])
+}
+
+model symbol_historical_price_full_nasdaq {
+  symbol            String   @db.VarChar(20)
+  date              DateTime @db.Timestamp(6)
+  open              Decimal? @db.Decimal(30, 10)
+  high              Decimal? @db.Decimal(30, 10)
+  low               Decimal? @db.Decimal(30, 10)
+  close             Decimal? @db.Decimal(30, 10)
+  adj_close         Decimal? @db.Decimal(30, 10)
+  volume            BigInt?
+  unadjusted_volume BigInt?
+  change            Decimal? @db.Decimal(30, 10)
+  change_percent    Decimal? @db.Decimal(30, 10)
+  vwap              Decimal? @db.Decimal(30, 10)
+  label             String?  @db.VarChar(50)
+  change_over_time  Decimal? @db.Decimal(30, 20)
+  symbols           symbols  @relation(fields: [symbol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([symbol, date])
+}
+
+model symbol_historical_price_full_nyse {
+  symbol            String   @db.VarChar(20)
+  date              DateTime @db.Timestamp(6)
+  open              Decimal? @db.Decimal(30, 10)
+  high              Decimal? @db.Decimal(30, 10)
+  low               Decimal? @db.Decimal(30, 10)
+  close             Decimal? @db.Decimal(30, 10)
+  adj_close         Decimal? @db.Decimal(30, 10)
+  volume            BigInt?
+  unadjusted_volume BigInt?
+  change            Decimal? @db.Decimal(30, 10)
+  change_percent    Decimal? @db.Decimal(30, 10)
+  vwap              Decimal? @db.Decimal(30, 10)
+  label             String?  @db.VarChar(50)
+  change_over_time  Decimal? @db.Decimal(30, 20)
+  symbols           symbols  @relation(fields: [symbol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([symbol, date])
+}
+
+model symbols_check_updated {
+  symbol          String   @db.VarChar(20)
+  update_function String   @db.VarChar(100)
+  executed_date   DateTime @db.Timestamp(6)
+  is_updated      Boolean? @default(false)
+  symbols         symbols  @relation(fields: [symbol], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([symbol, update_function, executed_date])
 }
