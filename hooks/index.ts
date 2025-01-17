@@ -25,8 +25,8 @@ export const useWatchlistData = () => {
   }, []);
 };
 
-export const usePagination = <T, >(items: T[], itemsPerPage: number) => {
-  const [currentPage, setCurrentPage] = useState(1);
+export const usePagination = <T, >(items: T[], itemsPerPage: number, savedPage: number) => {
+  const [currentPage, setCurrentPage] = useState(savedPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
@@ -46,7 +46,7 @@ export const usePagination = <T, >(items: T[], itemsPerPage: number) => {
 
   return {
     currentItems,
-    currentPage,
+    currentPage, setCurrentPage,
     totalPages,
     goToNextPage,
     goToPreviousPage,

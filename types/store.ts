@@ -22,6 +22,7 @@ export interface AnalysisStore {
   minimumOperatingIncomeRatio: number;
   searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
+  savedPage: number;
   excludeWatchlist: boolean;
   showBBValues: boolean;
   filterUnderBBLower: boolean;
@@ -51,6 +52,7 @@ export interface AnalysisStore {
   setApplyMinimumOperatingIncomeRatio: (applyMinimumOperatingIncomeRatio: boolean) => void;
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
+  setSavedPage: (savedPage: number) => void;
   setExcludeWatchlist: (excludeWatchlist: boolean) => void;
   setShowBBValues: (showBBValues: boolean) => void;
   setFilterUnderBBLower: (filterUnderBBLower: boolean) => void;
@@ -75,6 +77,7 @@ export interface AnalysisVolumeStore {
   sortedSymbols: SymbolVolumeInfoArrayItem[],
   searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
+  savedPage: number;
   excludeWatchlist: boolean;
   numberOfBindingDays: number;
   numberOfBinds: number;
@@ -87,6 +90,7 @@ export interface AnalysisVolumeStore {
   setSortedSymbols: (sortedSymbols: SymbolVolumeInfoArrayItem[]) => void;
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
+  setSavedPage: (savedPage: number) => void;
   setExcludeWatchlist: (excludeWatchlist: boolean) => void;
   setNumberOfBindingDays: (numberOfBindingDays: number) => void;
   setNumberOfBinds: (numberOfBinds: number) => void;

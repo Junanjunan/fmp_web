@@ -12,7 +12,8 @@ export const AnalysisVolumeTable = () => {
     symbolsVolumeInfoObject,
     numberOfBinds,
     lastClickedSymbol, setLastClickedSymbol,
-    sortedSymbols, setSortedSymbols
+    sortedSymbols, setSortedSymbols,
+    savedPage, setSavedPage,
   } = useAnalysisVolumeStore();
   const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -25,9 +26,13 @@ export const AnalysisVolumeTable = () => {
     goToNextPage,
     goToPreviousPage,
     goToSpecificPage,
-  } = usePagination(sortedSymbols, 20);
+  } = usePagination(sortedSymbols, 20, savedPage);
 
   useWatchlistData();
+
+  useEffect(() => {
+    setSavedPage(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     if (lastClickedSymbol && lastClickedRowRef.current) {

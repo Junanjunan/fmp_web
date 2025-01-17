@@ -23,6 +23,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     filterUnderBBMiddle, setFilterUnderBBMiddle,
     BollingerObject, setBollingerObject,
     filterLoading, setFilterLoading,
+    savedPage, setSavedPage,
   } = useAnalysisStore();
   const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -88,9 +89,13 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     goToNextPage,
     goToPreviousPage,
     goToSpecificPage,
-  } = usePagination(filteredSymbols, 20);
+  } = usePagination(filteredSymbols, 20, savedPage);
 
   useWatchlistData();
+
+  useEffect(() => {
+    setSavedPage(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     if (sortedSymbolGrowths.length > 0) {
@@ -366,13 +371,13 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
           onClick={() => goToSpecificPage(1)}
           title="To First"
           isLoading={null}
-          disabled={currentPage === 1}
+          disabled={savedPage === 1}
         />
         <Button
           onClick={goToPreviousPage}
           title="Previous"
           isLoading={null}
-          disabled={currentPage === 1}
+          disabled={savedPage === 1}
         />
         <span>Page {currentPage} of {totalPages}</span>
         <Button
