@@ -45,7 +45,7 @@ export const requestInsertWatchList = async (
 }
 
 export const requestDeleteWatchList = async (
-  data: { symbol: string }
+  data: { watchlistName: string, symbol: string }
 ) => {
   const response = await serverApi.delete('/watchlist', { data });
   return response.data;

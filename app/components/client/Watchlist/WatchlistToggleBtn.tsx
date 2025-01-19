@@ -7,6 +7,7 @@ import {
   requestGetWatchList, requestInsertWatchList,
   requestDeleteWatchList
 } from '@/app/axios';
+import { Button } from '@/app/components/client/UI';
 
 
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
@@ -68,6 +69,26 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     }
   }
 
+  const deleteSymbolFromWatchlist = async (watchListName: string, symbol: string) => {
+    const confirm = window.confirm(`Will you remove ${symbol} from ${watchListName}?`);
+    if (!confirm) {
+      return;
+    }
+
+    const deleteResult = await requestDeleteWatchList({ watchlistName: watchListName, symbol });
+    if (deleteResult.success) {
+      Object.keys(organizedWatchLists).forEach((key) => {
+        if (key === watchListName) {
+          const updatedSymbols = organizedWatchLists[key].filter((symbolInWatchlist) => symbolInWatchlist !== symbol);
+          organizedWatchLists[key] = updatedSymbols;
+        }
+      });
+      const symbolsInWatchLists = Object.values(organizedWatchLists).flat();
+      setIsInWatchListState(symbolsInWatchLists.includes(symbol));
+      setOrganizedWatchLists(organizedWatchLists);
+    }
+  }
+
   if (!session) {
     return null;
   }
@@ -97,7 +118,15 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
                 {symbols.map((symbol) => {
                   return (
                     <tr key={symbol} className="border border-gray-500">
-                      <td className="p-1">{symbol}</td>
+                      <td className="p-1">
+                        {symbol}
+                        <Button
+                          onClick={() => deleteSymbolFromWatchlist(watchlistName, symbol)}
+                          title="✕"
+                          isLoading={null}
+                          additionalClass="ml-2"
+                        />
+                      </td>
                     </tr>
                   );
                 })}

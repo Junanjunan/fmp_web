@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession_ } from "@/lib/auth/session";
-import { deleteWatchList, getAllWatchLists, insertSymbolToWatchList } from "@/lib/sql";
+import { deleteSymbolFromWatchlist, getAllWatchLists, insertSymbolToWatchList } from "@/lib/sql";
 
 
 export async function GET() {
@@ -66,8 +66,8 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { symbol } = await request.json();
-  const sqlRes = await deleteWatchList(session.user.email, symbol);
+  const { watchlistName, symbol } = await request.json();
+  const sqlRes = await deleteSymbolFromWatchlist(session.user.email, watchlistName, symbol);
   if (!sqlRes.success) {
     return NextResponse.json({ success: false, message: sqlRes.message }, { status: 500 });
   }

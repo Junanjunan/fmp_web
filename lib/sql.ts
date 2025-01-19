@@ -240,15 +240,30 @@ export const insertSymbolToWatchList = async (
   }
 }
 
-export const deleteWatchList = async (
+export const deleteSymbolFromWatchlist = async (
   userEmail: string,
+  watchlistName: string,
   symbol: dbTypes.SymbolRow['id']
 ) => {
+  const userSymbolsListId = (await prisma.user_symbols_list.findFirst({
+    where: {
+      user_email: userEmail,
+      name: watchlistName
+    }
+  }))?.id;
+  if (!userSymbolsListId) {
+    return {
+      success: false,
+      message: 'Watchlist not found'
+    };
+  }
+
   try {
     await prisma.user_symbols.delete({
       where: {
-        user_email_symbol_id:{
+        user_email_symbol_id_user_symbols_list_id: {
           user_email: userEmail,
+          user_symbols_list_id: userSymbolsListId,
           symbol_id: symbol
         } 
       }
