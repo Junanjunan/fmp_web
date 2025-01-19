@@ -14,6 +14,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const [isInWatchListState, setIsInWatchListState] = useState(false);
   const [organizedWatchLists, setOrganizedWatchLists] = useState<OrgnizedWatchListsObject>({});
   const { data: session } = useSession();
+
   useEffect(() => {
     const fetchWatchList = async () => {
       if (!session) {
