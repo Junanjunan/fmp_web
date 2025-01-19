@@ -145,3 +145,18 @@ export interface UserSymbolRow {
   user_email: string;
   symbol_id: SymbolRow["id"];
 }
+
+export interface WatchlistRow {
+  id: number,
+  user_email: string;
+  name: string;
+}
+
+export interface AllWatchListsRow extends UserSymbolRow {
+  user_symbols_list_id: number;
+  user_symbols_list: WatchlistRow;
+}
+
+export interface OrgnizedWatchListsObject {
+  [key: WatchlistRow["name"]]: UserSymbolRow["symbol_id"][];
+}

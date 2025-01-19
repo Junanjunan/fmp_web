@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession_ } from "@/lib/auth/session";
-import { deleteWatchList, getWatchList, insertSymbolToWatchList } from "@/lib/sql";
+import { deleteWatchList, getAllWatchLists, insertSymbolToWatchList } from "@/lib/sql";
 
 
 export async function GET() {
@@ -16,8 +16,8 @@ export async function GET() {
   }
 
   const { email } = session.user;
-  const watchlist = await getWatchList(email);
-  return NextResponse.json({ watchlist });
+  const allWatchLists = await getAllWatchLists(email);
+  return NextResponse.json({ allWatchLists });
 }
 
 

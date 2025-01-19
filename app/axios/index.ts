@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FilteredIds, ExchangeRow } from '@/types/db';
+import { FilteredIds, ExchangeRow, AllWatchListsRow } from '@/types/db';
 
 
 export const serverApi = axios.create({
@@ -32,7 +32,7 @@ export const requestSymbolHistoricalPrices = async (data: { exchange_id: string,
 }
 
 export const requestGetWatchList = async (
-) => {
+): Promise<{allWatchLists: AllWatchListsRow[]}> => {
   const response = await serverApi.get('/watchlist');
   return response.data;
 }

@@ -121,6 +121,16 @@ export const getFilteredSymbolsProfiles = async(
   return result.rows;
 }
 
+export const getAllWatchLists = async (
+  userEmail: string
+) => {
+  const watchLists = await prisma.user_symbols.findMany({
+    where: { user_email: userEmail },
+    include: { user_symbols_list: true },
+  });
+  return watchLists;
+}
+
 export const getWatchList = async (
   userEmail: string
 ): Promise<dbTypes.SymbolRow['id'][]> => {

@@ -20,7 +20,9 @@ export const useWatchlistData = () => {
     requestGetWatchList()
       .then((res) => {
         isDataFetched.current = true;
-        setWatchlist(res.watchlist);
+        setWatchlist(res.allWatchLists.map(
+          watchlistObject => watchlistObject.symbol_id
+        ));
       });
   }, []);
 };

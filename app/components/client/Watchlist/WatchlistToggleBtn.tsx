@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { SymbolRow } from '@/types';
+import { SymbolRow, OrgnizedWatchListsObject } from '@/types';
 import { isApiError } from '@/lib/error';
 import {
   requestGetWatchList, requestInsertWatchList,
@@ -12,14 +12,25 @@ import {
 
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const [isInWatchListState, setIsInWatchListState] = useState(false);
+  const [organizedWatchLists, setOrganizedWatchLists] = useState<OrgnizedWatchListsObject>({});
   const { data: session } = useSession();
   useEffect(() => {
     const fetchWatchList = async () => {
       if (!session) {
         return;
       }
-      const { watchlist } = await requestGetWatchList();
-      setIsInWatchListState(watchlist.includes(symbol));
+      const { allWatchLists } = await requestGetWatchList();
+      const organizedWatchLists: OrgnizedWatchListsObject = {};
+      allWatchLists.forEach((watchlist) => {
+        if (!organizedWatchLists[watchlist.user_symbols_list.name]) {
+          organizedWatchLists[watchlist.user_symbols_list.name] = [watchlist.symbol_id];
+        } else {
+          organizedWatchLists[watchlist.user_symbols_list.name].push(watchlist.symbol_id);
+        }
+      });
+      const symbolsInWatchLists = allWatchLists.map((watchlist) => watchlist.symbol_id);
+      setIsInWatchListState(symbolsInWatchLists.includes(symbol));
+      setOrganizedWatchLists(organizedWatchLists);
     }
     fetchWatchList();
   }, [symbol]);
@@ -67,6 +78,30 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     ) : (
       <span onClick={handleToggleWatchlist} className="text-blue-500 border border-blue-500 px-2 py-1 ml-2 cursor-pointer">Add to Watchlist</span>
     )}
+    <div className="flex">
+      {Object.entries(organizedWatchLists).map(([watchlistName, symbols]) => {
+        return (
+          <div key={watchlistName}>
+            <table>
+              <thead className="bg-green-200">
+                <tr className="border border-gray-500">
+                  <th className="p-1">{watchlistName}</th>
+                </tr>
+              </thead>
+              <tbody className="border border-gray-500">
+                {symbols.map((symbol) => {
+                  return (
+                    <tr key={symbol} className="border border-gray-500">
+                      <td className="p-1">{symbol}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
+    </div>
     </>
   );
 }
