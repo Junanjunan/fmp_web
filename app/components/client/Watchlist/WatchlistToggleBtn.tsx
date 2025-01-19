@@ -103,15 +103,19 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     <div className={`flex ${showWatchLists ? 'block' : 'hidden'}`}>
       {Object.entries(organizedWatchLists).map(([watchlistName, symbols]) => {
         return (
-          <div
-            key={watchlistName}
-            onClick={() => addSymbolToWatchList(watchlistName, symbol)}
-            className="cursor-pointer"
-          >
+          <div key={watchlistName}>
             <table>
               <thead className="bg-green-200">
                 <tr className="border border-gray-500">
-                  <th className="p-1">{watchlistName}</th>
+                  <th className="p-1">
+                    {watchlistName}
+                    <Button
+                      onClick={() => addSymbolToWatchList(watchlistName, symbol)}
+                      title="+"
+                      isLoading={null}
+                      additionalClass="ml-2 cursor-pointer"
+                    />
+                  </th>
                 </tr>
               </thead>
               <tbody className="border border-gray-500">
