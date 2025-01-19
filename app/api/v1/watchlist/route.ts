@@ -34,8 +34,8 @@ export async function POST(request: Request) {
       );
     }
     const { email } = session.user;
-    const { symbol } = await request.json();
-    const sqlRes = await insertSymbolToWatchList(email, symbol);
+    const { watchlistName, symbol } = await request.json();
+    const sqlRes = await insertSymbolToWatchList(email, watchlistName, symbol);
     if (!sqlRes.success) {
       return NextResponse.json(
         {
@@ -45,7 +45,9 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
-    return NextResponse.json({ success: true });
+
+    const allWatchLists = await getAllWatchLists(email);
+    return NextResponse.json({ success: true, allWatchLists });
   } catch (e) {
     console.error(e);
     return NextResponse.json(

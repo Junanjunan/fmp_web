@@ -202,12 +202,27 @@ export const getSymbolsHistoricalPricesByDate = async (
 
 export const insertSymbolToWatchList = async (
   userEmail: string,
+  watchlistName: string,
   symbol: dbTypes.SymbolRow['id']
 ) => {
   try {
+    const userSymbolsListId = (await prisma.user_symbols_list.findFirst({
+      where: {
+        user_email: userEmail,
+        name: watchlistName
+      }
+    }))?.id;
+    if (!userSymbolsListId) {
+      return {
+        success: false,
+        message: 'Watchlist not found'
+      };
+    }
+
     await prisma.user_symbols.create({
       data: {
         user_email: userEmail,
+        user_symbols_list_id: userSymbolsListId,
         symbol_id: symbol,
       },
     });

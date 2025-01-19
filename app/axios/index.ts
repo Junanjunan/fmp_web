@@ -38,7 +38,7 @@ export const requestGetWatchList = async (
 }
 
 export const requestInsertWatchList = async (
-  data: { symbol: string }
+  data: { watchlistName:string, symbol: string }
 ) => {
   const response = await serverApi.post('/watchlist', data);
   return response.data;

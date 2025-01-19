@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { SymbolRow, OrgnizedWatchListsObject } from '@/types';
-import { isApiError } from '@/lib/error';
+import { SymbolRow, OrgnizedWatchListsObject, AllWatchListsRow } from '@/types';
 import {
   requestGetWatchList, requestInsertWatchList,
   requestDeleteWatchList
@@ -13,6 +12,7 @@ import {
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const [isInWatchListState, setIsInWatchListState] = useState(false);
   const [organizedWatchLists, setOrganizedWatchLists] = useState<OrgnizedWatchListsObject>({});
+  const [showWatchLists, setShowWatchLists] = useState(false);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -37,33 +37,33 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   }, [symbol]);
 
   const handleToggleWatchlist = async () => {
-    if (isInWatchListState) {
-      // Remove from watchlist
-      try {
-        await requestDeleteWatchList({ symbol });
-        setIsInWatchListState(false);
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          alert(e.message);
-        } else if (isApiError(e)) {
-          alert(e.response?.data?.message || 'An error occurred');
-        } else {
-          alert('An error occurred');
-        }
-      }
+    setShowWatchLists(!showWatchLists);
+  }
+
+  const addSymbolToWatchList = async (watchListName: string, symbol: string) => {
+    const symbolsInWatchlist = organizedWatchLists[watchListName];
+    if (symbolsInWatchlist.includes(symbol)) {
+      alert("It is already in watchlist");
     } else {
-      // Add to watchlist
-      try {
-        await requestInsertWatchList({ symbol });
-        setIsInWatchListState(true);
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          alert(e.message);
-        } else if (isApiError(e)) {
-          alert(e.response?.data?.message || 'An error occurred');
-        } else {
-          alert('An error occurred');
-        }
+      const confirm = window.confirm(`Will you add ${symbol} to ${watchListName}?`);
+      if (!confirm) {
+        return;
+      }
+
+      const insertResult = await requestInsertWatchList({ watchlistName: watchListName, symbol });
+      if (insertResult.success) {
+        const allWatchLists: AllWatchListsRow[] = insertResult.allWatchLists;
+        const organizedWatchLists: OrgnizedWatchListsObject = {};
+        allWatchLists.forEach((watchlist) => {
+          if (!organizedWatchLists[watchlist.user_symbols_list.name]) {
+            organizedWatchLists[watchlist.user_symbols_list.name] = [watchlist.symbol_id];
+          } else {
+            organizedWatchLists[watchlist.user_symbols_list.name].push(watchlist.symbol_id);
+          }
+        });
+        const symbolsInWatchLists = allWatchLists.map((watchlist) => watchlist.symbol_id);
+        setIsInWatchListState(symbolsInWatchLists.includes(symbol));
+        setOrganizedWatchLists(organizedWatchLists);
       }
     }
   }
@@ -79,10 +79,14 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     ) : (
       <span onClick={handleToggleWatchlist} className="text-blue-500 border border-blue-500 px-2 py-1 ml-2 cursor-pointer">Add to Watchlist</span>
     )}
-    <div className="flex">
+    <div className={`flex ${showWatchLists ? 'block' : 'hidden'}`}>
       {Object.entries(organizedWatchLists).map(([watchlistName, symbols]) => {
         return (
-          <div key={watchlistName}>
+          <div
+            key={watchlistName}
+            onClick={() => addSymbolToWatchList(watchlistName, symbol)}
+            className="cursor-pointer"
+          >
             <table>
               <thead className="bg-green-200">
                 <tr className="border border-gray-500">
