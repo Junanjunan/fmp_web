@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession_ } from "@/lib/auth/session";
-import { insertNewWatchlist } from "@/lib/sql";
+import { insertWatchlist } from "@/lib/sql";
 
 
 export async function POST(request: Request) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
     const { email } = session.user;
     const { watchlistName } = await request.json();
-    const sqlRes = await insertNewWatchlist(email, watchlistName);
+    const sqlRes = await insertWatchlist(email, watchlistName);
     if (!sqlRes.success) {
       return NextResponse.json(
         {

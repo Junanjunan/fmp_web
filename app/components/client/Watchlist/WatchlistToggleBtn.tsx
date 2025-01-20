@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { SymbolRow, OrgnizedWatchListsObject } from '@/types';
 import {
-  requestGetWatchList, requestInsertWatchList,
-  requestDeleteWatchList, requestInsertNewWatchlist
+  requestGetWatchList, requestInsertSymbolToWatchList,
+  requestDeleteSymbolFromWatchList, requestInsertWatchlist
 } from '@/app/axios';
 import { Button } from '@/app/components/client/UI';
 
@@ -59,7 +59,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   }
 
   const handleAddWatchlist = async () => {
-    const response = await requestInsertNewWatchlist({watchlistName: newWatchlistName});
+    const response = await requestInsertWatchlist({watchlistName: newWatchlistName});
     if (response.success) {
       setToggleResetWatchlist(!toggleResetWatchlist);
       setNewWatchlistName("");
@@ -77,7 +77,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
         return;
       }
 
-      const insertResult = await requestInsertWatchList({ watchlistName: watchListName, symbol });
+      const insertResult = await requestInsertSymbolToWatchList({ watchlistName: watchListName, symbol });
       if (insertResult.success) {
         setToggleResetWatchlist(!toggleResetWatchlist);
       }
@@ -90,7 +90,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
       return;
     }
 
-    const deleteResult = await requestDeleteWatchList({ watchlistName: watchListName, symbol });
+    const deleteResult = await requestDeleteSymbolFromWatchList({ watchlistName: watchListName, symbol });
     if (deleteResult.success) {
       setToggleResetWatchlist(!toggleResetWatchlist);
     }

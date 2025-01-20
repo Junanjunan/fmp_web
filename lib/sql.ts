@@ -278,7 +278,7 @@ export const deleteSymbolFromWatchlist = async (
   }
 }
 
-export const insertNewWatchlist = async (
+export const insertWatchlist = async (
   userEmail: string,
   watchlistName: string,
 ) => {
@@ -294,7 +294,7 @@ export const insertNewWatchlist = async (
     console.error(e);
     return {
       success: false,
-      message: 'insertNewWatchlist failed'
+      message: 'insertWatchlist failed'
     };
   }
 }

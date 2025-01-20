@@ -37,21 +37,21 @@ export const requestGetWatchList = async (
   return response.data;
 }
 
-export const requestInsertWatchList = async (
+export const requestInsertSymbolToWatchList = async (
   data: { watchlistName:string, symbol: string }
 ) => {
   const response = await serverApi.post('/watchlist', data);
   return response.data;
 }
 
-export const requestDeleteWatchList = async (
+export const requestDeleteSymbolFromWatchList = async (
   data: { watchlistName: string, symbol: string }
 ) => {
   const response = await serverApi.delete('/watchlist', { data });
   return response.data;
 }
 
-export const requestInsertNewWatchlist = async (
+export const requestInsertWatchlist = async (
   data: { watchlistName: string }
 ) => {
   const response = await serverApi.post('/watchlists-all', data);
