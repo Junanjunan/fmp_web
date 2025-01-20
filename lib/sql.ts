@@ -124,9 +124,9 @@ export const getFilteredSymbolsProfiles = async(
 export const getAllWatchLists = async (
   userEmail: string
 ) => {
-  const watchLists = await prisma.user_symbols.findMany({
+  const watchLists = await prisma.user_symbols_list.findMany({
     where: { user_email: userEmail },
-    include: { user_symbols_list: true },
+    include: { user_symbols: true }
   });
   return watchLists;
 }

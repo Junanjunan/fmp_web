@@ -22,16 +22,26 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
       if (!session) {
         return;
       }
+
       const { allWatchLists } = await requestGetWatchList();
       const organizedWatchLists: OrgnizedWatchListsObject = {};
       allWatchLists.forEach((watchlist) => {
-        if (!organizedWatchLists[watchlist.user_symbols_list.name]) {
-          organizedWatchLists[watchlist.user_symbols_list.name] = [watchlist.symbol_id];
-        } else {
-          organizedWatchLists[watchlist.user_symbols_list.name].push(watchlist.symbol_id);
+        if (!organizedWatchLists[watchlist.name]) {
+          organizedWatchLists[watchlist.name] = [];
         }
+        watchlist.user_symbols.forEach((userSymbol) => {
+          organizedWatchLists[watchlist.name].push(userSymbol.symbol_id);
+        });
       });
-      const symbolsInWatchLists = allWatchLists.map((watchlist) => watchlist.symbol_id);
+
+      const userSymbolsArray = allWatchLists.map((watchlist) => watchlist.user_symbols);
+      const symbolsInWatchLists: string[] = [];
+      userSymbolsArray.forEach((userSymbols) => {
+        userSymbols.forEach((userSymbol) => {
+          symbolsInWatchLists.push(userSymbol.symbol_id);
+        });
+      });
+
       setIsInWatchListState(symbolsInWatchLists.includes(symbol));
       setOrganizedWatchLists(organizedWatchLists);
     }
