@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession_ } from "@/lib/auth/session";
-import { deleteSymbolFromWatchlist, getAllWatchLists, insertSymbolToWatchList } from "@/lib/sql";
+import { deleteSymbolFromWatchlist, getAllWatchlists, insertSymbolToWatchlist } from "@/lib/sql";
 
 
 export async function GET() {
@@ -16,8 +16,8 @@ export async function GET() {
   }
 
   const { email } = session.user;
-  const allWatchLists = await getAllWatchLists(email);
-  return NextResponse.json({ allWatchLists });
+  const allWatchlists = await getAllWatchlists(email);
+  return NextResponse.json({ allWatchlists });
 }
 
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     }
     const { email } = session.user;
     const { watchlistName, symbol } = await request.json();
-    const sqlRes = await insertSymbolToWatchList(email, watchlistName, symbol);
+    const sqlRes = await insertSymbolToWatchlist(email, watchlistName, symbol);
     if (!sqlRes.success) {
       return NextResponse.json(
         {
@@ -46,8 +46,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const allWatchLists = await getAllWatchLists(email);
-    return NextResponse.json({ success: true, allWatchLists });
+    const allWatchlists = await getAllWatchlists(email);
+    return NextResponse.json({ success: true, allWatchlists });
   } catch (e) {
     console.error(e);
     return NextResponse.json(

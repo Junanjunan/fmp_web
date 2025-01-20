@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FilteredIds, ExchangeRow, AllWatchListsRow } from '@/types/db';
+import { FilteredIds, ExchangeRow, AllWatchlistsRow } from '@/types/db';
 
 
 export const serverApi = axios.create({
@@ -31,20 +31,20 @@ export const requestSymbolHistoricalPrices = async (data: { exchange_id: string,
   return response.data;
 }
 
-export const requestGetWatchList = async (
-): Promise<{allWatchLists: AllWatchListsRow[]}> => {
+export const requestGetWatchlist = async (
+): Promise<{allWatchlists: AllWatchlistsRow[]}> => {
   const response = await serverApi.get('/watchlist');
   return response.data;
 }
 
-export const requestInsertSymbolToWatchList = async (
+export const requestInsertSymbolToWatchlist = async (
   data: { watchlistName:string, symbol: string }
 ) => {
   const response = await serverApi.post('/watchlist', data);
   return response.data;
 }
 
-export const requestDeleteSymbolFromWatchList = async (
+export const requestDeleteSymbolFromWatchlist = async (
   data: { watchlistName: string, symbol: string }
 ) => {
   const response = await serverApi.delete('/watchlist', { data });
@@ -58,7 +58,7 @@ export const requestInsertWatchlist = async (
   return response.data;
 }
 
-export const requestDeleteWatchList = async (
+export const requestDeleteWatchlist = async (
   data: { watchlistName: string }
 ) => {
   const response = await serverApi.delete('/watchlists-all', { data } );

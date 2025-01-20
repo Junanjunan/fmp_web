@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useWatchlistStore } from '@/app/stores/useStore';
-import { requestGetWatchList } from '@/app/axios';
+import { requestGetWatchlist } from '@/app/axios';
 
 export const useWatchlistData = () => {
   const { setWatchlist } = useWatchlistStore();
@@ -17,10 +17,10 @@ export const useWatchlistData = () => {
       return;
     }
 
-    requestGetWatchList()
+    requestGetWatchlist()
       .then((res) => {
         isDataFetched.current = true;
-        setWatchlist(res.allWatchLists.map(
+        setWatchlist(res.allWatchlists.map(
           watchlistObject => watchlistObject.symbol_id
         ));
       });

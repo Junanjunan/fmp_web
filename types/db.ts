@@ -152,10 +152,10 @@ export interface WatchlistRow {
   name: string;
 }
 
-export interface AllWatchListsRow extends WatchlistRow {
+export interface AllWatchlistsRow extends WatchlistRow {
   user_symbols: UserSymbolRow[];
 }
 
-export interface OrgnizedWatchListsObject {
+export interface OrgnizedWatchlistsObject {
   [key: WatchlistRow["name"]]: UserSymbolRow["symbol_id"][];
 }

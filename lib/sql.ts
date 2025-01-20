@@ -121,17 +121,17 @@ export const getFilteredSymbolsProfiles = async(
   return result.rows;
 }
 
-export const getAllWatchLists = async (
+export const getAllWatchlists = async (
   userEmail: string
 ) => {
-  const watchLists = await prisma.user_symbols_list.findMany({
+  const watchlists = await prisma.user_symbols_list.findMany({
     where: { user_email: userEmail },
     include: { user_symbols: true }
   });
-  return watchLists;
+  return watchlists;
 }
 
-export const getWatchList = async (
+export const getWatchlist = async (
   userEmail: string
 ): Promise<dbTypes.SymbolRow['id'][]> => {
   const userSymbols: dbTypes.UserSymbolRow[] = await prisma.user_symbols.findMany({
@@ -200,7 +200,7 @@ export const getSymbolsHistoricalPricesByDate = async (
   return result.rows;
 }
 
-export const insertSymbolToWatchList = async (
+export const insertSymbolToWatchlist = async (
   userEmail: string,
   watchlistName: string,
   symbol: dbTypes.SymbolRow['id']

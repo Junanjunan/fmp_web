@@ -2,57 +2,57 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { SymbolRow, OrgnizedWatchListsObject } from '@/types';
+import { SymbolRow, OrgnizedWatchlistsObject } from '@/types';
 import {
-  requestGetWatchList, requestInsertSymbolToWatchList,
-  requestDeleteSymbolFromWatchList, requestInsertWatchlist,
-  requestDeleteWatchList
+  requestGetWatchlist, requestInsertSymbolToWatchlist,
+  requestDeleteSymbolFromWatchlist, requestInsertWatchlist,
+  requestDeleteWatchlist
 } from '@/app/axios';
 import { Button } from '@/app/components/client/UI';
 
 
 export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
-  const [isInWatchListState, setIsInWatchListState] = useState(false);
-  const [organizedWatchLists, setOrganizedWatchLists] = useState<OrgnizedWatchListsObject>({});
-  const [showWatchLists, setShowWatchLists] = useState(false);
+  const [isInWatchlistState, setIsInWatchlistState] = useState(false);
+  const [organizedWatchlists, setOrganizedWatchlists] = useState<OrgnizedWatchlistsObject>({});
+  const [showWatchlists, setShowWatchlists] = useState(false);
   const [toggleResetWatchlist, setToggleResetWatchlist] = useState(false);
   const [showAddWatchlist, setShowAddWatchlist] = useState(false);
   const [newWatchlistName, setNewWatchlistName] = useState("");
   const { data: session } = useSession();
 
   useEffect(() => {
-    const fetchWatchList = async () => {
+    const fetchWatchlist = async () => {
       if (!session) {
         return;
       }
 
-      const { allWatchLists } = await requestGetWatchList();
-      const organizedWatchLists: OrgnizedWatchListsObject = {};
-      allWatchLists.forEach((watchlist) => {
-        if (!organizedWatchLists[watchlist.name]) {
-          organizedWatchLists[watchlist.name] = [];
+      const { allWatchlists } = await requestGetWatchlist();
+      const organizedWatchlists: OrgnizedWatchlistsObject = {};
+      allWatchlists.forEach((watchlist) => {
+        if (!organizedWatchlists[watchlist.name]) {
+          organizedWatchlists[watchlist.name] = [];
         }
         watchlist.user_symbols.forEach((userSymbol) => {
-          organizedWatchLists[watchlist.name].push(userSymbol.symbol_id);
+          organizedWatchlists[watchlist.name].push(userSymbol.symbol_id);
         });
       });
 
-      const userSymbolsArray = allWatchLists.map((watchlist) => watchlist.user_symbols);
-      const symbolsInWatchLists: string[] = [];
+      const userSymbolsArray = allWatchlists.map((watchlist) => watchlist.user_symbols);
+      const symbolsInWatchlists: string[] = [];
       userSymbolsArray.forEach((userSymbols) => {
         userSymbols.forEach((userSymbol) => {
-          symbolsInWatchLists.push(userSymbol.symbol_id);
+          symbolsInWatchlists.push(userSymbol.symbol_id);
         });
       });
 
-      setIsInWatchListState(symbolsInWatchLists.includes(symbol));
-      setOrganizedWatchLists(organizedWatchLists);
+      setIsInWatchlistState(symbolsInWatchlists.includes(symbol));
+      setOrganizedWatchlists(organizedWatchlists);
     }
-    fetchWatchList();
+    fetchWatchlist();
   }, [symbol, toggleResetWatchlist]);
 
   const handleToggleWatchlist = async () => {
-    setShowWatchLists(!showWatchLists);
+    setShowWatchlists(!showWatchlists);
   }
 
   const handleShowAddWatchlist = () => {
@@ -74,36 +74,36 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
       return;
     }
 
-    const response = await requestDeleteWatchList({watchlistName});
+    const response = await requestDeleteWatchlist({watchlistName});
     if (response.success) {
       setToggleResetWatchlist(!toggleResetWatchlist);
     }
   }
 
-  const addSymbolToWatchList = async (watchListName: string, symbol: string) => {
-    const symbolsInWatchlist = organizedWatchLists[watchListName];
+  const addSymbolToWatchlist = async (watchlistName: string, symbol: string) => {
+    const symbolsInWatchlist = organizedWatchlists[watchlistName];
     if (symbolsInWatchlist.includes(symbol)) {
       alert("It is already in watchlist");
     } else {
-      const confirm = window.confirm(`Will you add ${symbol} to ${watchListName}?`);
+      const confirm = window.confirm(`Will you add ${symbol} to ${watchlistName}?`);
       if (!confirm) {
         return;
       }
 
-      const insertResult = await requestInsertSymbolToWatchList({ watchlistName: watchListName, symbol });
+      const insertResult = await requestInsertSymbolToWatchlist({ watchlistName: watchlistName, symbol });
       if (insertResult.success) {
         setToggleResetWatchlist(!toggleResetWatchlist);
       }
     }
   }
 
-  const deleteSymbolFromWatchlist = async (watchListName: string, symbol: string) => {
-    const confirm = window.confirm(`Will you remove ${symbol} from ${watchListName}?`);
+  const deleteSymbolFromWatchlist = async (watchlistName: string, symbol: string) => {
+    const confirm = window.confirm(`Will you remove ${symbol} from ${watchlistName}?`);
     if (!confirm) {
       return;
     }
 
-    const deleteResult = await requestDeleteSymbolFromWatchList({ watchlistName: watchListName, symbol });
+    const deleteResult = await requestDeleteSymbolFromWatchlist({ watchlistName: watchlistName, symbol });
     if (deleteResult.success) {
       setToggleResetWatchlist(!toggleResetWatchlist);
     }
@@ -115,13 +115,13 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
 
   return (
     <>
-    {isInWatchListState ? (
+    {isInWatchlistState ? (
       <span onClick={handleToggleWatchlist} className="text-gray-500 border border-gray-500 px-2 py-1 ml-2 cursor-pointer">Remove from Watchlist</span>
     ) : (
       <span onClick={handleToggleWatchlist} className="text-blue-500 border border-blue-500 px-2 py-1 ml-2 cursor-pointer">Add to Watchlist</span>
     )}
-    <div className={`flex ${showWatchLists ? 'block' : 'hidden'}`}>
-      {Object.entries(organizedWatchLists).map(([watchlistName, symbols]) => {
+    <div className={`flex ${showWatchlists ? 'block' : 'hidden'}`}>
+      {Object.entries(organizedWatchlists).map(([watchlistName, symbols]) => {
         return (
           <div key={watchlistName}>
             <table>
@@ -130,7 +130,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
                   <th className="p-1">
                     {watchlistName}
                     <Button
-                      onClick={() => addSymbolToWatchList(watchlistName, symbol)}
+                      onClick={() => addSymbolToWatchlist(watchlistName, symbol)}
                       title="+"
                       isLoading={null}
                       additionalClass="ml-2 cursor-pointer"
