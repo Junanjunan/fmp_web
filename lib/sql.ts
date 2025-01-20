@@ -277,3 +277,24 @@ export const deleteSymbolFromWatchlist = async (
     };
   }
 }
+
+export const insertNewWatchlist = async (
+  userEmail: string,
+  watchlistName: string,
+) => {
+  try {
+    await prisma.user_symbols_list.create({
+      data: {
+        user_email: userEmail,
+        name: watchlistName,
+      },
+    });
+    return { success: true };
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      message: 'insertNewWatchlist failed'
+    };
+  }
+}

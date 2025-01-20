@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { SymbolRow, OrgnizedWatchListsObject } from '@/types';
 import {
   requestGetWatchList, requestInsertWatchList,
-  requestDeleteWatchList
+  requestDeleteWatchList, requestInsertNewWatchlist
 } from '@/app/axios';
 import { Button } from '@/app/components/client/UI';
 
@@ -15,6 +15,8 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const [organizedWatchLists, setOrganizedWatchLists] = useState<OrgnizedWatchListsObject>({});
   const [showWatchLists, setShowWatchLists] = useState(false);
   const [toggleResetWatchlist, setToggleResetWatchlist] = useState(false);
+  const [showAddWatchlist, setShowAddWatchlist] = useState(false);
+  const [newWatchlistName, setNewWatchlistName] = useState("");
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -50,6 +52,19 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
 
   const handleToggleWatchlist = async () => {
     setShowWatchLists(!showWatchLists);
+  }
+
+  const handleShowAddWatchlist = () => {
+    setShowAddWatchlist(!showAddWatchlist);
+  }
+
+  const handleAddWatchlist = async () => {
+    const response = await requestInsertNewWatchlist({watchlistName: newWatchlistName});
+    if (response.success) {
+      setToggleResetWatchlist(!toggleResetWatchlist);
+      setNewWatchlistName("");
+      setShowAddWatchlist(false);
+    }
   }
 
   const addSymbolToWatchList = async (watchListName: string, symbol: string) => {
@@ -131,6 +146,25 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
           </div>
         );
       })}
+      <input
+        type="text"
+        placeholder="New Watchlist Name"
+        className={`border border-gray-500 p-1 ${showAddWatchlist ? 'block' : 'hidden'}`}
+        value={newWatchlistName}
+        onChange={(e) => setNewWatchlistName(e.target.value)}
+      />
+      <Button
+        onClick={handleAddWatchlist}
+        title={"Submit"}
+        isLoading={null}
+        additionalClass={`${showAddWatchlist ? 'block' : 'hidden'} ml-2 cursor-pointer`}
+      />
+      <Button
+        onClick={handleShowAddWatchlist}
+        title={showAddWatchlist ? "Cancel" : "Add Watchlist"}
+        isLoading={null}
+        additionalClass={`${showAddWatchlist ? 'bg-gray-400' : 'bg-blue-500'} ml-2 cursor-pointer`}
+      />
     </div>
     </>
   );
