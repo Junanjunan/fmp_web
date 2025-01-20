@@ -5,7 +5,8 @@ import { useSession } from 'next-auth/react';
 import { SymbolRow, OrgnizedWatchListsObject } from '@/types';
 import {
   requestGetWatchList, requestInsertSymbolToWatchList,
-  requestDeleteSymbolFromWatchList, requestInsertWatchlist
+  requestDeleteSymbolFromWatchList, requestInsertWatchlist,
+  requestDeleteWatchList
 } from '@/app/axios';
 import { Button } from '@/app/components/client/UI';
 
@@ -67,6 +68,18 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     }
   }
 
+  const handleDeleteWatchlist = async (watchlistName: string) => {
+    const confirm = window.confirm(`Will you remove ${watchlistName}?\nAll symbols in the ${watchlistName} will be removed also`);
+    if (!confirm) {
+      return;
+    }
+
+    const response = await requestDeleteWatchList({watchlistName});
+    if (response.success) {
+      setToggleResetWatchlist(!toggleResetWatchlist);
+    }
+  }
+
   const addSymbolToWatchList = async (watchListName: string, symbol: string) => {
     const symbolsInWatchlist = organizedWatchLists[watchListName];
     if (symbolsInWatchlist.includes(symbol)) {
@@ -121,6 +134,12 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
                       title="+"
                       isLoading={null}
                       additionalClass="ml-2 cursor-pointer"
+                    />
+                    <Button
+                      onClick={() => handleDeleteWatchlist(watchlistName)}
+                      title="✕"
+                      isLoading={null}
+                      additionalClass="ml-2 cursor-pointer bg-gray-500"
                     />
                   </th>
                 </tr>

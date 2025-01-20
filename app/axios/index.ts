@@ -58,6 +58,13 @@ export const requestInsertWatchlist = async (
   return response.data;
 }
 
+export const requestDeleteWatchList = async (
+  data: { watchlistName: string }
+) => {
+  const response = await serverApi.delete('/watchlists-all', { data } );
+  return response.data;
+}
+
 export const requestSignup = async (
   data: { email: string, password: string, passwordConfirm: string }
 ) => {
