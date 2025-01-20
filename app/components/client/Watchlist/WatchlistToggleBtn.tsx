@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { SymbolRow, OrgnizedWatchListsObject, AllWatchListsRow } from '@/types';
+import { SymbolRow, OrgnizedWatchListsObject } from '@/types';
 import {
   requestGetWatchList, requestInsertWatchList,
   requestDeleteWatchList
@@ -14,6 +14,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const [isInWatchListState, setIsInWatchListState] = useState(false);
   const [organizedWatchLists, setOrganizedWatchLists] = useState<OrgnizedWatchListsObject>({});
   const [showWatchLists, setShowWatchLists] = useState(false);
+  const [toggleResetWatchlist, setToggleResetWatchlist] = useState(false);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
       setOrganizedWatchLists(organizedWatchLists);
     }
     fetchWatchList();
-  }, [symbol]);
+  }, [symbol, toggleResetWatchlist]);
 
   const handleToggleWatchlist = async () => {
     setShowWatchLists(!showWatchLists);
@@ -53,18 +54,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
 
       const insertResult = await requestInsertWatchList({ watchlistName: watchListName, symbol });
       if (insertResult.success) {
-        const allWatchLists: AllWatchListsRow[] = insertResult.allWatchLists;
-        const organizedWatchLists: OrgnizedWatchListsObject = {};
-        allWatchLists.forEach((watchlist) => {
-          if (!organizedWatchLists[watchlist.user_symbols_list.name]) {
-            organizedWatchLists[watchlist.user_symbols_list.name] = [watchlist.symbol_id];
-          } else {
-            organizedWatchLists[watchlist.user_symbols_list.name].push(watchlist.symbol_id);
-          }
-        });
-        const symbolsInWatchLists = allWatchLists.map((watchlist) => watchlist.symbol_id);
-        setIsInWatchListState(symbolsInWatchLists.includes(symbol));
-        setOrganizedWatchLists(organizedWatchLists);
+        setToggleResetWatchlist(!toggleResetWatchlist);
       }
     }
   }
@@ -77,15 +67,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
 
     const deleteResult = await requestDeleteWatchList({ watchlistName: watchListName, symbol });
     if (deleteResult.success) {
-      Object.keys(organizedWatchLists).forEach((key) => {
-        if (key === watchListName) {
-          const updatedSymbols = organizedWatchLists[key].filter((symbolInWatchlist) => symbolInWatchlist !== symbol);
-          organizedWatchLists[key] = updatedSymbols;
-        }
-      });
-      const symbolsInWatchLists = Object.values(organizedWatchLists).flat();
-      setIsInWatchListState(symbolsInWatchLists.includes(symbol));
-      setOrganizedWatchLists(organizedWatchLists);
+      setToggleResetWatchlist(!toggleResetWatchlist);
     }
   }
 
