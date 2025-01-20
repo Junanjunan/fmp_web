@@ -1,7 +1,7 @@
 'use client';
 
 import { createChart } from 'lightweight-charts';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChartProps } from '@/types/chart';
 import { calculateBollingerBands } from '@/lib/chart';
 
@@ -9,6 +9,19 @@ import { calculateBollingerBands } from '@/lib/chart';
 export const PriceChart = ({ data }: ChartProps) => {
   const priceChartRef = useRef<HTMLDivElement>(null);
   const volumeChartRef = useRef<HTMLDivElement>(null);
+  const [tooltip, setTooltip] = useState({
+    show: false,
+    x: 0,
+    y: 0,
+    high: 0,
+    low: 0,
+    open: 0,
+    close: 0,
+    highPercentChange: 0,
+    lowPercentChange: 0,
+    openPercentChange: 0,
+    closePercentChange: 0,
+  });
 
   useEffect(() => {
     if (!priceChartRef.current || !volumeChartRef.current) {
@@ -98,6 +111,46 @@ export const PriceChart = ({ data }: ChartProps) => {
     lowerBandSeries.setData(lower);
     volumeSeries.setData(volumeData);
 
+    // Add crosshair move handler for tooltip
+    priceChart.subscribeCrosshairMove((param) => {
+      if (
+        param.point === undefined ||
+        !param.time ||
+        param.point.x < 0 ||
+        param.point.y < 0
+      ) {
+        setTooltip(prev => ({ ...prev, show: false }));
+        return;
+      }
+
+      // Find current and previous candles
+      const currentIndex = candleData.findIndex(d => d.time === param.time);
+      if (currentIndex > 0) {
+        const currentCandle = candleData[currentIndex];
+        const previousCandle = candleData[currentIndex - 1];
+        const previousClose = previousCandle.close;
+
+        const highPercentChange = ((currentCandle.high - previousClose) / previousClose * 100).toFixed(2);
+        const lowPercentChange = ((currentCandle.low - previousClose) / previousClose * 100).toFixed(2);
+        const openPercentChange = ((currentCandle.open - previousClose) / previousClose * 100).toFixed(2);
+        const closePercentChange = ((currentCandle.close - previousClose) / previousClose * 100).toFixed(2);
+
+        setTooltip({
+          show: true,
+          x: param.point.x,
+          y: param.point.y,
+          high: currentCandle.high,
+          low: currentCandle.low,
+          open: currentCandle.open,
+          close: currentCandle.close,
+          highPercentChange: parseFloat(highPercentChange),
+          lowPercentChange: parseFloat(lowPercentChange),
+          openPercentChange: parseFloat(openPercentChange),
+          closePercentChange: parseFloat(closePercentChange),
+        });
+      }
+    });
+
     // Sync the time scales of both charts
     const syncHandler = () => {
       const timeRange = priceChart.timeScale().getVisibleRange();
@@ -136,11 +189,50 @@ export const PriceChart = ({ data }: ChartProps) => {
     };
   }, [data]);
 
+  const PriceModalItem = ({title, price, percentChange}: {title: string, price: number, percentChange: number}) => {
+    return (
+      <div className="flex justify-between gap-4">
+        <span className="font-large">{title}:</span>
+        <div>
+          <span className="mr-2">{price.toFixed(2)}</span>
+          <span className={percentChange >= 0 ? 'text-green-600' : 'text-red-600'}>
+            ({percentChange}%)
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  const PriceModal = () => {
+    return (
+      <>
+      {tooltip.show && (
+        <div
+          className="absolute bg-white shadow-lg rounded-lg p-3 z-50"
+          style={{
+            left: `${tooltip.x}px`,
+            top: `${tooltip.y - 20}px`,
+            transform: 'translate(-50%, -100%)',
+          }}
+        >
+          <div className="text-sm">
+            <PriceModalItem title={"Close"} price={tooltip.close} percentChange={tooltip.closePercentChange} />
+            <PriceModalItem title={"Open"} price={tooltip.open} percentChange={tooltip.openPercentChange} />
+            <PriceModalItem title={"High"} price={tooltip.high} percentChange={tooltip.highPercentChange} />
+            <PriceModalItem title={"Low"} price={tooltip.low} percentChange={tooltip.lowPercentChange} />            
+          </div>
+        </div>
+      )}
+      </>
+    )
+  }
+
   return (
-    <div>
+    <div className="relative">
       <ColorInformation />
       <div ref={priceChartRef} />
       <div ref={volumeChartRef} />
+      <PriceModal />
     </div>
   );
 };
