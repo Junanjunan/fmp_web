@@ -6,8 +6,8 @@ import {
 } from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
 import { requestGet, requestAnalysis } from '@/app/axios';
-import { TypeRow, ExchangeRow, ExchangesByCountry, SearchFilters } from '@/types';
-import { useAnalysisStore } from '@/app/stores/useStore';
+import { TypeRow, ExchangeRow, ExchangesByCountry, SearchFilters, SymbolRow } from '@/types';
+import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
 
 
 const AnalysisPage = () => {
@@ -25,10 +25,11 @@ const AnalysisPage = () => {
     minimumOperatingIncomeRatio, setMinimumOperatingIncomeRatio,
     applyYearCount, setApplyYearCount,
     selectedYearCount, setSelectedYearCount,
-    excludeWatchlist, setExcludeWatchlist,
     searchSymbol, setSearchSymbol,
     setSortedSymbolGrowths,
+    setWatchlistsToBeExcluded,
   } = useAnalysisStore();
+  const { watchlistObject } = useWatchlistStore();
   const [isLoading, setIsLoading] = useState(false);
   const filteredYears = applyYearCount
     ? yearsOfTable.slice(0, Number(selectedYearCount))
@@ -198,10 +199,16 @@ const AnalysisPage = () => {
 
       <div className="flex items-center h-20 -mt-10">
         <CheckboxList
-          attributes={['Exclude Watchlist']}
-          title=""
-          defaultChecked={excludeWatchlist ? ['Exclude Watchlist'] : []}
-          onChange={() => {setExcludeWatchlist(!excludeWatchlist)}}
+          attributes={Object.keys(watchlistObject)}
+          title="Check watchlist to be not shown in table"
+          defaultChecked={[]}
+          onChange={(selectedArray) => {
+            const symbolsToBeExcluded: SymbolRow["id"][] = [];
+            for (const watchlistName of selectedArray) {
+              symbolsToBeExcluded.push(...watchlistObject[watchlistName])
+            }
+            setWatchlistsToBeExcluded(symbolsToBeExcluded);
+          }}
         />
       </div>
       <RevenueTable filteredYears={filteredYears} />

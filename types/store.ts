@@ -14,6 +14,7 @@ export interface AnalysisStore {
   yearsOfTable: number[];
   totalYears: number[];
   symbolGrowths: GrowthOfSymbols;
+  originSortedSymbolGrowths: SortedSymbolGrowths;
   sortedSymbolGrowths: SortedSymbolGrowths;
   selectedYearCount: string | number;
   applyMinimumGrowth: boolean;
@@ -24,6 +25,7 @@ export interface AnalysisStore {
   lastClickedSymbol: SymbolRow["id"] | null;
   savedPage: number;
   excludeWatchlist: boolean;
+  watchlistsToBeExcluded: SymbolRow["id"][],
   showBBValues: boolean;
   filterUnderBBLower: boolean;
   filterUnderBBMiddle: boolean;
@@ -44,6 +46,7 @@ export interface AnalysisStore {
   setYearsOfTable: (yearsOfTable: number[]) => void;
   setTotalYears: (totalYears: number[]) => void;
   setSymbolGrowths: (symbolGrowths: GrowthOfSymbols) => void;
+  setOriginSortedSymbolGrowths: (originSortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSelectedYearCount: (selectedYearCount: string | number) => void;
   setMinimumGrowth: (minimumGrowth: number) => void;
@@ -54,6 +57,7 @@ export interface AnalysisStore {
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setSavedPage: (savedPage: number) => void;
   setExcludeWatchlist: (excludeWatchlist: boolean) => void;
+  setWatchlistsToBeExcluded: (watchlistsToBeExcluded: SymbolRow["id"][]) => void;
   setShowBBValues: (showBBValues: boolean) => void;
   setFilterUnderBBLower: (filterUnderBBLower: boolean) => void;
   setFilterUnderBBMiddle: (filterUnderBBMiddle: boolean) => void;

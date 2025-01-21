@@ -15,8 +15,9 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   const {
     symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
     excludeWatchlist, applyYearCount, applyMinimumGrowth,
-    applyMinimumOperatingIncomeRatio,
+    applyMinimumOperatingIncomeRatio, watchlistsToBeExcluded,
     sortedSymbolGrowths, setSortedSymbolGrowths,
+    originSortedSymbolGrowths, setOriginSortedSymbolGrowths,
     lastClickedSymbol, setLastClickedSymbol,
     showBBValues, setShowBBValues,
     filterUnderBBLower, setFilterUnderBBLower,
@@ -101,7 +102,9 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     if (sortedSymbolGrowths.length > 0) {
       return;
     }
-    setSortedSymbolGrowths(getSortedSymbolGrowths());
+    const sortedSymbolGrowths_ = getSortedSymbolGrowths();
+    setSortedSymbolGrowths(sortedSymbolGrowths_);
+    setOriginSortedSymbolGrowths(sortedSymbolGrowths_);
   }, [symbolGrowths, applyYearCount]);
 
   useEffect(() => {
@@ -112,6 +115,13 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       });
     }
   }, [lastClickedSymbol]);
+
+  useEffect(() => {
+    const filteredSymbols = originSortedSymbolGrowths.filter(symbolInfo => {
+      return !watchlistsToBeExcluded.includes(symbolInfo[0]);
+    });
+    setSortedSymbolGrowths(filteredSymbols);
+  }, [watchlistsToBeExcluded]);
 
   useEffect(() => {
     if (showBBValues) {
