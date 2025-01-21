@@ -1,7 +1,7 @@
 import {
   TypeRow, ExchangeRow, SymbolRow, SortedSymbolGrowths,
   ExchangesByCountry, GrowthOfSymbols, SymbolVolumeInfo,
-  SymbolVolumeInfoArrayItem
+  SymbolVolumeInfoArrayItem, OrgnizedWatchlistsObject
 } from '@/types';
 
 
@@ -74,11 +74,13 @@ export interface AnalysisVolumeStore {
   selectedTypeIds: TypeRow["id"][];
   selectedExchangeIds: ExchangeRow["id"][];
   symbolsVolumeInfoObject: { [key: string]: SymbolVolumeInfo };
+  originSortedSymbols: SymbolVolumeInfoArrayItem[],
   sortedSymbols: SymbolVolumeInfoArrayItem[],
   searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
   savedPage: number;
   excludeWatchlist: boolean;
+  watchlistsToBeExcluded: SymbolRow["id"][]
   numberOfBindingDays: number;
   numberOfBinds: number;
 
@@ -87,11 +89,13 @@ export interface AnalysisVolumeStore {
   setSelectedTypeIds: (selectedTypeIds: TypeRow["id"][]) => void;
   setSelectedExchangeIds: (selectedExchangeIds: ExchangeRow["id"][]) => void;
   setSymbolsVolumeInfoObject: (symbolsVolumeInfoObject: { [key: string]: SymbolVolumeInfo }) => void;
+  setOriginSortedSymbols: (originSortedSymbols: SymbolVolumeInfoArrayItem[]) => void;
   setSortedSymbols: (sortedSymbols: SymbolVolumeInfoArrayItem[]) => void;
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setSavedPage: (savedPage: number) => void;
   setExcludeWatchlist: (excludeWatchlist: boolean) => void;
+  setWatchlistsToBeExcluded: (watchlistsToBeExcluded: SymbolRow["id"][]) => void;
   setNumberOfBindingDays: (numberOfBindingDays: number) => void;
   setNumberOfBinds: (numberOfBinds: number) => void;
   reset: () => void;
@@ -99,6 +103,8 @@ export interface AnalysisVolumeStore {
 
 export interface WatchlistStore {
   watchlist: SymbolRow["id"][];
+  watchlistObject: OrgnizedWatchlistsObject;
 
   setWatchlist: (watchlist: SymbolRow["id"][]) => void;
+  setWatchlistObject: (watchlistObject: OrgnizedWatchlistsObject) => void;
 }

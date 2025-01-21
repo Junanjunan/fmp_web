@@ -10,7 +10,7 @@ import {
   SymbolRow, TypeRow, ExchangeRow, ExchangesByCountry,
   SearchFilters, SymbolVolumeInfo, SymbolVolumeInfoArrayItem
 } from '@/types';
-import { useAnalysisVolumeStore } from '@/app/stores/useStore';
+import { useAnalysisVolumeStore, useWatchlistStore } from '@/app/stores/useStore';
 
 
 const AnalysisVolumePage = () => {
@@ -20,11 +20,12 @@ const AnalysisVolumePage = () => {
     selectedTypeIds, setSelectedTypeIds,
     selectedExchangeIds, setSelectedExchangeIds,
     symbolsVolumeInfoObject, setSymbolsVolumeInfoObject,
-    excludeWatchlist, setExcludeWatchlist,
+    setWatchlistsToBeExcluded,
     numberOfBindingDays, setNumberOfBindingDays,
     numberOfBinds, setNumberOfBinds,
-    setSortedSymbols,
+    setOriginSortedSymbols, setSortedSymbols,
   } = useAnalysisVolumeStore();
+  const { watchlistObject } = useWatchlistStore();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -104,6 +105,7 @@ const AnalysisVolumePage = () => {
     });
 
     setSymbolsVolumeInfoObject(symbolsVolumeInfoObject);
+    setOriginSortedSymbols(sortedSymbolsArray);
     setSortedSymbols(sortedSymbolsArray);
     setIsLoading(false);
   };
@@ -147,14 +149,18 @@ const AnalysisVolumePage = () => {
       />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
       <SearchedCount />
-      <div className="flex items-center h-20">
-        <CheckboxList
-          attributes={['Exclude Watchlist']}
-          title=""
-          defaultChecked={excludeWatchlist ? ['Exclude Watchlist'] : []}
-          onChange={() => {setExcludeWatchlist(!excludeWatchlist)}}
-        />
-      </div>
+      <CheckboxList
+        attributes={Object.keys(watchlistObject)}
+        title="Check watchlist to be not shown in table"
+        defaultChecked={[]}
+        onChange={(selectedArray) => {
+          const symbolsToBeExcluded: SymbolRow["id"][] = [];
+          for (const watchlistName of selectedArray) {
+            symbolsToBeExcluded.push(...watchlistObject[watchlistName])
+          }
+          setWatchlistsToBeExcluded(symbolsToBeExcluded);
+        }}
+      />
       <AnalysisVolumeTable />
     </main>
   );

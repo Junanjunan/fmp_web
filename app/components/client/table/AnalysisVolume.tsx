@@ -8,11 +8,12 @@ import { useWatchlistData, usePagination } from '@/hooks';
 export const AnalysisVolumeTable = () => {
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
-    excludeWatchlist,
+    watchlistsToBeExcluded,
     symbolsVolumeInfoObject,
     numberOfBinds,
     lastClickedSymbol, setLastClickedSymbol,
     sortedSymbols, setSortedSymbols,
+    originSortedSymbols,
     savedPage, setSavedPage,
   } = useAnalysisVolumeStore();
   const { watchlist } = useWatchlistStore();
@@ -43,6 +44,13 @@ export const AnalysisVolumeTable = () => {
     }
   }, [lastClickedSymbol]);
 
+  useEffect(() => {
+    const filteredSymbols = originSortedSymbols.filter(symbolInfo => {
+      return !watchlistsToBeExcluded.includes(symbolInfo.symbol);
+    });
+    setSortedSymbols(filteredSymbols);
+  }, [watchlistsToBeExcluded]);
+
   const executeFMP = async () => {
     const confirm = window.confirm('Are you sure you want to refresh the filtered symbols?');
     if (!confirm) {
@@ -69,7 +77,7 @@ export const AnalysisVolumeTable = () => {
   }
 
   const symbolDatas = Object.entries(symbolsVolumeInfoObject).filter(([symbol, _]) => {
-    if (excludeWatchlist && watchlist.includes(symbol)) {
+    if (watchlistsToBeExcluded.includes(symbol)) {
       return false;
     }
 

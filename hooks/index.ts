@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useWatchlistStore } from '@/app/stores/useStore';
 import { requestGetWatchlist } from '@/app/axios';
+import { OrgnizedWatchlistsObject } from '@/types/db';
 
 export const useWatchlistData = () => {
-  const { setWatchlist } = useWatchlistStore();
+  const { setWatchlistObject } = useWatchlistStore();
   const { data: session } = useSession();
   const isDataFetched = useRef(false);
 
@@ -19,10 +20,17 @@ export const useWatchlistData = () => {
 
     requestGetWatchlist()
       .then((res) => {
-        isDataFetched.current = true;
-        setWatchlist(res.allWatchlists.map(
-          watchlistObject => watchlistObject.symbol_id
-        ));
+        const allWatchlists = res.allWatchlists;
+        const organizedWatchlists: OrgnizedWatchlistsObject = {};
+        allWatchlists.forEach((watchlist) => {
+          if (!organizedWatchlists[watchlist.name]) {
+            organizedWatchlists[watchlist.name] = [];
+          }
+          watchlist.user_symbols.forEach((userSymbol) => {
+            organizedWatchlists[watchlist.name].push(userSymbol.symbol_id);
+          });
+        });
+        setWatchlistObject(organizedWatchlists);
       });
   }, []);
 };

@@ -74,11 +74,13 @@ export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
   selectedTypeIds: ["stock"],
   selectedExchangeIds: ["NASDAQ", "NYSE"],
   symbolsVolumeInfoObject: {},
+  originSortedSymbols: [],
   sortedSymbols: [],
   searchSymbol: "",
   lastClickedSymbol: null,
   savedPage: 1,
   excludeWatchlist: false,
+  watchlistsToBeExcluded: [],
   numberOfBindingDays: 1,
   numberOfBinds: 3,
 
@@ -88,11 +90,13 @@ export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
   setSelectedTypeIds: (selectedTypeIds) => set({ selectedTypeIds }),
   setSelectedExchangeIds: (selectedExchangeIds) => set({ selectedExchangeIds }),
   setSymbolsVolumeInfoObject: (symbolsVolumeInfoObject) => set({ symbolsVolumeInfoObject }),
+  setOriginSortedSymbols: (originSortedSymbols) => set({ originSortedSymbols }),
   setSortedSymbols: (sortedSymbols) => set({ sortedSymbols }),
   setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
   setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
   setSavedPage: (savedPage) => set({ savedPage }),
   setExcludeWatchlist: (excludeWatchlist) => set({ excludeWatchlist }),
+  setWatchlistsToBeExcluded: (watchlistsToBeExcluded) => set({ watchlistsToBeExcluded }),
   setNumberOfBindingDays: (numberOfBindingDays) => set({ numberOfBindingDays }),
   setNumberOfBinds: (numberOfBinds) => set({ numberOfBinds }),
 
@@ -107,6 +111,8 @@ export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
 
 export const useWatchlistStore = create<WatchlistStore>((set) => ({
   watchlist: [],
+  watchlistObject: {},
 
   setWatchlist: (watchlist) => set({ watchlist }),
+  setWatchlistObject: (watchlistObject) => set({ watchlistObject }),
 }));
