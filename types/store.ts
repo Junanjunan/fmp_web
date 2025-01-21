@@ -24,7 +24,6 @@ export interface AnalysisStore {
   searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
   savedPage: number;
-  excludeWatchlist: boolean;
   watchlistsToBeExcluded: SymbolRow["id"][],
   showBBValues: boolean;
   filterUnderBBLower: boolean;
@@ -56,7 +55,6 @@ export interface AnalysisStore {
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setSavedPage: (savedPage: number) => void;
-  setExcludeWatchlist: (excludeWatchlist: boolean) => void;
   setWatchlistsToBeExcluded: (watchlistsToBeExcluded: SymbolRow["id"][]) => void;
   setShowBBValues: (showBBValues: boolean) => void;
   setFilterUnderBBLower: (filterUnderBBLower: boolean) => void;
@@ -83,7 +81,6 @@ export interface AnalysisVolumeStore {
   searchSymbol: string;
   lastClickedSymbol: SymbolRow["id"] | null;
   savedPage: number;
-  excludeWatchlist: boolean;
   watchlistsToBeExcluded: SymbolRow["id"][]
   numberOfBindingDays: number;
   numberOfBinds: number;
@@ -98,7 +95,6 @@ export interface AnalysisVolumeStore {
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setSavedPage: (savedPage: number) => void;
-  setExcludeWatchlist: (excludeWatchlist: boolean) => void;
   setWatchlistsToBeExcluded: (watchlistsToBeExcluded: SymbolRow["id"][]) => void;
   setNumberOfBindingDays: (numberOfBindingDays: number) => void;
   setNumberOfBinds: (numberOfBinds: number) => void;

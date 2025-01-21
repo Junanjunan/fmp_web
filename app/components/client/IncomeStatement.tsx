@@ -14,7 +14,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
     symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
-    excludeWatchlist, applyYearCount, applyMinimumGrowth,
+    applyYearCount, applyMinimumGrowth,
     applyMinimumOperatingIncomeRatio, watchlistsToBeExcluded,
     sortedSymbolGrowths, setSortedSymbolGrowths,
     originSortedSymbolGrowths, setOriginSortedSymbolGrowths,
@@ -47,7 +47,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       }
     }
 
-    if (excludeWatchlist && watchlist.includes(symbol)) {
+    if (watchlistsToBeExcluded.includes(symbol)) {
       return false;
     }
 
