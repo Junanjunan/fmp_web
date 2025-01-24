@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { SymbolRow, OrgnizedWatchlistsObject } from '@/types';
+import { SymbolRow, OrgnizedWatchlistsObject, ExchangeRow } from '@/types';
 import {
   requestGetWatchlist, requestInsertSymbolToWatchlist,
   requestDeleteSymbolFromWatchlist, requestInsertWatchlist,
@@ -11,7 +11,10 @@ import {
 import { Button } from '@/app/components/client/UI';
 
 
-export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
+export const WatchlistToggleBtn = (
+  { symbol , exchange}:
+  { symbol: SymbolRow["id"], exchange: ExchangeRow["id"] }
+) => {
   const [isInWatchlistState, setIsInWatchlistState] = useState(false);
   const [organizedWatchlists, setOrganizedWatchlists] = useState<OrgnizedWatchlistsObject>({});
   const [showWatchlists, setShowWatchlists] = useState(false);
@@ -34,7 +37,9 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
           organizedWatchlists[watchlist.name] = [];
         }
         watchlist.user_symbols.forEach((userSymbol) => {
-          organizedWatchlists[watchlist.name].push(userSymbol.symbol_id);
+          organizedWatchlists[watchlist.name].push(
+            [userSymbol.symbol_id, userSymbol.exchange_id]
+          );
         });
       });
 
@@ -97,8 +102,12 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
       });
   }
 
-  const addSymbolToWatchlist = async (watchlistName: string, symbol: string) => {
-    const symbolsInWatchlist = organizedWatchlists[watchlistName];
+  const addSymbolToWatchlist = async (
+    watchlistName: string, symbol: string, exchange: string
+  ) => {
+    const symbolsInWatchlist = organizedWatchlists[watchlistName].map(
+      symbolWithExchangeArray => symbolWithExchangeArray[0]
+    );
     if (symbolsInWatchlist.includes(symbol)) {
       alert("It is already in watchlist");
     } else {
@@ -107,20 +116,26 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
         return;
       }
 
-      const insertResult = await requestInsertSymbolToWatchlist({ watchlistName: watchlistName, symbol });
+      const insertResult = await requestInsertSymbolToWatchlist({
+        watchlistName: watchlistName, symbol, exchange
+      });
       if (insertResult.success) {
         setToggleResetWatchlist(!toggleResetWatchlist);
       }
     }
   }
 
-  const deleteSymbolFromWatchlist = async (watchlistName: string, symbol: string) => {
+  const deleteSymbolFromWatchlist = async (
+    watchlistName: string, symbol: string, exchange: string
+  ) => {
     const confirm = window.confirm(`Will you remove ${symbol} from ${watchlistName}?`);
     if (!confirm) {
       return;
     }
 
-    const deleteResult = await requestDeleteSymbolFromWatchlist({ watchlistName: watchlistName, symbol });
+    const deleteResult = await requestDeleteSymbolFromWatchlist({
+      watchlistName: watchlistName, symbol, exchange
+    });
     if (deleteResult.success) {
       setToggleResetWatchlist(!toggleResetWatchlist);
     }
@@ -143,7 +158,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
       isLoading={isLoading}
     />
     <div className={`flex ${showWatchlists ? 'block' : 'hidden'}`}>
-      {Object.entries(organizedWatchlists).map(([watchlistName, symbols]) => {
+      {Object.entries(organizedWatchlists).map(([watchlistName, symbolWithExchangeArray]) => {
         return (
           <div key={watchlistName}>
             <table>
@@ -152,7 +167,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
                   <th className="p-1">
                     {watchlistName}
                     <Button
-                      onClick={() => addSymbolToWatchlist(watchlistName, symbol)}
+                      onClick={() => addSymbolToWatchlist(watchlistName, symbol, exchange)}
                       title="+"
                       isLoading={null}
                       additionalClass="ml-2 cursor-pointer"
@@ -167,13 +182,13 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
                 </tr>
               </thead>
               <tbody className="border border-gray-500">
-                {symbols.map((symbol) => {
+                {symbolWithExchangeArray.map(([symbol, exchange]) => {
                   return (
                     <tr key={symbol} className="border border-gray-500">
                       <td className="p-1">
-                        {symbol}
+                        {symbol} ({exchange})
                         <Button
-                          onClick={() => deleteSymbolFromWatchlist(watchlistName, symbol)}
+                          onClick={() => deleteSymbolFromWatchlist(watchlistName, symbol, exchange)}
                           title="✕"
                           isLoading={null}
                           additionalClass="ml-2"

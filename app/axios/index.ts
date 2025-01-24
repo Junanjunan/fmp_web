@@ -38,14 +38,14 @@ export const requestGetWatchlist = async (
 }
 
 export const requestInsertSymbolToWatchlist = async (
-  data: { watchlistName:string, symbol: string }
+  data: { watchlistName:string, symbol: string, exchange: string }
 ) => {
   const response = await serverApi.post('/watchlist', data);
   return response.data;
 }
 
 export const requestDeleteSymbolFromWatchlist = async (
-  data: { watchlistName: string, symbol: string }
+  data: { watchlistName: string, symbol: string, exchange: string }
 ) => {
   const response = await serverApi.delete('/watchlist', { data });
   return response.data;

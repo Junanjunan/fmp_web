@@ -146,6 +146,10 @@ export interface UserSymbolRow {
   symbol_id: SymbolRow["id"];
 }
 
+export interface UserSymbolRowWithExchangeId extends UserSymbolRow{
+  exchange_id: ExchangeRow["id"]
+}
+
 export interface WatchlistRow {
   id: number,
   user_email: string;
@@ -153,9 +157,12 @@ export interface WatchlistRow {
 }
 
 export interface AllWatchlistsRow extends WatchlistRow {
-  user_symbols: UserSymbolRow[];
+  user_symbols: UserSymbolRowWithExchangeId[];
 }
 
 export interface OrgnizedWatchlistsObject {
-  [key: WatchlistRow["name"]]: UserSymbolRow["symbol_id"][];
+  [key: WatchlistRow["name"]]: [
+    UserSymbolRowWithExchangeId["symbol_id"],
+    UserSymbolRowWithExchangeId["exchange_id"]
+  ][];
 }

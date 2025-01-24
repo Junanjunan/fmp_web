@@ -34,8 +34,10 @@ export async function POST(request: Request) {
       );
     }
     const { email } = session.user;
-    const { watchlistName, symbol } = await request.json();
-    const sqlRes = await insertSymbolToWatchlist(email, watchlistName, symbol);
+    const { watchlistName, symbol, exchange } = await request.json();
+    const sqlRes = await insertSymbolToWatchlist(
+      email, watchlistName, symbol, exchange
+    );
     if (!sqlRes.success) {
       return NextResponse.json(
         {
@@ -66,8 +68,10 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { watchlistName, symbol } = await request.json();
-  const sqlRes = await deleteSymbolFromWatchlist(session.user.email, watchlistName, symbol);
+  const { watchlistName, symbol, exchange } = await request.json();
+  const sqlRes = await deleteSymbolFromWatchlist(
+    session.user.email, watchlistName, symbol, exchange
+  );
   if (!sqlRes.success) {
     return NextResponse.json({ success: false, message: sqlRes.message }, { status: 500 });
   }

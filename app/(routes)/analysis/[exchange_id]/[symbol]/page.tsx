@@ -51,7 +51,7 @@ const SymbolPage = async (
       <div className="mt-10">
         <span className="text-xl">Symbol: </span>
         <span className="text-xl font-bold">{symbol}</span>
-        <WatchlistToggleBtn symbol={symbol} />
+        <WatchlistToggleBtn symbol={symbol} exchange={exchange_id} />
       </div>
       <BasicInfoTable symbolRow={symbolRow} />
       <SymbolProfilesTable symbolProfilesRow={symbolProfilesRow} />

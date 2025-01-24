@@ -203,7 +203,8 @@ export const getSymbolsHistoricalPricesByDate = async (
 export const insertSymbolToWatchlist = async (
   userEmail: string,
   watchlistName: string,
-  symbol: dbTypes.SymbolRow['id']
+  symbol: dbTypes.SymbolRow['id'],
+  exchange: dbTypes.ExchangeRow['id']
 ) => {
   try {
     const userSymbolsListId = (await prisma.user_symbols_list.findFirst({
@@ -224,6 +225,7 @@ export const insertSymbolToWatchlist = async (
         user_email: userEmail,
         user_symbols_list_id: userSymbolsListId,
         symbol_id: symbol,
+        exchange_id: exchange,
       },
     });
 
@@ -243,7 +245,8 @@ export const insertSymbolToWatchlist = async (
 export const deleteSymbolFromWatchlist = async (
   userEmail: string,
   watchlistName: string,
-  symbol: dbTypes.SymbolRow['id']
+  symbol: dbTypes.SymbolRow['id'],
+  exchange: dbTypes.ExchangeRow['id']
 ) => {
   const userSymbolsListId = (await prisma.user_symbols_list.findFirst({
     where: {
@@ -261,10 +264,11 @@ export const deleteSymbolFromWatchlist = async (
   try {
     await prisma.user_symbols.delete({
       where: {
-        user_email_symbol_id_user_symbols_list_id: {
+        user_email_exchange_id_symbol_id_user_symbols_list_id: {
           user_email: userEmail,
           user_symbols_list_id: userSymbolsListId,
-          symbol_id: symbol
+          symbol_id: symbol,
+          exchange_id: exchange
         } 
       }
     });
