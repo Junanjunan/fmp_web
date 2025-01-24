@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ExchangeRow, SortedSymbolGrowths, SymbolRow } from '@/types';
 import { Button, CheckboxList } from '@/app/components/client/UI';
 import Link from 'next/link';
@@ -93,6 +93,15 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   } = usePagination(filteredSymbols, 20, savedPage);
 
   useWatchlistData();
+
+  const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
+  const [selectedRows, setSelectedRows] = useState<string[]>(
+    currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}-${exchange_id}`)
+  );
+
+  useEffect(() => {
+    console.log(selectedRows);
+  }, [selectedRows]);
 
   useEffect(() => {
     setSavedPage(currentPage);
@@ -204,6 +213,26 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     setSortedSymbolGrowths(getSortedSymbolGrowths());
   };
 
+  const handleHeaderCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setIsAllSelected(true);
+      setSelectedRows(
+        currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}-${exchange_id}`)
+      );
+    } else {
+      setIsAllSelected(false);
+      setSelectedRows([]);
+    }
+  }
+
+  const handleRowCheckboxChange = (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedRows((prev) => [...prev, id]);
+    } else {
+      setSelectedRows((prev) => prev.filter((rowId) => rowId !== id));
+    }
+  };
+
   function getSortedSymbolGrowths() {
     const _sortedSymbolGrowths: SortedSymbolGrowths = Object.entries(symbolGrowths).sort((a, b) => {
       if (!sortColumn) {
@@ -287,6 +316,13 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       <table className="table">
         <thead className="tableHeader sticky top-0 z-10">
           <tr>
+            <th className="tableCell" rowSpan={2}>
+              <input
+                type="checkbox"
+                checked={isAllSelected}
+                onChange={handleHeaderCheckboxChange}
+              />
+            </th>
             <th className="tableCell" rowSpan={2}>Growth (%)</th>
             <th className="tableCell" rowSpan={2}>Type</th>
             <th
@@ -335,7 +371,9 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
           {currentSymbols.map(([
             symbol,
             { type_id, exchange_id, growthArray, operatingIncomeRatios, price, psRatio }
-          ]) => (
+          ]) => {
+          const rowId = `${exchange_id}-${symbol}`;
+          return (
             <tr
               key={symbol}
               ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
@@ -344,6 +382,14 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
                 watchlist.includes(symbol) ? 'bg-green-100' : ''
               }
             >
+              <td className="tableCell">
+                <input
+                  type="checkbox"
+                  id={rowId}
+                  checked={selectedRows.includes(rowId) || isAllSelected}
+                  onChange={handleRowCheckboxChange(rowId)}
+                />
+              </td>
               <td className="tableCell">
                 <Link
                   href={`/analysis/${exchange_id}/${symbol}`}
@@ -373,7 +419,8 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
                 )
               })}
             </tr>
-          ))}
+          );
+        })}
         </tbody>
       </table>
       <div className="pagination">
