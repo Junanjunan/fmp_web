@@ -372,55 +372,55 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             symbol,
             { type_id, exchange_id, growthArray, operatingIncomeRatios, price, psRatio }
           ]) => {
-          const rowId = `${exchange_id}-${symbol}`;
-          return (
-            <tr
-              key={symbol}
-              ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
-              className={
-                lastClickedSymbol === symbol ? 'bg-blue-100' :
-                watchlist.includes(symbol) ? 'bg-green-100' : ''
-              }
-            >
-              <td className="tableCell">
-                <input
-                  type="checkbox"
-                  id={rowId}
-                  checked={selectedRows.includes(rowId) || isAllSelected}
-                  onChange={handleRowCheckboxChange(rowId)}
-                />
-              </td>
-              <td className="tableCell">
-                <Link
-                  href={`/analysis/${exchange_id}/${symbol}`}
-                  onClick={() => setLastClickedSymbol(symbol)}
-                >
-                  {symbol}
-                </Link>
-              </td>
-              <td className="tableCell">{type_id}</td>
-              <td className="tableCell">{exchange_id}</td>
-              <td className="tableCell">{price}</td>
-              <td className="tableCell">{BollingerObject?.[symbol]?.lastLower}</td>
-              <td className="tableCell">{BollingerObject?.[symbol]?.lastMiddle}</td>
-              <td className="tableCell">{BollingerObject?.[symbol]?.lastUpper}</td>
-              <td className="tableCell">{psRatio}</td>
-              {filteredYears.map((year) => (
-                <td key={year} className="tableCell">
-                  {growthArray.find(growth => growth.year == year)?.growth}
+            const rowId = `${exchange_id}-${symbol}`;
+            return (
+              <tr
+                key={symbol}
+                ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
+                className={
+                  lastClickedSymbol === symbol ? 'bg-blue-100' :
+                  watchlist.includes(symbol) ? 'bg-green-100' : ''
+                }
+              >
+                <td className="tableCell">
+                  <input
+                    type="checkbox"
+                    id={rowId}
+                    checked={selectedRows.includes(rowId) || isAllSelected}
+                    onChange={handleRowCheckboxChange(rowId)}
+                  />
                 </td>
-              ))}
-              {filteredYears.map((year, index) => {
-                const OIRatio = operatingIncomeRatios.find(ratio => ratio.year == year)?.ratio;
-                return (
-                  <td key={index} className="tableCell">
-                    {OIRatio}
+                <td className="tableCell">
+                  <Link
+                    href={`/analysis/${exchange_id}/${symbol}`}
+                    onClick={() => setLastClickedSymbol(symbol)}
+                  >
+                    {symbol}
+                  </Link>
+                </td>
+                <td className="tableCell">{type_id}</td>
+                <td className="tableCell">{exchange_id}</td>
+                <td className="tableCell">{price}</td>
+                <td className="tableCell">{BollingerObject?.[symbol]?.lastLower}</td>
+                <td className="tableCell">{BollingerObject?.[symbol]?.lastMiddle}</td>
+                <td className="tableCell">{BollingerObject?.[symbol]?.lastUpper}</td>
+                <td className="tableCell">{psRatio}</td>
+                {filteredYears.map((year) => (
+                  <td key={year} className="tableCell">
+                    {growthArray.find(growth => growth.year == year)?.growth}
                   </td>
-                )
-              })}
-            </tr>
-          );
-        })}
+                ))}
+                {filteredYears.map((year, index) => {
+                  const OIRatio = operatingIncomeRatios.find(ratio => ratio.year == year)?.ratio;
+                  return (
+                    <td key={index} className="tableCell">
+                      {OIRatio}
+                    </td>
+                  )
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <div className="pagination">
