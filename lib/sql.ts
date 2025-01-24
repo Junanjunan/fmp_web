@@ -321,3 +321,45 @@ export const deleteWatchlist = async (
     }
   }
 }
+
+export const correctWatchlistExchange = async () => {
+  try {
+    const userSymbolsRows = await prisma.user_symbols.findMany();
+    for (const row of userSymbolsRows) {
+      const { id, symbol_id, exchange_id } = row;
+      const result = await prisma.symbols.findFirst({
+        where: {
+          id: symbol_id,
+          exchange_id
+        }
+      });
+      if (result === null) {
+        const result = await prisma.symbols.findFirst({
+          where: {
+            id: symbol_id
+          }
+        });
+        const exchangeId = result?.exchange_id;
+        if (!exchangeId) {
+          return {
+            success: false,
+            message: "correctWatchlistExchange failed - No exchangeId"
+          }
+        }
+        await prisma.user_symbols.update({
+          where: {id},
+          data: {
+            exchange_id: exchangeId
+          }
+        });
+      }
+    }
+    return {success: true}
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      message: "correctWatchlistExchange failed"
+    }
+  }
+}

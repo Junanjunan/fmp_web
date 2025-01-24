@@ -71,3 +71,8 @@ export const requestSignup = async (
   const response = await serverApi.post('/auth/signup', data);
   return response.data;
 }
+
+export const requestCorrectWatchlistExchange = async () => {
+  const response = await serverApi.post('/watchlist/exchange');
+  return response.data;
+}

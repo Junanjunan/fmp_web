@@ -6,7 +6,7 @@ import { SymbolRow, OrgnizedWatchlistsObject } from '@/types';
 import {
   requestGetWatchlist, requestInsertSymbolToWatchlist,
   requestDeleteSymbolFromWatchlist, requestInsertWatchlist,
-  requestDeleteWatchlist
+  requestDeleteWatchlist, requestCorrectWatchlistExchange
 } from '@/app/axios';
 import { Button } from '@/app/components/client/UI';
 
@@ -18,6 +18,7 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
   const [toggleResetWatchlist, setToggleResetWatchlist] = useState(false);
   const [showAddWatchlist, setShowAddWatchlist] = useState(false);
   const [newWatchlistName, setNewWatchlistName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -80,6 +81,22 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     }
   }
 
+  const handleCorrectWatchlistExchange = () => {
+    setIsLoading(true);
+    requestCorrectWatchlistExchange()
+      .then(res => {
+        if (res.success) {
+          alert("Success");
+        }
+      })
+      .catch(error => {
+        alert(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
   const addSymbolToWatchlist = async (watchlistName: string, symbol: string) => {
     const symbolsInWatchlist = organizedWatchlists[watchlistName];
     if (symbolsInWatchlist.includes(symbol)) {
@@ -120,6 +137,11 @@ export const WatchlistToggleBtn = ({ symbol }: { symbol: SymbolRow["id"] }) => {
     ) : (
       <span onClick={handleToggleWatchlist} className="text-blue-500 border border-blue-500 px-2 py-1 ml-2 cursor-pointer">Add to Watchlist</span>
     )}
+    <Button
+      onClick={handleCorrectWatchlistExchange}
+      title={"Correct watchlist exchange"}
+      isLoading={isLoading}
+    />
     <div className={`flex ${showWatchlists ? 'block' : 'hidden'}`}>
       {Object.entries(organizedWatchlists).map(([watchlistName, symbols]) => {
         return (
