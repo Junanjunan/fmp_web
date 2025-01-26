@@ -96,7 +96,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
 
   const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<string[]>(
-    currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}-${exchange_id}`)
+    currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}::${exchange_id}`)
   );
 
   useEffect(() => {
@@ -217,7 +217,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     if (e.target.checked) {
       setIsAllSelected(true);
       setSelectedRows(
-        currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}-${exchange_id}`)
+        currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}::${exchange_id}`)
       );
     } else {
       setIsAllSelected(false);
@@ -372,7 +372,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             symbol,
             { type_id, exchange_id, growthArray, operatingIncomeRatios, price, psRatio }
           ]) => {
-            const rowId = `${exchange_id}-${symbol}`;
+            const rowId = `${exchange_id}::${symbol}`;
             return (
               <tr
                 key={symbol}
