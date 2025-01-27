@@ -372,7 +372,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             symbol,
             { type_id, exchange_id, growthArray, operatingIncomeRatios, price, psRatio }
           ]) => {
-            const rowId = `${exchange_id}::${symbol}`;
+            const rowId = `${symbol}::${exchange_id}`;
             return (
               <tr
                 key={symbol}
