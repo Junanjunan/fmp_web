@@ -237,7 +237,7 @@ export const WatchlistToggleBtn = (
       <input
         type="text"
         placeholder="New Watchlist Name"
-        className={`border border-gray-500 p-1 ${showAddWatchlist ? 'block' : 'hidden'}`}
+        className={`border border-gray-500 p-1 ${showAddWatchlist ? 'block' : 'hidden'} h-12`}
         value={newWatchlistName}
         onChange={(e) => setNewWatchlistName(e.target.value)}
       />
@@ -245,13 +245,13 @@ export const WatchlistToggleBtn = (
         onClick={handleAddWatchlist}
         title={"Submit"}
         isLoading={null}
-        additionalClass={`${showAddWatchlist ? 'block' : 'hidden'} ml-2 cursor-pointer`}
+        additionalClass={`${showAddWatchlist ? 'block' : 'hidden'} ml-2 cursor-pointer h-12`}
       />
       <Button
         onClick={handleShowAddWatchlist}
         title={showAddWatchlist ? "Cancel" : "Add Watchlist"}
         isLoading={null}
-        additionalClass={`${showAddWatchlist ? 'bg-gray-400' : 'bg-blue-500'} ml-2 cursor-pointer`}
+        additionalClass={`${showAddWatchlist ? 'bg-gray-400' : 'bg-blue-500'} ml-2 cursor-pointer h-12`}
       />
     </div>
     </>
