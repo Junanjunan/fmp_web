@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import {
   getSymbol, getIncomeStatement, getSymbolProfile,
   getHistoricalPrices
@@ -26,6 +27,21 @@ const SymbolPage = async (
     getIncomeStatement(symbol),
     getHistoricalPrices(exchange_id, symbol)
   ]);
+
+  if (symbolRow.exchange_id !== exchange_id) {
+    return (
+      <div>
+        <div>
+          <h3>The {symbol} does not exist in {exchange_id}, It is in {symbolRow.exchange_id}</h3>
+        </div>
+        <div className='rounded bg-blue-500 mt-5 p-3 w-72 text-white'>
+          <Link href={`/analysis/${symbolRow.exchange_id}/${symbol}`} className="">
+            Go to /{symbolRow.exchange_id}/{symbol} analysis page
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   let historicalPriceData = historicalPricesRows.map(row => ({
     time: formatDate(row.date),
