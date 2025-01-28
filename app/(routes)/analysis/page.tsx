@@ -5,7 +5,7 @@ import {
   CheckboxList, CheckboxObjectList, Button, Select, InputText
 } from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
-import { requestGet, requestAnalysis } from '@/app/axios';
+import { requestGet, requestAnalysis, requestWatchlistsAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow, ExchangesByCountry, SearchFilters, SymbolRow } from '@/types';
 import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
 
@@ -93,6 +93,14 @@ const AnalysisPage = () => {
     setIsLoading(false);
   };
 
+  const showWatchlistsAnalysis = async () => {
+    setSortedSymbolGrowths([]);
+    setIsLoading(true);
+    const response = await requestWatchlistsAnalysis();
+    setSymbolGrowths(response);
+    setIsLoading(false);
+  }
+
   const handleApplyYearCount = () => {
       if (!applyYearCount) {
         setSelectedYearCount(5);
@@ -137,6 +145,13 @@ const AnalysisPage = () => {
         placeholder="ex: AA, AAP, AAPL, aapl"
       />
       <Button onClick={handleSubmit} isLoading={isLoading} title="Search" />
+      <div>
+        <Button
+          onClick={showWatchlistsAnalysis}
+          isLoading={isLoading}
+          title="Search Watchlist Symbols"
+        />
+      </div>
       <SearchedCount />
 
       <div className="flex items-center h-20">

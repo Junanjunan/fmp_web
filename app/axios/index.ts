@@ -19,6 +19,11 @@ export const requestAnalysis = async (data: FilteredIds) => {
   return response.data;
 }
 
+export const requestWatchlistsAnalysis = async () => {
+  const response = await serverApi.post('/analysis/watchlist');
+  return response.data;
+}
+
 export const requestAnalysisVolume = async (
   data: {exchangeIds: ExchangeRow['id'][], days: number}
 ) => {

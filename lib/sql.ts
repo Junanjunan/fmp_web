@@ -121,6 +121,20 @@ export const getFilteredSymbolsProfiles = async(
   return result.rows;
 }
 
+export const getSymbolsProfilesInWatchlists = async (
+  symbols: dbTypes.SymbolRow['id'][]
+) => {
+  let sql = `
+    SELECT s.*, sp.*
+    FROM symbols s
+    LEFT JOIN symbol_profiles sp ON s.id = sp.symbol
+    WHERE s.id IN (${symbols.map(id => `'${id}'`).join(',')})
+    AND sp.is_actively_trading = true
+  `;
+  const result = await query(sql);
+  return result.rows;
+}
+
 export const getAllWatchlists = async (
   userEmail: string
 ) => {
