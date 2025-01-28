@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { SymbolRow, OrgnizedWatchlistsObject, ExchangeRow } from '@/types';
 import {
   requestGetWatchlist, requestInsertSymbolToWatchlist,
@@ -218,7 +219,9 @@ export const WatchlistToggleBtn = (
                   return (
                     <tr key={symbol} className="border border-gray-500">
                       <td className="p-1">
-                        {symbol} ({exchange})
+                        <Link href={`/analysis/${exchange}/${symbol}`} target="_blank">
+                          {symbol} ({exchange})
+                        </Link>
                         <Button
                           onClick={() => deleteSymbolFromWatchlist(watchlistName, symbol, exchange)}
                           title="✕"
