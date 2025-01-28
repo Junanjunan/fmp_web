@@ -97,9 +97,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   useWatchlistData();
 
   const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
-  const [selectedRows, setSelectedRows] = useState<string[]>(
-    currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}::${exchange_id}`)
-  );
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   useEffect(() => {
     setSavedPage(currentPage);
