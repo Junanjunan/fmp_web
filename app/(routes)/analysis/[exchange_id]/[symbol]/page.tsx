@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {
   getSymbol, getIncomeStatement, getSymbolProfile,
   getHistoricalPrices
@@ -42,12 +41,6 @@ const SymbolPage = async (
 
   return (
     <div>
-      <Link
-        href="/analysis"
-        className="text-blue-500 hover:text-blue-700 border border-blue-500 px-2 py-1"
-      >
-        Back to Analysis
-      </Link>
       <div className="mt-10">
         <span className="text-xl">Symbol: </span>
         <span className="text-xl font-bold">{symbol}</span>
