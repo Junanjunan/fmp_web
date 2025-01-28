@@ -42,6 +42,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
     if (!yearsOfSymbol.includes(thirdYear)) {
       return false;
     }
+
     if (applyYearCount) {
       if (Number(growthArray.at(-1)?.year) > Number(yearsOfTable.at(-1))) {
         return false;
