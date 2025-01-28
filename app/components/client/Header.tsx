@@ -9,7 +9,7 @@ export function Header() {
 
   return (
     <header className="p-4 bg-white shadow">
-      <nav className="flex justify-between items-center max-w-7xl mx-auto">
+      <nav className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/" className="text-xl font-bold">
             Logo
