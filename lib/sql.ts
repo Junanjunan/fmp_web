@@ -282,6 +282,53 @@ export const deleteSymbolFromWatchlist = async (
   }
 }
 
+export const insertManySymbolsToWatchlist = async (
+  userEmail: string,
+  watchlistName: string,
+  symbolWithExchangeArray: string[]
+) => {
+  try {
+    const userSymbolsListId = (await prisma.user_symbols_list.findFirst({
+      where: {
+        user_email: userEmail,
+        name: watchlistName
+      }
+    }))?.id;
+    if (!userSymbolsListId) {
+      return {
+        success: false,
+        message: 'Watchlist not found'
+      };
+    }
+
+    const data = [];
+    for (const symbolWithExchange of symbolWithExchangeArray) {
+      const [symbol, exchange] = symbolWithExchange.split("::");
+      const item = {
+        user_email: userEmail,
+        exchange_id: exchange,
+        symbol_id: symbol,
+        user_symbols_list_id: userSymbolsListId,
+      }
+      data.push(item);
+    }
+
+    await prisma.user_symbols.createMany({
+      data: data,
+      skipDuplicates: true,
+    });
+
+    return { success: true };
+  } catch (e) {
+    console.error(e);
+    let message = 'Inserting into watchlist failed';
+    return {
+      success: false,
+      message: message
+    };
+  }
+}
+
 export const insertWatchlist = async (
   userEmail: string,
   watchlistName: string,

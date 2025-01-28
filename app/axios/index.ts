@@ -44,6 +44,13 @@ export const requestInsertSymbolToWatchlist = async (
   return response.data;
 }
 
+export const requestInsertManySymbolsToWatchlist = async (
+  data: { watchlistName: string, symbolWithExchangeArray: string[] }
+) => {
+  const response = await serverApi.post('/watchlist/many-symbols', data);
+  return response.data;
+}
+
 export const requestDeleteSymbolFromWatchlist = async (
   data: { watchlistName: string, symbol: string, exchange: string }
 ) => {

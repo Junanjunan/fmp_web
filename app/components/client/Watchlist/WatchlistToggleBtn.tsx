@@ -6,14 +6,19 @@ import { SymbolRow, OrgnizedWatchlistsObject, ExchangeRow } from '@/types';
 import {
   requestGetWatchlist, requestInsertSymbolToWatchlist,
   requestDeleteSymbolFromWatchlist, requestInsertWatchlist,
-  requestDeleteWatchlist, requestCorrectWatchlistExchange
+  requestDeleteWatchlist, requestCorrectWatchlistExchange,
+  requestInsertManySymbolsToWatchlist
 } from '@/app/axios';
 import { Button } from '@/app/components/client/UI';
 
 
 export const WatchlistToggleBtn = (
-  { symbol , exchange}:
-  { symbol: SymbolRow["id"], exchange: ExchangeRow["id"] }
+  { symbol = null , exchange = null, symbolWithExchangeArrayData = null }:
+  { 
+    symbol?: SymbolRow["id"] | null,
+    exchange?: ExchangeRow["id"] | null,
+    symbolWithExchangeArrayData?: string[] | null,
+  }
 ) => {
   const [isInWatchlistState, setIsInWatchlistState] = useState(false);
   const [organizedWatchlists, setOrganizedWatchlists] = useState<OrgnizedWatchlistsObject>({});
@@ -51,7 +56,9 @@ export const WatchlistToggleBtn = (
         });
       });
 
-      setIsInWatchlistState(symbolsInWatchlists.includes(symbol));
+      if (symbol){
+        setIsInWatchlistState(symbolsInWatchlists.includes(symbol));
+      }
       setOrganizedWatchlists(organizedWatchlists);
     }
     fetchWatchlist();
@@ -125,6 +132,22 @@ export const WatchlistToggleBtn = (
     }
   }
 
+  const addManySymbolsToWatchlist = async (
+    watchlistName: string, symbolWithExchangeArray: string[]
+  ) => {
+    const confirm = window.confirm(`Will you add selected symbols to ${watchlistName}?`);
+    if (!confirm) {
+      return;
+    }
+
+    const insertResult = await requestInsertManySymbolsToWatchlist({
+      watchlistName, symbolWithExchangeArray
+    });
+    if (insertResult.success) {
+      setToggleResetWatchlist(!toggleResetWatchlist);
+    }
+  }
+
   const deleteSymbolFromWatchlist = async (
     watchlistName: string, symbol: string, exchange: string
   ) => {
@@ -167,7 +190,14 @@ export const WatchlistToggleBtn = (
                   <th className="p-1">
                     {watchlistName}
                     <Button
-                      onClick={() => addSymbolToWatchlist(watchlistName, symbol, exchange)}
+                      onClick={() => {
+                        if (symbol && exchange) {
+                          addSymbolToWatchlist(watchlistName, symbol, exchange)
+                        } else if (symbolWithExchangeArrayData) {
+                            addManySymbolsToWatchlist(watchlistName, symbolWithExchangeArrayData);
+                          }
+                        }
+                      }
                       title="+"
                       isLoading={null}
                       additionalClass="ml-2 cursor-pointer"

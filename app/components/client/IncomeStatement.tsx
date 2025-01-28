@@ -8,6 +8,7 @@ import { requestSymbolHistoricalPrices } from '@/app/axios';
 import { calculateLastBollingerBands } from '@/lib/chart';
 import { SymbolInfoObject } from '@/types/chart';
 import { formatDate } from '@/lib/date';
+import { WatchlistToggleBtn } from '@/app/components/client/Watchlist/WatchlistToggleBtn';
 
 
 export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
@@ -98,10 +99,6 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
   const [selectedRows, setSelectedRows] = useState<string[]>(
     currentSymbols.map(([symbol, { exchange_id }]) => `${symbol}::${exchange_id}`)
   );
-
-  useEffect(() => {
-    console.log(selectedRows);
-  }, [selectedRows]);
 
   useEffect(() => {
     setSavedPage(currentPage);
@@ -313,6 +310,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
       </div>
       <span className="text-red-500">{filterLoading ? 'Loading...' : ''}</span>
       <ColorInformation />
+      <WatchlistToggleBtn symbolWithExchangeArrayData={selectedRows} />
       <table className="table">
         <thead className="tableHeader sticky top-0 z-10">
           <tr>
@@ -386,7 +384,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
                   <input
                     type="checkbox"
                     id={rowId}
-                    checked={selectedRows.includes(rowId) || isAllSelected}
+                    checked={selectedRows.includes(rowId)}
                     onChange={handleRowCheckboxChange(rowId)}
                   />
                 </td>
