@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const { email } = session.user;
     const { watchlistName, symbol, exchange } = await request.json();
     const sqlRes = await insertSymbolToWatchlist(
-      email, watchlistName, symbol, exchange
+      email, watchlistName, symbol.toUpperCase(), exchange.toUpperCase()
     );
     if (!sqlRes.success) {
       return NextResponse.json(
