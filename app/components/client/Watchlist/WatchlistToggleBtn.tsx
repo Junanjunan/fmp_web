@@ -10,6 +10,7 @@ import {
   requestInsertManySymbolsToWatchlist
 } from '@/app/axios';
 import { Button } from '@/app/components/client/UI';
+import { useWatchlistStore } from '@/app/stores/useStore';
 
 
 export const WatchlistToggleBtn = (
@@ -21,13 +22,13 @@ export const WatchlistToggleBtn = (
   }
 ) => {
   const [isInWatchlistState, setIsInWatchlistState] = useState(false);
-  const [organizedWatchlists, setOrganizedWatchlists] = useState<OrgnizedWatchlistsObject>({});
   const [showWatchlists, setShowWatchlists] = useState(false);
   const [toggleResetWatchlist, setToggleResetWatchlist] = useState(false);
   const [showAddWatchlist, setShowAddWatchlist] = useState(false);
   const [newWatchlistName, setNewWatchlistName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
+  const { setWatchlist, watchlistObject, setWatchlistObject } = useWatchlistStore();
 
   useEffect(() => {
     const fetchWatchlist = async () => {
@@ -59,7 +60,8 @@ export const WatchlistToggleBtn = (
       if (symbol){
         setIsInWatchlistState(symbolsInWatchlists.includes(symbol));
       }
-      setOrganizedWatchlists(organizedWatchlists);
+      setWatchlistObject(organizedWatchlists);
+      setWatchlist(symbolsInWatchlists);
     }
     fetchWatchlist();
   }, [symbol, toggleResetWatchlist]);
@@ -112,7 +114,7 @@ export const WatchlistToggleBtn = (
   const addSymbolToWatchlist = async (
     watchlistName: string, symbol: string, exchange: string
   ) => {
-    const symbolsInWatchlist = organizedWatchlists[watchlistName].map(
+    const symbolsInWatchlist = watchlistObject[watchlistName].map(
       symbolWithExchangeArray => symbolWithExchangeArray[0]
     );
     if (symbolsInWatchlist.includes(symbol)) {
@@ -181,7 +183,7 @@ export const WatchlistToggleBtn = (
       isLoading={isLoading}
     />
     <div className={`flex ${showWatchlists ? 'block' : 'hidden'}`}>
-      {Object.entries(organizedWatchlists).map(([watchlistName, symbolWithExchangeArray]) => {
+      {Object.entries(watchlistObject).map(([watchlistName, symbolWithExchangeArray]) => {
         return (
           <div key={watchlistName}>
             <table>
