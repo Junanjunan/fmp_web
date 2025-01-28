@@ -205,7 +205,10 @@ const AnalysisPage = () => {
           onChange={(selectedArray) => {
             const symbolsToBeExcluded: SymbolRow["id"][] = [];
             for (const watchlistName of selectedArray) {
-              symbolsToBeExcluded.push(...watchlistObject[watchlistName])
+              const symbolWithExchangeArray = watchlistObject[watchlistName];
+              for (const symbolWithExchange of symbolWithExchangeArray) {
+                symbolsToBeExcluded.push(symbolWithExchange[0])
+              }
             }
             setWatchlistsToBeExcluded(symbolsToBeExcluded);
           }}

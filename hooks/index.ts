@@ -28,7 +28,7 @@ export const useWatchlistData = () => {
             organizedWatchlists[watchlist.name] = [];
           }
           watchlist.user_symbols.forEach((userSymbol) => {
-            organizedWatchlists[watchlist.name].push(userSymbol.symbol_id);
+            organizedWatchlists[watchlist.name].push([userSymbol.symbol_id, userSymbol.exchange_id]);
             symbolsInWatchlists.push(userSymbol.symbol_id);
           });
         });
