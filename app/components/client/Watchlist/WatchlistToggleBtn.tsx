@@ -215,15 +215,18 @@ export const WatchlistToggleBtn = (
                 </tr>
               </thead>
               <tbody className="border border-gray-500">
-                {symbolWithExchangeArray.map(([symbol, exchange]) => {
+                {symbolWithExchangeArray.map(([symbolInArray, exchangeInArray]) => {
                   return (
-                    <tr key={symbol} className="border border-gray-500">
+                    <tr
+                      key={symbolInArray}
+                      className={`border border-gray-500 ${symbol === symbolInArray ? 'bg-blue-100' : ''}`}
+                    >
                       <td className="p-1">
-                        <Link href={`/analysis/${exchange}/${symbol}`} target="_blank">
-                          {symbol} ({exchange})
+                        <Link href={`/analysis/${exchangeInArray}/${symbolInArray}`} target="_blank">
+                          {symbolInArray} ({exchangeInArray})
                         </Link>
                         <Button
-                          onClick={() => deleteSymbolFromWatchlist(watchlistName, symbol, exchange)}
+                          onClick={() => deleteSymbolFromWatchlist(watchlistName, symbolInArray, exchangeInArray)}
                           title="✕"
                           isLoading={null}
                           additionalClass="ml-2"
