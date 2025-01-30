@@ -55,7 +55,15 @@ else
     # Loop through each table and restore
     for table in "${TABLES[@]}"; do
         echo "Restoring table: $table"
-        PGPASSWORD=$DB_PASSWORD pg_restore -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME --data-only -v --table="$table" "$BACKUP_FILE"
+
+        # Check if the table exists in the database
+        if PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "\dt" | grep -q "$table"; then
+            echo "Table $table already exists. Restoring with --data-only..."
+            PGPASSWORD=$DB_PASSWORD pg_restore -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME --data-only -v --table="$table" "$BACKUP_FILE"
+        else
+            echo "Table $table does not exist. Restoring without --data-only..."
+            PGPASSWORD=$DB_PASSWORD pg_restore -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -v --table="$table" "$BACKUP_FILE"
+        fi
         
         # Check if individual table restore was successful
         if [ $? -eq 0 ]; then
