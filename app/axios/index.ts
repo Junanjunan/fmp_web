@@ -14,6 +14,16 @@ export const requestGet = async <T>(path: string): Promise<T> => {
   return response.data;
 }
 
+export const requestSearchFilters = async (exchangesString: string | null = null, countriesString: string | null) => {
+  const response = await serverApi.get(`/search-filters`, {
+    params: {
+      exchangesString,
+      countriesString
+    }
+  });
+  return response.data;
+}
+
 export const requestAnalysis = async (data: FilteredIds) => {
   const response = await serverApi.post('/analysis', data);
   return response.data;

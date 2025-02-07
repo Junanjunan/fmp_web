@@ -16,12 +16,19 @@ export const getTypes = async (
 }
 
 export const getExchanges = async (
-  exchanges: dbTypes.ExchangeRow['id'][] | null = null
+  exchangesString: string | null = null,
+  countriesString: string | null = null
 ): Promise<dbTypes.ExchangeRow[]> => {
-  let sql = `SELECT * FROM exchanges`;
-  if (exchanges) {
-    sql += ` WHERE id IN (${exchanges.join(',')});`;
+  let sql = `SELECT * FROM exchanges WHERE 1=1`;
+  if (exchangesString) {
+    const formattedExchanges = exchangesString.split(',').map(exchange => `'${exchange.trim()}'`).join(', ');
+    sql += ` AND id IN (${formattedExchanges})`;
   }
+  if (countriesString) {
+    const formattedCountries = countriesString.split(',').map(country => `'${country.trim()}'`).join(', ');
+    sql += ` AND country_id IN (${formattedCountries})`;
+  }
+  sql += ';'
   const result = await query(sql);
   return result.rows;
 }

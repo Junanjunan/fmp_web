@@ -5,7 +5,7 @@ import {
   CheckboxList, CheckboxObjectList, Button, InputText
 } from '@/app/components/client/UI';
 import { AnalysisVolumeTable } from '@/app/components/client/table/AnalysisVolume';
-import { requestGet, requestAnalysisVolume } from '@/app/axios';
+import { requestSearchFilters, requestAnalysisVolume } from '@/app/axios';
 import {
   SymbolRow, TypeRow, ExchangeRow, ExchangesByCountry,
   SearchFilters, SymbolVolumeInfo, SymbolVolumeInfoArrayItem
@@ -35,7 +35,9 @@ const AnalysisVolumePage = () => {
   }, []);
 
   const setSearchFilters = async () => {
-    const searchFilters = await requestGet<SearchFilters>('search-filters');
+    const defaultCountries = ['US', 'KOR'];
+    const countriesString = defaultCountries.join(',');
+    const searchFilters: SearchFilters = await requestSearchFilters(null, countriesString);
     const types = searchFilters.types;
     const exchanges = searchFilters.exchanges;
     const exchangesByCountry: ExchangesByCountry = [];

@@ -5,7 +5,7 @@ import {
   CheckboxList, CheckboxObjectList, Button, Select, InputText
 } from '@/app/components/client/UI';
 import { RevenueTable } from '@/app/components/client/IncomeStatement';
-import { requestGet, requestAnalysis, requestWatchlistsAnalysis } from '@/app/axios';
+import { requestGet, requestSearchFilters, requestAnalysis, requestWatchlistsAnalysis } from '@/app/axios';
 import { TypeRow, ExchangeRow, ExchangesByCountry, SearchFilters, SymbolRow } from '@/types';
 import { useAnalysisStore, useWatchlistStore } from '@/app/stores/useStore';
 
@@ -47,7 +47,9 @@ const AnalysisPage = () => {
   }, [selectedYearCount, totalYears]);
 
   const setSearchFilters = async () => {
-    const searchFilters = await requestGet<SearchFilters>('search-filters');
+    const defaultCountries = ['US', 'KOR'];
+    const countriesString = defaultCountries.join(',');
+    const searchFilters: SearchFilters = await requestSearchFilters(null, countriesString);
     const types = searchFilters.types;
     const exchanges = searchFilters.exchanges;
     const exchangesByCountry: ExchangesByCountry = [];
