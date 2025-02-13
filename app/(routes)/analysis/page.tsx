@@ -14,10 +14,12 @@ const AnalysisPage = () => {
   const {
     typeIds, setTypeIds,
     exchanges, setExchanges,
+    isOnlyPriceInfo, setIsOnlyPriceInfo,
     selectedTypeIds, setSelectedTypeIds,
     selectedExchangeIds, setSelectedExchangeIds,
     yearsOfTable, setYearsOfTable,
     totalYears, setTotalYears,
+    symbolPriceInfos, setSymbolPriceInfos,
     symbolGrowths, setSymbolGrowths,
     applyMinimumGrowth, setApplyMinimumGrowth,
     minimumGrowth, setMinimumGrowth,
@@ -41,6 +43,18 @@ const AnalysisPage = () => {
     setSelectedTypeIds(selectedTypeIds);
     setSelectedExchangeIds(selectedExchangeIds);
   }, []);
+
+  useEffect(() => {
+    if (isOnlyPriceInfo) {
+      setApplyYearCount(false);
+      setApplyMinimumGrowth(false);
+      setApplyMinimumOperatingIncomeRatio(false);
+    } else {
+      setApplyYearCount(true);
+      setApplyMinimumGrowth(true);
+      setApplyMinimumOperatingIncomeRatio(true);
+    }
+  }, [isOnlyPriceInfo]);
 
   useEffect(() => {
     setYearsOfTable(totalYears.slice(0, Number(selectedYearCount)));
@@ -80,6 +94,10 @@ const AnalysisPage = () => {
     setSelectedExchangeIds(selected);
   };
 
+  const handleIsOnlyPriceInfo = () => {
+    setIsOnlyPriceInfo(!isOnlyPriceInfo);
+  }
+
   const handleSubmit = async () => {
     // Table can be fulfilled after search when sortedSymbolGrowths is empty
     // app/components/client/IncomeStatement.tsx 17 line: if (sortedSymbolGrowths.length > 0)
@@ -89,9 +107,14 @@ const AnalysisPage = () => {
       typeIds: selectedTypeIds,
       exchangeIds: selectedExchangeIds,
       symbol: searchSymbol,
+      isOnlyPriceInfo,
     };
     const response = await requestAnalysis(data);
-    setSymbolGrowths(response);
+    if (isOnlyPriceInfo) {
+      setSymbolPriceInfos(response);
+    } else {
+      setSymbolGrowths(response);
+    }
     setIsLoading(false);
   };
 
@@ -120,7 +143,7 @@ const AnalysisPage = () => {
       return null;
     }
 
-    const count = Object.keys(symbolGrowths).length;
+    const count = isOnlyPriceInfo ? Object.keys(symbolGrowths).length : Object.keys(symbolPriceInfos).length;
     return <span>{count} searched</span>;
   };
 
@@ -137,6 +160,12 @@ const AnalysisPage = () => {
         title="Exchanges"
         defaultChecked={selectedExchangeIds}
         onChange={handleExchangeChange}
+      />
+      <CheckboxList
+        attributes={['See only price info']}
+        title=""
+        defaultChecked={isOnlyPriceInfo ? ['See only price info'] : []}
+        onChange={handleIsOnlyPriceInfo}
       />
       <InputText
         inputType="text"
@@ -156,11 +185,13 @@ const AnalysisPage = () => {
       </div>
       <SearchedCount />
 
+      {isOnlyPriceInfo ? null :
+      <>
       <div className="flex items-center h-20">
         <CheckboxList
           attributes={['Year Count']}
           title=""
-          defaultChecked={applyYearCount ? ['Year Count'] : []}
+          defaultChecked={applyYearCount || !isOnlyPriceInfo ? ['Year Count'] : []}
           onChange={handleApplyYearCount}
         />
         <div className={`mb-10 ml-5 ${applyYearCount ? 'block' : 'hidden'}`}>
@@ -178,7 +209,7 @@ const AnalysisPage = () => {
         <CheckboxList
           attributes={['Minimum Growth(%)']}
           title=""
-          defaultChecked={applyMinimumGrowth ? ['Minimum Growth(%)'] : []}
+          defaultChecked={applyMinimumGrowth || !isOnlyPriceInfo ? ['Minimum Growth(%)'] : []}
           onChange={() => setApplyMinimumGrowth(!applyMinimumGrowth)}
         />
         <div className={`mb-10 ml-5 ${applyMinimumGrowth ? 'block' : 'hidden'}`}>
@@ -197,7 +228,7 @@ const AnalysisPage = () => {
           attributes={['Minimum Operating Income Ratio(%)']}
           title=""
           defaultChecked={
-            applyMinimumOperatingIncomeRatio ? ['Minimum Operating Income Ratio(%)'] : []
+            applyMinimumOperatingIncomeRatio || !isOnlyPriceInfo ? ['Minimum Operating Income Ratio(%)'] : []
           }
           onChange={
             () => setApplyMinimumOperatingIncomeRatio(!applyMinimumOperatingIncomeRatio)
@@ -213,8 +244,10 @@ const AnalysisPage = () => {
           />
         </div>
       </div>
+      </>
+      }
 
-      <div className="flex items-center h-20 -mt-10">
+      <div className="flex items-center h-20">
         <CheckboxList
           attributes={Object.keys(watchlistObject)}
           title="Check watchlist to be not shown in table"
@@ -231,7 +264,7 @@ const AnalysisPage = () => {
           }}
         />
       </div>
-      <RevenueTable filteredYears={filteredYears} />
+      <RevenueTable filteredYears={filteredYears} isOnlyPriceInfo={isOnlyPriceInfo} />
     </main>
   );
 };

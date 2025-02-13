@@ -76,6 +76,7 @@ export interface FilteredIds {
   typeIds: TypeRow["id"][];
   exchangeIds: ExchangeRow["id"][];
   symbol: SymbolRow["id"];
+  isOnlyPriceInfo: boolean;
 }
 
 export interface SymbolProfileRow {

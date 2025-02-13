@@ -11,7 +11,10 @@ import { formatDate } from '@/lib/date';
 import { WatchlistToggleBtn } from '@/app/components/client/Watchlist/WatchlistToggleBtn';
 
 
-export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => {
+export const RevenueTable = (
+  { filteredYears, isOnlyPriceInfo }:
+  { filteredYears: number[], isOnlyPriceInfo: boolean }
+) => {
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
     symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
@@ -340,11 +343,15 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
             >
               PS Ratio{toggleArrow('psRatio')}
             </th>
+            {isOnlyPriceInfo ? null:
+            <>
             <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth(%)</th>
             <th className="tableCell" colSpan={filteredYears.length}>Operating Income Ratio(%)</th>
+            </>
+            }
           </tr>
           <tr>
-            {filteredYears.map((year) => (
+            {isOnlyPriceInfo ? null : filteredYears.map((year) => (
               <th
                 key={year}
                 className="tableCell cursor-pointer"
@@ -353,7 +360,7 @@ export const RevenueTable = ({ filteredYears }: { filteredYears: number[] }) => 
                 {year}{toggleArrow(year.toString())}
               </th>
             ))}
-            {filteredYears.map((year) => (
+            {isOnlyPriceInfo ? null : filteredYears.map((year) => (
               <th
                 key={year}
                 className="tableCell cursor-pointer"

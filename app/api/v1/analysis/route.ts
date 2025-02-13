@@ -3,7 +3,7 @@ import { FilteredIds } from '@/types/db';
 import { getFilteredSymbolsProfiles, getIncomeStatement } from '@/lib/sql';
 import { getGrowthArray } from '@/lib/analysis';
 import { getPercentageNumber } from '@/lib/math';
-import { GrowthOfSymbols } from '@/types/analysis';
+import { PriceInfoOfSymbols, GrowthOfSymbols } from '@/types/analysis';
 
 
 export async function POST(request: Request) {
@@ -11,8 +11,22 @@ export async function POST(request: Request) {
   const typeIds = data.typeIds;
   const exchangeIds = data.exchangeIds;
   const symbol = data.symbol ?? '';
+  const isOnlyPriceInfo = data.isOnlyPriceInfo;
   const symbolRows = await getFilteredSymbolsProfiles(typeIds, exchangeIds, symbol);
+  const priceInfoOfSymbols: PriceInfoOfSymbols = {}
   const growthOfSymbols: GrowthOfSymbols = {};
+
+  if (isOnlyPriceInfo) {
+    for (const symbolRow of symbolRows) {
+      const { id, type_id, exchange_id, price } = symbolRow;
+      priceInfoOfSymbols[id] = {
+        type_id,
+        exchange_id,
+        price,
+      }
+    }
+    return NextResponse.json(priceInfoOfSymbols);
+  }
 
   for (const symbolRow of symbolRows) {
     const { id, type_id, exchange_id, mkt_cap, price } = symbolRow;

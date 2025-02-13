@@ -11,6 +11,14 @@ export interface RatioArray {
   ratio: number;
 }
 
+export interface PriceInfoOfSymbols {
+  [key: SymbolRow["id"]]: {
+    type_id: TypeRow["id"];
+    exchange_id: ExchangeRow["id"];
+    price: number;
+  };
+}
+
 export interface GrowthOfSymbols {
   [key: SymbolRow["id"]]: {
     type_id: TypeRow["id"];

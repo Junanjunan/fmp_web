@@ -1,18 +1,21 @@
 import {
   TypeRow, ExchangeRow, SymbolRow, SortedSymbolGrowths,
   ExchangesByCountry, GrowthOfSymbols, SymbolVolumeInfo,
-  SymbolVolumeInfoArrayItem, OrgnizedWatchlistsObject
+  SymbolVolumeInfoArrayItem, OrgnizedWatchlistsObject,
+  PriceInfoOfSymbols
 } from '@/types';
 
 
 export interface AnalysisStore {
   typeIds: TypeRow["id"][];
   exchanges: ExchangesByCountry;
+  isOnlyPriceInfo: boolean;
   selectedTypeIds: TypeRow["id"][];
   selectedExchangeIds: ExchangeRow["id"][];
   applyYearCount: boolean;
   yearsOfTable: number[];
   totalYears: number[];
+  symbolPriceInfos: PriceInfoOfSymbols;
   symbolGrowths: GrowthOfSymbols;
   originSortedSymbolGrowths: SortedSymbolGrowths;
   sortedSymbolGrowths: SortedSymbolGrowths;
@@ -39,11 +42,13 @@ export interface AnalysisStore {
 
   setTypeIds: (typeIds: TypeRow["id"][]) => void;
   setExchanges: (exchanges: ExchangesByCountry) => void;
+  setIsOnlyPriceInfo: (isOnlyPriceInfo: boolean) => void;
   setSelectedTypeIds: (selectedTypeIds: TypeRow["id"][]) => void;
   setSelectedExchangeIds: (selectedExchangeIds: ExchangeRow["id"][]) => void;
   setApplyYearCount: (applyYearCount: boolean) => void;
   setYearsOfTable: (yearsOfTable: number[]) => void;
   setTotalYears: (totalYears: number[]) => void;
+  setSymbolPriceInfos: (symbolPriceInfos: PriceInfoOfSymbols) => void;
   setSymbolGrowths: (symbolGrowths: GrowthOfSymbols) => void;
   setOriginSortedSymbolGrowths: (originSortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
