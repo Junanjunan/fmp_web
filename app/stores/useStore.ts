@@ -1,15 +1,17 @@
 import { create } from 'zustand';
-import { AnalysisStore, AnalysisVolumeStore, WatchlistStore } from '@/types/store';
+import { AnalysisStore, AnalysisVolumeStore, AnalysisPriceStore, WatchlistStore } from '@/types/store';
 
 
 export const useAnalysisStore = create<AnalysisStore>((set) => ({
   // Initial state
   typeIds: [],
   exchanges: [],
+  isOnlyPriceInfo: false,
   selectedTypeIds: ["stock"],
   selectedExchangeIds: ["NASDAQ", "NYSE"],
   yearsOfTable: [],
   totalYears: [],
+  symbolPriceInfos: {},
   symbolGrowths: {},
   originSortedSymbolGrowths: [],
   sortedSymbolGrowths: [],
@@ -33,9 +35,11 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   setTypeIds: (typeIds) => set({ typeIds }),
   setExchanges: (exchanges) => set({ exchanges }),
   setSelectedTypeIds: (selectedTypeIds) => set({ selectedTypeIds }),
+  setIsOnlyPriceInfo: (isOnlyPriceInfo) => set({ isOnlyPriceInfo}),
   setSelectedExchangeIds: (selectedExchangeIds) => set({ selectedExchangeIds }),
   setYearsOfTable: (yearsOfTable) => set({ yearsOfTable }),
   setTotalYears: (totalYears) => set({ totalYears }),
+  setSymbolPriceInfos: (symbolPriceInfos) => set({ symbolPriceInfos }),
   setSymbolGrowths: (symbolGrowths) => set({ symbolGrowths }),
   setOriginSortedSymbolGrowths: (originSortedSymbolGrowths) => set({ originSortedSymbolGrowths }),
   setSortedSymbolGrowths: (sortedSymbolGrowths) => set({ sortedSymbolGrowths }),
@@ -57,6 +61,7 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   reset: () => set({
     typeIds: [],
     exchanges: [],
+    isOnlyPriceInfo: false,
     selectedTypeIds: ["stock"],
     selectedExchangeIds: ["NASDAQ", "NYSE"],
     yearsOfTable: [],
@@ -105,6 +110,46 @@ export const useAnalysisVolumeStore = create<AnalysisVolumeStore>((set) => ({
     exchanges: [],
     selectedTypeIds: ["stock"],
     selectedExchangeIds: ["NASDAQ", "NYSE"],
+    lastClickedSymbol: null,
+  })
+}));
+
+export const useAnalysisPriceStore = create<AnalysisPriceStore>((set) => ({
+  // Initial state
+  typeIds: [],
+  exchanges: [],
+  selectedTypeIds: ["stock"],
+  selectedExchangeIds: ["NASDAQ", "NYSE", "AMEX"],
+  symbolPriceInfos: {},
+  originSortedSymbols: [],
+  sortedSymbols: [],
+  searchSymbol: "",
+  lastClickedSymbol: null,
+  savedPage: 1,
+  watchlistsToBeExcluded: [],
+  numberOfBindingDays: 1,
+  numberOfBinds: 3,
+
+  // Actions
+  setTypeIds: (typeIds) => set({ typeIds }),
+  setExchanges: (exchanges) => set({ exchanges }),
+  setSelectedTypeIds: (selectedTypeIds) => set({ selectedTypeIds }),
+  setSelectedExchangeIds: (selectedExchangeIds) => set({ selectedExchangeIds }),
+  setSymbolPriceInfos: (symbolPriceInfos) => set({ symbolPriceInfos }),
+  setOriginSortedSymbols: (originSortedSymbols) => set({ originSortedSymbols }),
+  setSortedSymbols: (sortedSymbols) => set({ sortedSymbols }),
+  setSearchSymbol: (searchSymbol) => set({ searchSymbol }),
+  setLastClickedSymbol: (symbol) => set({ lastClickedSymbol: symbol }),
+  setSavedPage: (savedPage) => set({ savedPage }),
+  setWatchlistsToBeExcluded: (watchlistsToBeExcluded) => set({ watchlistsToBeExcluded }),
+  setNumberOfBindingDays: (numberOfBindingDays) => set({ numberOfBindingDays }),
+  setNumberOfBinds: (numberOfBinds) => set({ numberOfBinds }),
+
+  reset: () => set({
+    typeIds: [],
+    exchanges: [],
+    selectedTypeIds: ["stock"],
+    selectedExchangeIds: ["NASDAQ", "NYSE", "AMEX"],
     lastClickedSymbol: null,
   })
 }));

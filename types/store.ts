@@ -1,18 +1,21 @@
 import {
   TypeRow, ExchangeRow, SymbolRow, SortedSymbolGrowths,
   ExchangesByCountry, GrowthOfSymbols, SymbolVolumeInfo,
-  SymbolVolumeInfoArrayItem, OrgnizedWatchlistsObject
+  SymbolVolumeInfoArrayItem, OrgnizedWatchlistsObject,
+  PriceInfoOfSymbols, SymbolPriceInfoArrayItem
 } from '@/types';
 
 
 export interface AnalysisStore {
   typeIds: TypeRow["id"][];
   exchanges: ExchangesByCountry;
+  isOnlyPriceInfo: boolean;
   selectedTypeIds: TypeRow["id"][];
   selectedExchangeIds: ExchangeRow["id"][];
   applyYearCount: boolean;
   yearsOfTable: number[];
   totalYears: number[];
+  symbolPriceInfos: PriceInfoOfSymbols;
   symbolGrowths: GrowthOfSymbols;
   originSortedSymbolGrowths: SortedSymbolGrowths;
   sortedSymbolGrowths: SortedSymbolGrowths;
@@ -39,11 +42,13 @@ export interface AnalysisStore {
 
   setTypeIds: (typeIds: TypeRow["id"][]) => void;
   setExchanges: (exchanges: ExchangesByCountry) => void;
+  setIsOnlyPriceInfo: (isOnlyPriceInfo: boolean) => void;
   setSelectedTypeIds: (selectedTypeIds: TypeRow["id"][]) => void;
   setSelectedExchangeIds: (selectedExchangeIds: ExchangeRow["id"][]) => void;
   setApplyYearCount: (applyYearCount: boolean) => void;
   setYearsOfTable: (yearsOfTable: number[]) => void;
   setTotalYears: (totalYears: number[]) => void;
+  setSymbolPriceInfos: (symbolPriceInfos: PriceInfoOfSymbols) => void;
   setSymbolGrowths: (symbolGrowths: GrowthOfSymbols) => void;
   setOriginSortedSymbolGrowths: (originSortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
@@ -92,6 +97,37 @@ export interface AnalysisVolumeStore {
   setSymbolsVolumeInfoObject: (symbolsVolumeInfoObject: { [key: string]: SymbolVolumeInfo }) => void;
   setOriginSortedSymbols: (originSortedSymbols: SymbolVolumeInfoArrayItem[]) => void;
   setSortedSymbols: (sortedSymbols: SymbolVolumeInfoArrayItem[]) => void;
+  setSearchSymbol: (searchSymbol: string) => void;
+  setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
+  setSavedPage: (savedPage: number) => void;
+  setWatchlistsToBeExcluded: (watchlistsToBeExcluded: SymbolRow["id"][]) => void;
+  setNumberOfBindingDays: (numberOfBindingDays: number) => void;
+  setNumberOfBinds: (numberOfBinds: number) => void;
+  reset: () => void;
+}
+
+export interface AnalysisPriceStore {
+  typeIds: TypeRow["id"][];
+  exchanges: ExchangesByCountry;
+  selectedTypeIds: TypeRow["id"][];
+  selectedExchangeIds: ExchangeRow["id"][];
+  symbolPriceInfos: PriceInfoOfSymbols;
+  originSortedSymbols: SymbolPriceInfoArrayItem[],
+  sortedSymbols: SymbolPriceInfoArrayItem[],
+  searchSymbol: string;
+  lastClickedSymbol: SymbolRow["id"] | null;
+  savedPage: number;
+  watchlistsToBeExcluded: SymbolRow["id"][];
+  numberOfBindingDays: number;
+  numberOfBinds: number;
+
+  setTypeIds: (typeIds: TypeRow["id"][]) => void;
+  setExchanges: (exchanges: ExchangesByCountry) => void;
+  setSelectedTypeIds: (selectedTypeIds: TypeRow["id"][]) => void;
+  setSelectedExchangeIds: (selectedExchangeIds: ExchangeRow["id"][]) => void;
+  setSymbolPriceInfos: (symbolPriceInfos: PriceInfoOfSymbols) => void;
+  setOriginSortedSymbols: (originSortedSymbols: SymbolPriceInfoArrayItem[]) => void;
+  setSortedSymbols: (sortedSymbols: SymbolPriceInfoArrayItem[]) => void;
   setSearchSymbol: (searchSymbol: string) => void;
   setLastClickedSymbol: (lastClickedSymbol: SymbolRow["id"] | null) => void;
   setSavedPage: (savedPage: number) => void;

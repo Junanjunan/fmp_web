@@ -39,3 +39,17 @@ export interface SymbolVolumeInfo {
 export interface SymbolVolumeInfoArrayItem extends SymbolVolumeInfo {
   symbol: SymbolRow["id"];
 }
+
+export interface SymbolPriceInfo {
+  type_id: TypeRow["id"];
+  exchange_id: ExchangeRow["id"];
+  price: number;
+}
+
+export interface PriceInfoOfSymbols {
+  [key: SymbolRow["id"]]: SymbolPriceInfo;
+}
+
+export interface SymbolPriceInfoArrayItem extends SymbolPriceInfo {
+  symbol: SymbolRow["id"]
+}

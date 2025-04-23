@@ -41,6 +41,13 @@ export const requestAnalysisVolume = async (
   return response.data;
 }
 
+export const requestAnalysisPrice = async (
+  data: {exchangeIds: ExchangeRow['id'][]}
+) => {
+  const response = await serverApi.post('/analysis-price', data);
+  return response.data;
+}
+
 export const requestSymbolHistoricalPrices = async (data: { exchange_id: string, symbolIds: string[] }) => {
   const response = await serverApi.post('/symbols/historical-prices', data);
   return response.data;
