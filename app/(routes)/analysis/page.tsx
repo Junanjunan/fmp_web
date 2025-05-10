@@ -21,6 +21,8 @@ const AnalysisPage = () => {
     totalYears, setTotalYears,
     symbolPriceInfos, setSymbolPriceInfos,
     symbolGrowths, setSymbolGrowths,
+    applyMinimumGrowthOfGrowth, setApplyMinimumGrowthOfGrowth,
+    minimumGrowthOfGrowth, setMinimumGrowthOfGrowth,
     applyMinimumGrowth, setApplyMinimumGrowth,
     minimumGrowth, setMinimumGrowth,
     applyMinimumOperatingIncomeRatio, setApplyMinimumOperatingIncomeRatio,
@@ -47,10 +49,12 @@ const AnalysisPage = () => {
   useEffect(() => {
     if (isOnlyPriceInfo) {
       setApplyYearCount(false);
+      setApplyMinimumGrowthOfGrowth(false);
       setApplyMinimumGrowth(false);
       setApplyMinimumOperatingIncomeRatio(false);
     } else {
       setApplyYearCount(true);
+      setApplyMinimumGrowthOfGrowth(true);
       setApplyMinimumGrowth(true);
       setApplyMinimumOperatingIncomeRatio(true);
     }
@@ -201,6 +205,24 @@ const AnalysisPage = () => {
                 onChange={handleYearCountChange}
                 title=""
                 id="yearCount"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center h-20 -mt-10">
+            <CheckboxList
+              attributes={['Minimum Growth of Growth(%)']}
+              title=""
+              defaultChecked={applyMinimumGrowthOfGrowth || !isOnlyPriceInfo ? ['Minimum Growth of Growth(%)'] : []}
+              onChange={() => setApplyMinimumGrowthOfGrowth(!applyMinimumGrowthOfGrowth)}
+            />
+            <div className={`mb-10 ml-5 ${applyMinimumGrowthOfGrowth ? 'block' : 'hidden'}`}>
+              <InputText
+                inputType="number"
+                value={minimumGrowthOfGrowth}
+                onChange={(e) => setMinimumGrowthOfGrowth(Number(e.target.value))}
+                title=""
+                id="growthOfGrowthLimit"
               />
             </div>
           </div>

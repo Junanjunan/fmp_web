@@ -20,6 +20,8 @@ export interface AnalysisStore {
   originSortedSymbolGrowths: SortedSymbolGrowths;
   sortedSymbolGrowths: SortedSymbolGrowths;
   selectedYearCount: string | number;
+  applyMinimumGrowthOfGrowth: boolean;
+  minimumGrowthOfGrowth: number;
   applyMinimumGrowth: boolean;
   minimumGrowth: number;
   applyMinimumOperatingIncomeRatio: boolean;
@@ -53,6 +55,8 @@ export interface AnalysisStore {
   setOriginSortedSymbolGrowths: (originSortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSortedSymbolGrowths: (sortedSymbolGrowths: SortedSymbolGrowths) => void;
   setSelectedYearCount: (selectedYearCount: string | number) => void;
+  setMinimumGrowthOfGrowth: (minimumGrowthOfGrowth: number) => void;
+  setApplyMinimumGrowthOfGrowth: (applyMinimumGrowthOfGrowth: boolean) => void;
   setMinimumGrowth: (minimumGrowth: number) => void;
   setApplyMinimumGrowth: (applyMinimumGrowth: boolean) => void;
   setMinimumOperatingIncomeRatio: (minimumOperatingIncomeRatio: number) => void;

@@ -17,9 +17,10 @@ export const RevenueTable = (
 ) => {
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
-    symbolGrowths, yearsOfTable, minimumGrowth, minimumOperatingIncomeRatio,
-    applyYearCount, applyMinimumGrowth,
-    applyMinimumOperatingIncomeRatio, watchlistsToBeExcluded,
+    symbolGrowths, yearsOfTable, watchlistsToBeExcluded,
+    minimumGrowthOfGrowth, minimumGrowth, minimumOperatingIncomeRatio,
+    applyYearCount, applyMinimumGrowthOfGrowth,
+    applyMinimumGrowth, applyMinimumOperatingIncomeRatio,
     sortedSymbolGrowths, setSortedSymbolGrowths,
     originSortedSymbolGrowths, setOriginSortedSymbolGrowths,
     lastClickedSymbol, setLastClickedSymbol,
@@ -72,6 +73,11 @@ export const RevenueTable = (
     for (let i = 0; i < growthArray.length; i++) {
       for (const year of yearsOfTable) {
         if (growthArray[i].year == year) {
+          if (applyMinimumGrowthOfGrowth) {
+            if (!growthArray[i].growthOfGrowth || growthArray[i].growthOfGrowth < minimumGrowthOfGrowth) {
+              return false;
+            }
+          }
           if (applyMinimumGrowth) {
             if (!growthArray[i].growth || growthArray[i].growth < minimumGrowth) {
               return false;
