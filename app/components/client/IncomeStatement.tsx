@@ -18,8 +18,8 @@ export const RevenueTable = (
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
     symbolGrowths, yearsOfTable, watchlistsToBeExcluded,
-    minimumGrowthOfGrowth, minimumGrowth, minimumOperatingIncomeRatio,
-    applyYearCount, applyMinimumGrowthOfGrowth,
+    minimumPERatio, minimumGrowthOfGrowth, minimumGrowth, minimumOperatingIncomeRatio,
+    applyMinimumPERatio, applyYearCount, applyMinimumGrowthOfGrowth,
     applyMinimumGrowth, applyMinimumOperatingIncomeRatio,
     sortedSymbolGrowths, setSortedSymbolGrowths,
     originSortedSymbolGrowths, setOriginSortedSymbolGrowths,
@@ -39,6 +39,7 @@ export const RevenueTable = (
   const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
     const symbol = symbolData[0];
     const price = symbolData[1].price;
+    const peRatio = symbolData[1].peRatio;
     const growthArray = symbolData[1].growthArray;
     const OIRatios = symbolData[1].operatingIncomeRatios;
     const thirdYear = Number(yearsOfTable[2]);
@@ -75,6 +76,11 @@ export const RevenueTable = (
         if (growthArray[i].year == year) {
           if (applyMinimumGrowthOfGrowth) {
             if (!growthArray[i].growthOfGrowth || growthArray[i].growthOfGrowth < minimumGrowthOfGrowth) {
+              return false;
+            }
+          }
+          if (applyMinimumPERatio) {
+            if (peRatio < minimumPERatio) {
               return false;
             }
           }

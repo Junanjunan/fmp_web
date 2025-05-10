@@ -21,6 +21,8 @@ const AnalysisPage = () => {
     totalYears, setTotalYears,
     symbolPriceInfos, setSymbolPriceInfos,
     symbolGrowths, setSymbolGrowths,
+    applyMinimumPERatio, setApplyMinimumPERatio,
+    minimumPERatio, setMinimumPERatio,
     applyMinimumGrowthOfGrowth, setApplyMinimumGrowthOfGrowth,
     minimumGrowthOfGrowth, setMinimumGrowthOfGrowth,
     applyMinimumGrowth, setApplyMinimumGrowth,
@@ -205,6 +207,24 @@ const AnalysisPage = () => {
                 onChange={handleYearCountChange}
                 title=""
                 id="yearCount"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center h-20 -mt-10">
+            <CheckboxList
+              attributes={['PE Ratio']}
+              title=""
+              defaultChecked={applyMinimumPERatio || !isOnlyPriceInfo ? ['PE Ratio'] : []}
+              onChange={() => setApplyMinimumPERatio(!applyMinimumPERatio)}
+            />
+            <div className={`mb-10 ml-5 ${applyMinimumPERatio ? 'block' : 'hidden'}`}>
+              <InputText
+                inputType="number"
+                value={minimumPERatio}
+                onChange={(e) => setMinimumPERatio(Number(e.target.value))}
+                title=""
+                id="peRatio"
               />
             </div>
           </div>
