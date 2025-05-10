@@ -189,7 +189,7 @@ export const PriceChart = ({ data }: ChartProps) => {
     };
   }, [data]);
 
-  const PriceModalItem = ({title, price, percentChange}: {title: string, price: number, percentChange: number}) => {
+  const PriceModalItem = ({ title, price, percentChange }: { title: string, price: number, percentChange: number }) => {
     return (
       <div className="flex justify-between gap-4">
         <span className="font-large">{title}:</span>
@@ -206,23 +206,23 @@ export const PriceChart = ({ data }: ChartProps) => {
   const PriceModal = () => {
     return (
       <>
-      {tooltip.show && (
-        <div
-          className="absolute bg-white shadow-lg rounded-lg p-3 z-50"
-          style={{
-            left: `${tooltip.x}px`,
-            top: `${tooltip.y - 20}px`,
-            transform: 'translate(-50%, -100%)',
-          }}
-        >
-          <div className="text-sm">
-            <PriceModalItem title={"Close"} price={tooltip.close} percentChange={tooltip.closePercentChange} />
-            <PriceModalItem title={"Open"} price={tooltip.open} percentChange={tooltip.openPercentChange} />
-            <PriceModalItem title={"High"} price={tooltip.high} percentChange={tooltip.highPercentChange} />
-            <PriceModalItem title={"Low"} price={tooltip.low} percentChange={tooltip.lowPercentChange} />            
+        {tooltip.show && (
+          <div
+            className="absolute bg-white shadow-lg rounded-lg p-3 z-50"
+            style={{
+              left: `${tooltip.x}px`,
+              top: `${tooltip.y - 20}px`,
+              transform: 'translate(-50%, -100%)',
+            }}
+          >
+            <div className="text-sm">
+              <PriceModalItem title={"Close"} price={tooltip.close} percentChange={tooltip.closePercentChange} />
+              <PriceModalItem title={"Open"} price={tooltip.open} percentChange={tooltip.openPercentChange} />
+              <PriceModalItem title={"High"} price={tooltip.high} percentChange={tooltip.highPercentChange} />
+              <PriceModalItem title={"Low"} price={tooltip.low} percentChange={tooltip.lowPercentChange} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </>
     )
   }

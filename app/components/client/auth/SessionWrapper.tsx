@@ -4,10 +4,10 @@ import { SessionProvider } from 'next-auth/react'
 import { Session } from 'next-auth'
 
 
-export function SessionWrapper({ 
+export function SessionWrapper({
   children,
-  session 
-}: { 
+  session
+}: {
   children: React.ReactNode
   session: Session | null
 }) {

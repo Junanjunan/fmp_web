@@ -118,7 +118,7 @@ export interface SymbolProfileRow {
   is_fund: boolean;
 }
 
-export interface SymbolWithProfile extends SymbolRow, Omit<SymbolProfileRow, 'price'> {}
+export interface SymbolWithProfile extends SymbolRow, Omit<SymbolProfileRow, 'price'> { }
 
 export interface HistoricalPriceRow {
   symbol: string;
@@ -147,7 +147,7 @@ export interface UserSymbolRow {
   symbol_id: SymbolRow["id"];
 }
 
-export interface UserSymbolRowWithExchangeId extends UserSymbolRow{
+export interface UserSymbolRowWithExchangeId extends UserSymbolRow {
   exchange_id: ExchangeRow["id"]
 }
 

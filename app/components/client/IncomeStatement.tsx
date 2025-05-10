@@ -13,7 +13,7 @@ import { WatchlistToggleBtn } from '@/app/components/client/Watchlist/WatchlistT
 
 export const RevenueTable = (
   { filteredYears, isOnlyPriceInfo }:
-  { filteredYears: number[], isOnlyPriceInfo: boolean }
+    { filteredYears: number[], isOnlyPriceInfo: boolean }
 ) => {
   const lastClickedRowRef = useRef<HTMLTableRowElement | null>(null);
   const {
@@ -149,27 +149,27 @@ export const RevenueTable = (
       for (const exchangeId in exchangeSymbolsObject) {
         const data = {
           exchange_id: exchangeId,
-          symbolIds: exchangeSymbolsObject[exchangeId] 
+          symbolIds: exchangeSymbolsObject[exchangeId]
         }
         requestSymbolHistoricalPrices(data)
           .then(response => {
             for (const row of response.data) {
-            if (row.symbol in symbolInfoObject) {
-              symbolInfoObject[row.symbol].push(row);
-            } else {
-              symbolInfoObject[row.symbol] = [row];
+              if (row.symbol in symbolInfoObject) {
+                symbolInfoObject[row.symbol].push(row);
+              } else {
+                symbolInfoObject[row.symbol] = [row];
+              }
             }
-          }
-          Object.entries(symbolInfoObject).forEach(([symbol, data]) => {
-            data.sort(
-              (a, b) => new Date(formatDate(b.date)).getTime() - new Date(formatDate(a.date)).getTime()
-            );
-            const { lastUpper, lastMiddle, lastLower } = calculateLastBollingerBands(data);
-            symbolBollingerObject[symbol] = { lastUpper, lastMiddle, lastLower };
+            Object.entries(symbolInfoObject).forEach(([symbol, data]) => {
+              data.sort(
+                (a, b) => new Date(formatDate(b.date)).getTime() - new Date(formatDate(a.date)).getTime()
+              );
+              const { lastUpper, lastMiddle, lastLower } = calculateLastBollingerBands(data);
+              symbolBollingerObject[symbol] = { lastUpper, lastMiddle, lastLower };
+            });
+            setBollingerObject(symbolBollingerObject);
+            setFilterLoading(false);
           });
-          setBollingerObject(symbolBollingerObject);
-          setFilterLoading(false);
-        });
       }
     }
   }, [showBBValues])
@@ -184,7 +184,7 @@ export const RevenueTable = (
     try {
       const response = await fetch('/api/v1/fmp-server/symbols', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           params: {
             filePath: 'services.subprocess',
@@ -204,7 +204,7 @@ export const RevenueTable = (
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       if (yearType) {
-        setSortYearType(yearType as 'revenue' | 'operatingIncome'); 
+        setSortYearType(yearType as 'revenue' | 'operatingIncome');
       }
       setSortColumn(column);
       setSortDirection('desc');
@@ -239,13 +239,13 @@ export const RevenueTable = (
       }
 
       if (sortColumn === 'exchange') {
-        return sortDirection === 'asc' 
+        return sortDirection === 'asc'
           ? a[1].exchange_id.localeCompare(b[1].exchange_id)
           : b[1].exchange_id.localeCompare(a[1].exchange_id);
       }
 
       if (sortColumn === 'psRatio') {
-        return sortDirection === 'asc' 
+        return sortDirection === 'asc'
           ? a[1].psRatio - b[1].psRatio
           : b[1].psRatio - a[1].psRatio;
       }
@@ -291,7 +291,7 @@ export const RevenueTable = (
           attributes={['Show BB values']}
           title=""
           defaultChecked={showBBValues ? ['Show BB values'] : []}
-          onChange={() => {setShowBBValues(!showBBValues)}}
+          onChange={() => { setShowBBValues(!showBBValues) }}
         />
       </div>
       <div className="flex items-center h-20 -mt-10">
@@ -299,7 +299,7 @@ export const RevenueTable = (
           attributes={['Filter Under BB Lower']}
           title=""
           defaultChecked={showBBValues ? ['Filter Under BB Lower'] : []}
-          onChange={() => {setFilterUnderBBLower(!filterUnderBBLower)}}
+          onChange={() => { setFilterUnderBBLower(!filterUnderBBLower) }}
         />
       </div>
       <div className="flex items-center h-20 -mt-10">
@@ -307,7 +307,7 @@ export const RevenueTable = (
           attributes={['Filter under BB Middle']}
           title=""
           defaultChecked={showBBValues ? ['Filter under BB Middle'] : []}
-          onChange={() => {setFilterUnderBBMiddle(!filterUnderBBMiddle)}}
+          onChange={() => { setFilterUnderBBMiddle(!filterUnderBBMiddle) }}
         />
       </div>
       <span className="text-red-500">{filterLoading ? 'Loading...' : ''}</span>
@@ -343,11 +343,11 @@ export const RevenueTable = (
             >
               PS Ratio{toggleArrow('psRatio')}
             </th>
-            {isOnlyPriceInfo ? null:
-            <>
-            <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth(%)</th>
-            <th className="tableCell" colSpan={filteredYears.length}>Operating Income Ratio(%)</th>
-            </>
+            {isOnlyPriceInfo ? null :
+              <>
+                <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth(%)</th>
+                <th className="tableCell" colSpan={filteredYears.length}>Operating Income Ratio(%)</th>
+              </>
             }
           </tr>
           <tr>
@@ -383,7 +383,7 @@ export const RevenueTable = (
                 ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
                 className={
                   lastClickedSymbol === symbol ? 'bg-blue-100' :
-                  watchlist.includes(symbol) ? 'bg-green-100' : ''
+                    watchlist.includes(symbol) ? 'bg-green-100' : ''
                 }
               >
                 <td className="tableCell">

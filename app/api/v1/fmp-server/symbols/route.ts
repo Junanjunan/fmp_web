@@ -5,7 +5,7 @@ import { spawn } from "child_process";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { params: { filePath, method, symbols}} = body;
+    const { params: { filePath, method, symbols } } = body;
     const symbolsString = JSON.stringify(symbols);
     const fmpProcess = new Promise((resolve, reject) => {
       const childProcess = spawn(
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
           '-c',
           `source venv/bin/activate \
             && python -m ${filePath} ${method} '${symbolsString}'`,
-        ], 
+        ],
         {
           cwd: process.env.FMP_ROOT,
           detached: true, // Make the process independent

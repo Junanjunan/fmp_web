@@ -15,12 +15,12 @@ import { useWatchlistStore } from '@/app/stores/useStore';
 
 
 export const WatchlistToggleBtn = (
-  { symbol = null , exchange = null, symbolWithExchangeArrayData = null }:
-  { 
-    symbol?: SymbolRow["id"] | null,
-    exchange?: ExchangeRow["id"] | null,
-    symbolWithExchangeArrayData?: string[] | null,
-  }
+  { symbol = null, exchange = null, symbolWithExchangeArrayData = null }:
+    {
+      symbol?: SymbolRow["id"] | null,
+      exchange?: ExchangeRow["id"] | null,
+      symbolWithExchangeArrayData?: string[] | null,
+    }
 ) => {
   const [isInWatchlistState, setIsInWatchlistState] = useState(false);
   const [showWatchlists, setShowWatchlists] = useState(false);
@@ -58,7 +58,7 @@ export const WatchlistToggleBtn = (
         });
       });
 
-      if (symbol){
+      if (symbol) {
         setIsInWatchlistState(symbolsInWatchlists.includes(symbol));
       }
       setWatchlistObject(organizedWatchlists);
@@ -76,7 +76,7 @@ export const WatchlistToggleBtn = (
   }
 
   const handleAddWatchlist = async () => {
-    const response = await requestInsertWatchlist({watchlistName: newWatchlistName});
+    const response = await requestInsertWatchlist({ watchlistName: newWatchlistName });
     if (response.success) {
       setToggleResetWatchlist(!toggleResetWatchlist);
       setNewWatchlistName("");
@@ -90,7 +90,7 @@ export const WatchlistToggleBtn = (
       return;
     }
 
-    const response = await requestDeleteWatchlist({watchlistName});
+    const response = await requestDeleteWatchlist({ watchlistName });
     if (response.success) {
       setToggleResetWatchlist(!toggleResetWatchlist);
     }
@@ -173,93 +173,93 @@ export const WatchlistToggleBtn = (
 
   return (
     <>
-    {isInWatchlistState ? (
-      <span onClick={handleToggleWatchlist} className="text-gray-500 border border-gray-500 px-2 py-1 ml-2 cursor-pointer">Remove from Watchlist</span>
-    ) : (
-      <span onClick={handleToggleWatchlist} className="text-blue-500 border border-blue-500 px-2 py-1 ml-2 cursor-pointer">Add to Watchlist</span>
-    )}
-    <Button
-      onClick={handleCorrectWatchlistExchange}
-      title={"Correct watchlist exchange"}
-      isLoading={isLoading}
-    />
-    <div className={`flex ${showWatchlists ? 'block' : 'hidden'}`}>
-      {Object.entries(watchlistObject).map(([watchlistName, symbolWithExchangeArray]) => {
-        return (
-          <div key={watchlistName}>
-            <table>
-              <thead className="bg-green-200">
-                <tr className="border border-gray-500">
-                  <th className="p-1">
-                    {watchlistName}
-                    <Button
-                      onClick={() => {
-                        if (symbol && exchange) {
-                          addSymbolToWatchlist(watchlistName, symbol, exchange)
-                        } else if (symbolWithExchangeArrayData) {
+      {isInWatchlistState ? (
+        <span onClick={handleToggleWatchlist} className="text-gray-500 border border-gray-500 px-2 py-1 ml-2 cursor-pointer">Remove from Watchlist</span>
+      ) : (
+        <span onClick={handleToggleWatchlist} className="text-blue-500 border border-blue-500 px-2 py-1 ml-2 cursor-pointer">Add to Watchlist</span>
+      )}
+      <Button
+        onClick={handleCorrectWatchlistExchange}
+        title={"Correct watchlist exchange"}
+        isLoading={isLoading}
+      />
+      <div className={`flex ${showWatchlists ? 'block' : 'hidden'}`}>
+        {Object.entries(watchlistObject).map(([watchlistName, symbolWithExchangeArray]) => {
+          return (
+            <div key={watchlistName}>
+              <table>
+                <thead className="bg-green-200">
+                  <tr className="border border-gray-500">
+                    <th className="p-1">
+                      {watchlistName}
+                      <Button
+                        onClick={() => {
+                          if (symbol && exchange) {
+                            addSymbolToWatchlist(watchlistName, symbol, exchange)
+                          } else if (symbolWithExchangeArrayData) {
                             addManySymbolsToWatchlist(watchlistName, symbolWithExchangeArrayData);
                           }
                         }
-                      }
-                      title="+"
-                      isLoading={null}
-                      additionalClass="ml-2 cursor-pointer"
-                    />
-                    <Button
-                      onClick={() => handleDeleteWatchlist(watchlistName)}
-                      title="✕"
-                      isLoading={null}
-                      additionalClass="ml-2 cursor-pointer bg-gray-500"
-                    />
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="border border-gray-500">
-                {symbolWithExchangeArray.map(([symbolInArray, exchangeInArray]) => {
-                  return (
-                    <tr
-                      key={symbolInArray}
-                      className={`border border-gray-500 ${symbol === symbolInArray ? 'bg-blue-100' : ''}`}
-                    >
-                      <td className="p-1">
-                        <Link href={`/analysis/${exchangeInArray}/${symbolInArray}`} target="_blank">
-                          {symbolInArray} ({exchangeInArray})
-                        </Link>
-                        <Button
-                          onClick={() => deleteSymbolFromWatchlist(watchlistName, symbolInArray, exchangeInArray)}
-                          title="✕"
-                          isLoading={null}
-                          additionalClass="ml-2"
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        );
-      })}
-      <input
-        type="text"
-        placeholder="New Watchlist Name"
-        className={`border border-gray-500 p-1 ${showAddWatchlist ? 'block' : 'hidden'} h-12`}
-        value={newWatchlistName}
-        onChange={(e) => setNewWatchlistName(e.target.value)}
-      />
-      <Button
-        onClick={handleAddWatchlist}
-        title={"Submit"}
-        isLoading={null}
-        additionalClass={`${showAddWatchlist ? 'block' : 'hidden'} ml-2 cursor-pointer h-12`}
-      />
-      <Button
-        onClick={handleShowAddWatchlist}
-        title={showAddWatchlist ? "Cancel" : "Add Watchlist"}
-        isLoading={null}
-        additionalClass={`${showAddWatchlist ? 'bg-gray-400' : 'bg-blue-500'} ml-2 cursor-pointer h-12`}
-      />
-    </div>
+                        }
+                        title="+"
+                        isLoading={null}
+                        additionalClass="ml-2 cursor-pointer"
+                      />
+                      <Button
+                        onClick={() => handleDeleteWatchlist(watchlistName)}
+                        title="✕"
+                        isLoading={null}
+                        additionalClass="ml-2 cursor-pointer bg-gray-500"
+                      />
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="border border-gray-500">
+                  {symbolWithExchangeArray.map(([symbolInArray, exchangeInArray]) => {
+                    return (
+                      <tr
+                        key={symbolInArray}
+                        className={`border border-gray-500 ${symbol === symbolInArray ? 'bg-blue-100' : ''}`}
+                      >
+                        <td className="p-1">
+                          <Link href={`/analysis/${exchangeInArray}/${symbolInArray}`} target="_blank">
+                            {symbolInArray} ({exchangeInArray})
+                          </Link>
+                          <Button
+                            onClick={() => deleteSymbolFromWatchlist(watchlistName, symbolInArray, exchangeInArray)}
+                            title="✕"
+                            isLoading={null}
+                            additionalClass="ml-2"
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+        <input
+          type="text"
+          placeholder="New Watchlist Name"
+          className={`border border-gray-500 p-1 ${showAddWatchlist ? 'block' : 'hidden'} h-12`}
+          value={newWatchlistName}
+          onChange={(e) => setNewWatchlistName(e.target.value)}
+        />
+        <Button
+          onClick={handleAddWatchlist}
+          title={"Submit"}
+          isLoading={null}
+          additionalClass={`${showAddWatchlist ? 'block' : 'hidden'} ml-2 cursor-pointer h-12`}
+        />
+        <Button
+          onClick={handleShowAddWatchlist}
+          title={showAddWatchlist ? "Cancel" : "Add Watchlist"}
+          isLoading={null}
+          additionalClass={`${showAddWatchlist ? 'bg-gray-400' : 'bg-blue-500'} ml-2 cursor-pointer h-12`}
+        />
+      </div>
     </>
   );
 }

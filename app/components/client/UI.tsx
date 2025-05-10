@@ -3,13 +3,13 @@ import { SelectProps } from '@/types';
 
 
 export const CheckboxList = (
-  { attributes, title, defaultChecked, onChange }: 
-  {
-    attributes: string[],
-    title: string,
-    defaultChecked: string[],
-    onChange: (selected: string[]) => void,
-  }
+  { attributes, title, defaultChecked, onChange }:
+    {
+      attributes: string[],
+      title: string,
+      defaultChecked: string[],
+      onChange: (selected: string[]) => void,
+    }
 ) => {
   const [checkedItems, setCheckedItems] = useState<string[]>(defaultChecked);
 
@@ -28,12 +28,12 @@ export const CheckboxList = (
         {attributes.map((attribute) => {
           return (
             <div key={attribute}>
-              <input 
-                type="checkbox" 
-                id={attribute} 
-                name={attribute} 
-                checked={checkedItems.includes(attribute)} 
-                onChange={() => handleCheckboxChange(attribute)} 
+              <input
+                type="checkbox"
+                id={attribute}
+                name={attribute}
+                checked={checkedItems.includes(attribute)}
+                onChange={() => handleCheckboxChange(attribute)}
               />
               <label htmlFor={attribute}>{attribute}</label>
             </div>
@@ -46,15 +46,15 @@ export const CheckboxList = (
 
 export const CheckboxObjectList = (
   { attributes, title, defaultChecked, onChange }:
-  {
-    attributes: {
-      id: string,
-      infoArray: { id: string, name: string }[]
-    }[],
-    title: string,
-    defaultChecked: string[],
-    onChange: (selected: string[]) => void,
-  }
+    {
+      attributes: {
+        id: string,
+        infoArray: { id: string, name: string }[]
+      }[],
+      title: string,
+      defaultChecked: string[],
+      onChange: (selected: string[]) => void,
+    }
 ) => {
   const [checkedItems, setCheckedItems] = useState<string[]>(defaultChecked);
   const [toggleMenu, setToggleMenu] = useState<boolean>(false);
@@ -107,14 +107,14 @@ export const CheckboxObjectList = (
 }
 
 export const Button = (
-  { onClick, title, isLoading, additionalClass, disabled=false }:
-  {
-    onClick: () => void,
-    title: string,
-    isLoading: boolean | null,
-    additionalClass?: string,
-    disabled?: boolean,
-   }
+  { onClick, title, isLoading, additionalClass, disabled = false }:
+    {
+      onClick: () => void,
+      title: string,
+      isLoading: boolean | null,
+      additionalClass?: string,
+      disabled?: boolean,
+    }
 ) => (
   <button
     onClick={onClick}
@@ -153,15 +153,15 @@ export const Select = (
 };
 
 export const InputText = (
-  { inputType, value, onChange, title, id, placeholder }: 
-  { 
-    inputType: string,
-    value: string | number,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    title: string,
-    id: string,
-    placeholder?: string
-  }
+  { inputType, value, onChange, title, id, placeholder }:
+    {
+      inputType: string,
+      value: string | number,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+      title: string,
+      id: string,
+      placeholder?: string
+    }
 ) => (
   <div className="flex items-center mt-5">
     <label htmlFor={id} className="mr-4">{title}: </label>
@@ -170,7 +170,7 @@ export const InputText = (
       value={value === 0 && inputType === 'number' ? '' : value}
       placeholder={
         placeholder ? placeholder :
-        inputType === 'number' ? 'Empty means 0' : ''
+          inputType === 'number' ? 'Empty means 0' : ''
       }
       onChange={onChange}
       id={id}
@@ -195,7 +195,7 @@ export const SymbolCard = (
 
 export const SymbolCardList = (
   { items, onClick }:
-  { items: string[], onClick: (item: string) => void }
+    { items: string[], onClick: (item: string) => void }
 ) => (
   <div className="flex flex-wrap">
     {items.map(item => (

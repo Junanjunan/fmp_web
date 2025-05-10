@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     });
 
     // Remove password from response
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
       user: {
         id: user.id,

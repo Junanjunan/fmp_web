@@ -25,7 +25,7 @@ const WatchlistPage = () => {
           {watchlist.map((symbol) => (
             <tr key={symbol} className="hover:bg-gray-50">
               <td className="border p-2">
-                <Link 
+                <Link
                   href={`/analysis/${symbol}`}
                   className="text-blue-600 hover:underline"
                 >

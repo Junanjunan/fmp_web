@@ -61,7 +61,7 @@ export const AnalysisVolumeTable = () => {
     try {
       const response = await fetch('/api/v1/fmp-server/symbols', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           params: {
             filePath: 'services.subprocess',
@@ -164,7 +164,7 @@ export const AnalysisVolumeTable = () => {
               ref={lastClickedSymbol === symbol ? lastClickedRowRef : null}
               className={
                 lastClickedSymbol === symbol ? 'bg-blue-100' :
-                watchlist.includes(symbol) ? 'bg-green-100' : ''
+                  watchlist.includes(symbol) ? 'bg-green-100' : ''
               }
             >
               <td className="tableCell">

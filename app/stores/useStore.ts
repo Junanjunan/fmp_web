@@ -35,7 +35,7 @@ export const useAnalysisStore = create<AnalysisStore>((set) => ({
   setTypeIds: (typeIds) => set({ typeIds }),
   setExchanges: (exchanges) => set({ exchanges }),
   setSelectedTypeIds: (selectedTypeIds) => set({ selectedTypeIds }),
-  setIsOnlyPriceInfo: (isOnlyPriceInfo) => set({ isOnlyPriceInfo}),
+  setIsOnlyPriceInfo: (isOnlyPriceInfo) => set({ isOnlyPriceInfo }),
   setSelectedExchangeIds: (selectedExchangeIds) => set({ selectedExchangeIds }),
   setYearsOfTable: (yearsOfTable) => set({ yearsOfTable }),
   setTotalYears: (totalYears) => set({ totalYears }),

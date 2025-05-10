@@ -19,5 +19,5 @@ export async function POST(request: Request) {
     const symbolsHistoricalPrices = await getSymbolsHistoricalPricesByDate(exchangeId, startDate, endDate);
     exchangeHistoricalPricesObject[exchangeId] = symbolsHistoricalPrices;
   }
-  return NextResponse.json({'success': true, 'data': exchangeHistoricalPricesObject});
+  return NextResponse.json({ 'success': true, 'data': exchangeHistoricalPricesObject });
 }

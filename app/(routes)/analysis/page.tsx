@@ -127,12 +127,12 @@ const AnalysisPage = () => {
   }
 
   const handleApplyYearCount = () => {
-      if (!applyYearCount) {
-        setSelectedYearCount(5);
-      } else {
-        setSelectedYearCount(totalYears.length);
-      }
-      setApplyYearCount(!applyYearCount);
+    if (!applyYearCount) {
+      setSelectedYearCount(5);
+    } else {
+      setSelectedYearCount(totalYears.length);
+    }
+    setApplyYearCount(!applyYearCount);
   }
   const handleYearCountChange = (selected: string | number) => {
     setSelectedYearCount(selected);
@@ -186,65 +186,65 @@ const AnalysisPage = () => {
       <SearchedCount />
 
       {isOnlyPriceInfo ? null :
-      <>
-      <div className="flex items-center h-20">
-        <CheckboxList
-          attributes={['Year Count']}
-          title=""
-          defaultChecked={applyYearCount || !isOnlyPriceInfo ? ['Year Count'] : []}
-          onChange={handleApplyYearCount}
-        />
-        <div className={`mb-10 ml-5 ${applyYearCount ? 'block' : 'hidden'}`}>
-          <Select
-            options={totalYears.map((_, index) => index+1)}
-            value={selectedYearCount}
-            onChange={handleYearCountChange}
-            title=""
-            id="yearCount"
-          />
-        </div>
-      </div>
+        <>
+          <div className="flex items-center h-20">
+            <CheckboxList
+              attributes={['Year Count']}
+              title=""
+              defaultChecked={applyYearCount || !isOnlyPriceInfo ? ['Year Count'] : []}
+              onChange={handleApplyYearCount}
+            />
+            <div className={`mb-10 ml-5 ${applyYearCount ? 'block' : 'hidden'}`}>
+              <Select
+                options={totalYears.map((_, index) => index + 1)}
+                value={selectedYearCount}
+                onChange={handleYearCountChange}
+                title=""
+                id="yearCount"
+              />
+            </div>
+          </div>
 
-      <div className="flex items-center h-20 -mt-10">
-        <CheckboxList
-          attributes={['Minimum Growth(%)']}
-          title=""
-          defaultChecked={applyMinimumGrowth || !isOnlyPriceInfo ? ['Minimum Growth(%)'] : []}
-          onChange={() => setApplyMinimumGrowth(!applyMinimumGrowth)}
-        />
-        <div className={`mb-10 ml-5 ${applyMinimumGrowth ? 'block' : 'hidden'}`}>
-          <InputText
-            inputType="number"
-            value={minimumGrowth}
-            onChange={(e) => setMinimumGrowth(Number(e.target.value))}
-            title=""
-            id="growthLimit"
-          />
-        </div>
-      </div>
+          <div className="flex items-center h-20 -mt-10">
+            <CheckboxList
+              attributes={['Minimum Growth(%)']}
+              title=""
+              defaultChecked={applyMinimumGrowth || !isOnlyPriceInfo ? ['Minimum Growth(%)'] : []}
+              onChange={() => setApplyMinimumGrowth(!applyMinimumGrowth)}
+            />
+            <div className={`mb-10 ml-5 ${applyMinimumGrowth ? 'block' : 'hidden'}`}>
+              <InputText
+                inputType="number"
+                value={minimumGrowth}
+                onChange={(e) => setMinimumGrowth(Number(e.target.value))}
+                title=""
+                id="growthLimit"
+              />
+            </div>
+          </div>
 
-      <div className="flex items-center h-20 -mt-10">
-        <CheckboxList
-          attributes={['Minimum Operating Income Ratio(%)']}
-          title=""
-          defaultChecked={
-            applyMinimumOperatingIncomeRatio || !isOnlyPriceInfo ? ['Minimum Operating Income Ratio(%)'] : []
-          }
-          onChange={
-            () => setApplyMinimumOperatingIncomeRatio(!applyMinimumOperatingIncomeRatio)
-          }
-        />
-        <div className={`mb-10 ml-5 ${applyMinimumOperatingIncomeRatio ? 'block' : 'hidden'}`}>
-          <InputText
-            inputType="number"
-            value={minimumOperatingIncomeRatio}
-            onChange={(e) => setMinimumOperatingIncomeRatio(Number(e.target.value))}
-            title=""
-            id="operatingIncomeRatioLimit"
-          />
-        </div>
-      </div>
-      </>
+          <div className="flex items-center h-20 -mt-10">
+            <CheckboxList
+              attributes={['Minimum Operating Income Ratio(%)']}
+              title=""
+              defaultChecked={
+                applyMinimumOperatingIncomeRatio || !isOnlyPriceInfo ? ['Minimum Operating Income Ratio(%)'] : []
+              }
+              onChange={
+                () => setApplyMinimumOperatingIncomeRatio(!applyMinimumOperatingIncomeRatio)
+              }
+            />
+            <div className={`mb-10 ml-5 ${applyMinimumOperatingIncomeRatio ? 'block' : 'hidden'}`}>
+              <InputText
+                inputType="number"
+                value={minimumOperatingIncomeRatio}
+                onChange={(e) => setMinimumOperatingIncomeRatio(Number(e.target.value))}
+                title=""
+                id="operatingIncomeRatioLimit"
+              />
+            </div>
+          </div>
+        </>
       }
 
       <div className="flex items-center h-20">

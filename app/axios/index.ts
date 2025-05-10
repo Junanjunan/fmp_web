@@ -35,7 +35,7 @@ export const requestWatchlistsAnalysis = async () => {
 }
 
 export const requestAnalysisVolume = async (
-  data: {exchangeIds: ExchangeRow['id'][], days: number}
+  data: { exchangeIds: ExchangeRow['id'][], days: number }
 ) => {
   const response = await serverApi.post('/analysis-volume', data);
   return response.data;
@@ -47,13 +47,13 @@ export const requestSymbolHistoricalPrices = async (data: { exchange_id: string,
 }
 
 export const requestGetWatchlist = async (
-): Promise<{allWatchlists: AllWatchlistsRow[]}> => {
+): Promise<{ allWatchlists: AllWatchlistsRow[] }> => {
   const response = await serverApi.get('/watchlist');
   return response.data;
 }
 
 export const requestInsertSymbolToWatchlist = async (
-  data: { watchlistName:string, symbol: string, exchange: string }
+  data: { watchlistName: string, symbol: string, exchange: string }
 ) => {
   const response = await serverApi.post('/watchlist', data);
   return response.data;
@@ -83,7 +83,7 @@ export const requestInsertWatchlist = async (
 export const requestDeleteWatchlist = async (
   data: { watchlistName: string }
 ) => {
-  const response = await serverApi.delete('/watchlists-all', { data } );
+  const response = await serverApi.delete('/watchlists-all', { data });
   return response.data;
 }
 

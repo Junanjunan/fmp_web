@@ -13,7 +13,7 @@ import { formatDate } from '@/lib/date';
 
 const SymbolPage = async (
   { params }
-  : { params: Promise<{ exchange_id: string, symbol: string }> }
+    : { params: Promise<{ exchange_id: string, symbol: string }> }
 ) => {
   const { exchange_id, symbol } = await params;
   const [

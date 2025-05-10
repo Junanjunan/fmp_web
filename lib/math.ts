@@ -1,11 +1,11 @@
 export const getGrowth = (
-  currentYearRevenue: number, 
+  currentYearRevenue: number,
   previousYearRevenue: number
 ): number => {
   if (!previousYearRevenue) {
     if (currentYearRevenue) {
       return 999.99;
-    } else{
+    } else {
       return -999.99;
     }
   }

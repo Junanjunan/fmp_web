@@ -64,7 +64,7 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
-    async session({ session, token}) {
+    async session({ session, token }) {
       if (session.user) {
         session.user.email_verified = token.email_verified;
         session.user.created_at = token.created_at;

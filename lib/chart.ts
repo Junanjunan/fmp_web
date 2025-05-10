@@ -2,8 +2,8 @@ import { PriceData } from "@/types/chart"
 
 
 export function calculateBollingerBands(
-  data: PriceData[], 
-  period: number = 20, 
+  data: PriceData[],
+  period: number = 20,
   multiplier: number = 2
 ) {
   const upper = [];
@@ -45,8 +45,8 @@ export function calculateBollingerBands(
 
 
 export function calculateLastBollingerBands(
-  data: PriceData[], 
-  period: number = 20, 
+  data: PriceData[],
+  period: number = 20,
   multiplier: number = 2
 ) {
   // Check if there are enough data points

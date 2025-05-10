@@ -52,7 +52,7 @@ export const getSymbols = async (
   return result.rows;
 }
 
-export const getFilteredSymbols = async(
+export const getFilteredSymbols = async (
   typeIds: dbTypes.TypeRow['id'][],
   exchangeIds: dbTypes.ExchangeRow['id'][]
 ): Promise<dbTypes.SymbolRow[]> => {
@@ -108,7 +108,7 @@ export const getSymbolProfile = async (
   return result.rows[0];
 }
 
-export const getFilteredSymbolsProfiles = async(
+export const getFilteredSymbolsProfiles = async (
   typeIds: dbTypes.TypeRow['id'][],
   exchangeIds: dbTypes.ExchangeRow['id'][],
   symbol: dbTypes.SymbolRow['id']
@@ -290,7 +290,7 @@ export const deleteSymbolFromWatchlist = async (
           user_symbols_list_id: userSymbolsListId,
           symbol_id: symbol,
           exchange_id: exchange
-        } 
+        }
       }
     });
     return { success: true };
@@ -384,7 +384,7 @@ export const deleteWatchlist = async (
         }
       }
     });
-    return {success: true}
+    return { success: true }
   } catch (e) {
     console.error(e);
     return {
@@ -419,14 +419,14 @@ export const correctWatchlistExchange = async () => {
           }
         }
         await prisma.user_symbols.update({
-          where: {id},
+          where: { id },
           data: {
             exchange_id: exchangeId
           }
         });
       }
     }
-    return {success: true}
+    return { success: true }
   } catch (e) {
     console.error(e);
     return {
