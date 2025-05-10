@@ -45,12 +45,16 @@ export async function POST(request: Request) {
     }, incomeStatements[0]);
     const latestRevenue = latestIncomeStatement.revenue ? latestIncomeStatement.revenue : -1;
     const psRatio = Math.round(mkt_cap / latestRevenue * 100) / 100;
+    const eps = latestIncomeStatement.eps ? latestIncomeStatement.eps : -999999;
+    const peRatio = (eps == -999999) ? 999999 : Math.round(price / eps * 100) / 100;
 
     growthOfSymbols[id] = {
       type_id,
       exchange_id,
       price,
       psRatio,
+      peRatio,
+      eps,
       growthArray: revenueGrowthArray,
       operatingIncomeRatios,
     };

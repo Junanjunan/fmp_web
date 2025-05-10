@@ -26,6 +26,8 @@ export interface GrowthOfSymbols {
     exchange_id: ExchangeRow["id"];
     price: number;
     psRatio: number;
+    peRatio: number;
+    eps: number;
     growthArray: GrowthArray[];
     operatingIncomeRatios: RatioArray[];
   };

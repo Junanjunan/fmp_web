@@ -256,6 +256,18 @@ export const RevenueTable = (
           : b[1].psRatio - a[1].psRatio;
       }
 
+      if (sortColumn === 'peRatio') {
+        return sortDirection === 'asc'
+          ? a[1].peRatio - b[1].peRatio
+          : b[1].peRatio - a[1].peRatio;
+      }
+
+      if (sortColumn === 'eps') {
+        return sortDirection === 'asc'
+          ? a[1].eps - b[1].eps
+          : b[1].eps - a[1].eps;
+      }
+
       // For year columns
       const yearNum = parseInt(sortColumn);
       if (!isNaN(yearNum)) {
@@ -354,6 +366,20 @@ export const RevenueTable = (
             >
               PS Ratio{toggleArrow('psRatio')}
             </th>
+            <th
+              className="tableCell cursor-pointer"
+              rowSpan={2}
+              onClick={() => handleSort('peRatio')}
+            >
+              PE Ratio{toggleArrow('peRatio')}
+            </th>
+            <th
+              className="tableCell cursor-pointer"
+              rowSpan={2}
+              onClick={() => handleSort('eps')}
+            >
+              EPS{toggleArrow('eps')}
+            </th>
             {isOnlyPriceInfo ? null :
               <>
                 <th className="tableCell" colSpan={filteredYears.length}>Growth of Revenue Growth(%)</th>
@@ -395,7 +421,16 @@ export const RevenueTable = (
         <tbody>
           {currentSymbols.map(([
             symbol,
-            { type_id, exchange_id, growthArray, operatingIncomeRatios, price, psRatio }
+            {
+              type_id,
+              exchange_id,
+              growthArray,
+              operatingIncomeRatios,
+              price,
+              psRatio,
+              peRatio,
+              eps,
+            }
           ]) => {
             const rowId = `${symbol}::${exchange_id}`;
             return (
@@ -430,6 +465,8 @@ export const RevenueTable = (
                 <td className="tableCell">{BollingerObject?.[symbol]?.lastMiddle}</td>
                 <td className="tableCell">{BollingerObject?.[symbol]?.lastUpper}</td>
                 <td className="tableCell">{psRatio}</td>
+                <td className="tableCell">{peRatio}</td>
+                <td className="tableCell">{eps}</td>
                 {filteredYears.map((year) => (
                   <td key={year} className="tableCell">
                     {growthArray.find(growth => growth.year == year)?.growthOfGrowth}
