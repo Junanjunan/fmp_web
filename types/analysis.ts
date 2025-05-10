@@ -4,6 +4,7 @@ import { SymbolRow, TypeRow, ExchangeRow } from './db';
 export interface GrowthArray {
   year: number;
   growth: number;
+  growthOfGrowth: number;
 }
 
 export interface RatioArray {

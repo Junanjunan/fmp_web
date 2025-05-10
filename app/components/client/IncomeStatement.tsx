@@ -33,7 +33,7 @@ export const RevenueTable = (
   const { watchlist } = useWatchlistStore();
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [sortYearType, setSortYearType] = useState<'revenue' | 'operatingIncome' | null>(null);
+  const [sortYearType, setSortYearType] = useState<'revenue' | 'operatingIncome' | 'growthOfGrowthOfRevenue' | null>(null);
 
   const filteredSymbols: SortedSymbolGrowths = sortedSymbolGrowths.filter(symbolData => {
     const symbol = symbolData[0];
@@ -263,6 +263,11 @@ export const RevenueTable = (
           const bOIRatio = b[1].operatingIncomeRatios.find(g => g.year === yearNum)?.ratio || 0;
           return sortDirection === 'asc' ? aOIRatio - bOIRatio : bOIRatio - aOIRatio;
         }
+        if (sortYearType === 'growthOfGrowthOfRevenue') {
+          const aGrowth = a[1].growthArray.find(g => g.year === yearNum)?.growthOfGrowth || 0;
+          const bGrowth = b[1].growthArray.find(g => g.year === yearNum)?.growthOfGrowth || 0;
+          return sortDirection === 'asc' ? aGrowth - bGrowth : bGrowth - aGrowth;
+        }
       }
 
       return 0;
@@ -345,12 +350,22 @@ export const RevenueTable = (
             </th>
             {isOnlyPriceInfo ? null :
               <>
+                <th className="tableCell" colSpan={filteredYears.length}>Growth of Revenue Growth(%)</th>
                 <th className="tableCell" colSpan={filteredYears.length}>Revenue Growth(%)</th>
                 <th className="tableCell" colSpan={filteredYears.length}>Operating Income Ratio(%)</th>
               </>
             }
           </tr>
           <tr>
+            {isOnlyPriceInfo ? null : filteredYears.map((year) => (
+              <th
+                key={year}
+                className="tableCell cursor-pointer"
+                onClick={() => handleSort(year.toString(), 'growthOfGrowthOfRevenue')}
+              >
+                {year}{toggleArrow(year.toString())}
+              </th>
+            ))}
             {isOnlyPriceInfo ? null : filteredYears.map((year) => (
               <th
                 key={year}
@@ -409,6 +424,11 @@ export const RevenueTable = (
                 <td className="tableCell">{BollingerObject?.[symbol]?.lastMiddle}</td>
                 <td className="tableCell">{BollingerObject?.[symbol]?.lastUpper}</td>
                 <td className="tableCell">{psRatio}</td>
+                {filteredYears.map((year) => (
+                  <td key={year} className="tableCell">
+                    {growthArray.find(growth => growth.year == year)?.growthOfGrowth}
+                  </td>
+                ))}
                 {filteredYears.map((year) => (
                   <td key={year} className="tableCell">
                     {growthArray.find(growth => growth.year == year)?.growth}
